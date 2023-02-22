@@ -23,3 +23,4 @@ Add your own name (do not add the names for others!) to the section below.
 ## How to contribute to it
 
 ## Copyright / License (opt.)
+"Did I make any changes?"
