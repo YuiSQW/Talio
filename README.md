@@ -9,7 +9,9 @@ Add your own name (do not add the names for others!) to the section below.
 ## Group members
 - Marius Frija
 
-- Matthias van Vliet   
+- Matthias van Vliet
+
+- Rebecca Nys
 
 | Profile Picture | Name | Email |
 |---|---|---|
