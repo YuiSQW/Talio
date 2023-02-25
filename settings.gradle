@@ -1,4 +1,4 @@
-rootProject.name = 'quizzzz'
+rootProject.name = 'Team 44 task orginazer'
 
 include 'client'
 include 'server'
