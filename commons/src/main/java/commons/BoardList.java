@@ -1,0 +1,59 @@
+package commons;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class BoardList{
+    /**
+     * I named the list on the Board "BoardList" to prevent any confusion with java.util.List
+     */
+
+
+    private List<Card> cardList;
+    private String name;
+
+    public BoardList(){
+
+        this.cardList = new ArrayList<Card>();
+        this.name = "";
+    }
+
+    public BoardList(String name, List<Card> cardList){
+        this.name = name;
+        this.cardList = cardList;
+    }
+
+    public List<Card> getCardList(){
+        return this.cardList;
+    }
+
+    public String getName(){
+        return this.name;
+    }
+
+    public void setName(String name){
+        this.name = name;
+    }
+
+    public void setCardList(List<Card> cardList){
+        this.cardList = cardList;
+    }
+
+    public void addCard(Card cardToAdd){
+        this.cardList.add(cardToAdd);
+    }
+
+    public void deleteCard(long id){
+        //TODO
+        //the id field of Card needs to be added in the future for database purposes
+        //to be implemented here: deleting a card from cardList based on its id
+    }
+
+    @Override
+    public boolean equals(Object other){
+        return other instanceof BoardList &&
+               ((BoardList) other).cardList.equals(this.cardList) &&
+               ((BoardList) other).name.equals(this.name);
+    }
+
+}
