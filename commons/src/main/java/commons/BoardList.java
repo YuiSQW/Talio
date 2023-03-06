@@ -1,13 +1,22 @@
 package commons;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
+import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BoardList{
+@Entity
+@Table(name = "board_lists")
+public class BoardList implements Serializable {
     /**
      * I named the list on the Board "BoardList" to prevent any confusion with java.util.List
      */
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
     private List<Card> cardList;
     private String name;
@@ -54,6 +63,11 @@ public class BoardList{
         return other instanceof BoardList &&
                ((BoardList) other).cardList.equals(this.cardList) &&
                ((BoardList) other).name.equals(this.name);
+    }
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
     }
 
 }
