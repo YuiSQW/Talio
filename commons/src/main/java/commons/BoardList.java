@@ -1,12 +1,15 @@
 package commons;
 
+
 import javax.persistence.*;
-import java.util.ArrayList;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import java.io.Serializable;
 import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-public class BoardList{
+public class BoardList implements Serializable {
+
     /**
      * I named the list on the Board "BoardList" to prevent any confusion with java.util.List
      */
@@ -14,6 +17,7 @@ public class BoardList{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     public long id;
+
 
     @OneToMany(mappedBy = "parentList")
     private List<Card> cardList;
@@ -58,6 +62,11 @@ public class BoardList{
                ((BoardList) other).cardList.equals(this.cardList) &&
                ((BoardList) other).name.equals(this.name) &&
                ((BoardList) other).parentBoard.equals(this.parentBoard);
+    }
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
     }
 
 }
