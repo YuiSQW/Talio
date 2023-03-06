@@ -51,4 +51,20 @@ class BoardTest {
         otherBoard.setName("new name");
         assertNotEquals(testBoard, otherBoard);
     }
+    @Test
+    void addListTest(){
+        Board testBoard = new Board("testboard", new ArrayList<BoardList>());
+        BoardList testBoardList=new BoardList("test",new ArrayList<Card>());
+        testBoard.addList(testBoardList);
+        assertEquals(new BoardList("test",new ArrayList<Card>()),testBoard.getLists().get(0));
+    }
+    @Test
+    void deleteListTest(){
+        Board testBoard = new Board("testboard", new ArrayList<BoardList>());
+        BoardList testBoardList=new BoardList("test",new ArrayList<Card>());
+        testBoardList.setId(56);
+        testBoard.addList(testBoardList);
+        testBoard.deleteList(56);
+        assertEquals(new ArrayList<BoardList>(),testBoard.getLists());
+    }
 }

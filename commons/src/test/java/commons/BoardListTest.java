@@ -66,4 +66,14 @@ class BoardListTest {
         assertNotEquals(listTest, otherList);
     }
 
+    @Test
+    void getIdTest(){
+        BoardList listTest = new BoardList("testboard", new ArrayList<Card>());
+        listTest.setId(20);
+        Long id=listTest.getId();
+        id++;
+        Long id2=listTest.getId();
+        assertEquals(id,id2+1);
+    }
+
 }
