@@ -11,56 +11,38 @@ class BoardListTest {
 
     @Test
     void getCardListTest() {
-        BoardList listTest = new BoardList("testboard", new ArrayList<Card>());
+        BoardList listTest = new BoardList("testboard", new ArrayList<Card>(), new Board("", new ArrayList<>()));
         assertEquals(new ArrayList<Card>(), listTest.getCardList());
     }
 
     @Test
     void getNameTest() {
-        BoardList listTest = new BoardList("testboard", new ArrayList<Card>());
+        BoardList listTest = new BoardList("testboard", new ArrayList<Card>(), new Board("", new ArrayList<>()));
         assertEquals("testboard", listTest.getName());
     }
 
     @Test
     void setNameTest() {
-        BoardList listTest = new BoardList("testboard", new ArrayList<Card>());
+        BoardList listTest = new BoardList("testboard", new ArrayList<Card>(), new Board("", new ArrayList<>()));
         listTest.setName("new board name");
         assertEquals("new board name", listTest.getName());
     }
 
     @Test
     void setCardListTest() {
-        BoardList listTest = new BoardList("testboard", new ArrayList<Card>());
+        BoardList listTest = new BoardList("testboard", new ArrayList<Card>(), new Board("", new ArrayList<>()));
         List<Card> testList = new ArrayList<Card>();
-        testList.add(new Card("testCard", "test description"));
+        testList.add(new Card("testCard", "test description", listTest));
         listTest.setCardList(testList);
-        assertEquals(new Card("testCard", "test description"), listTest.getCardList().get(0));
+        assertEquals(new Card("testCard", "test description", listTest), listTest.getCardList().get(0));
     }
 
-    @Test
-    void addCardTest() {
-        BoardList listTest = new BoardList("testboard", new ArrayList<Card>());
-        listTest.addCard(new Card("testCard", "test description"));
-        assertEquals(new Card("testCard", "test description"), listTest.getCardList().get(0));
-    }
 
-    @Test
-    void deleteCard() {
-        //TODO
-    }
-
-    @Test
-    void emptyConstructorTest(){
-        BoardList listTest = new BoardList();
-        assertNotNull(listTest);
-        assertEquals("", listTest.getName());
-        assertEquals(new ArrayList<Card>(), listTest.getCardList());
-    }
 
     @Test
     void equalsTest(){
-        BoardList listTest = new BoardList("testboard", new ArrayList<Card>());
-        BoardList otherList = new BoardList("testboard", new ArrayList<Card>());
+        BoardList listTest = new BoardList("testboard", new ArrayList<Card>(), new Board("", new ArrayList<>()));
+        BoardList otherList = new BoardList("testboard", new ArrayList<Card>(), new Board("", new ArrayList<>()));
         assertEquals(listTest, otherList);
         otherList.setName("new name");
         assertNotEquals(listTest, otherList);

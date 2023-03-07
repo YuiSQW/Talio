@@ -1,10 +1,13 @@
 package client.scenes;
 
+import commons.Board;
+import commons.BoardList;
 import commons.Card;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class AddCardCtrl {
@@ -26,7 +29,7 @@ public class AddCardCtrl {
         }
 
         //TODO delegate card to CardOverviewCtrl to let it store the card in the database
-        return new Card(p, q);
+        return new Card(p, q, new BoardList("", new ArrayList<>(), new Board("", new ArrayList<>())));
     }
 
     //Still has no usage & needs to get replaced when data can get stored in database
