@@ -51,7 +51,7 @@ class BoardTest {
         Board testBoard = new Board("testboard", new ArrayList<BoardList>());
         BoardList testBoardList=new BoardList("test",new ArrayList<Card>());
         testBoard.addList(testBoardList);
-        assertEquals(new BoardList("test",new ArrayList<Card>()),testBoard.getLists().get(0));
+        assertEquals(new BoardList("test",new ArrayList<Card>(),testBoard),testBoard.getLists().get(0));
     }
     @Test
     void deleteListTest(){

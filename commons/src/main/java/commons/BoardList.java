@@ -39,6 +39,11 @@ public class BoardList implements Serializable {
         this.parentBoard = parentBoard;
     }
 
+    public BoardList(String name, List<Card> cardList){
+        this.name = name;
+        this.cardList = cardList;
+    }
+
     public List<Card> getCardList(){
         return this.cardList;
     }
@@ -61,6 +66,10 @@ public class BoardList implements Serializable {
     public long getId() { return this.id;}
 
     public void setId(long id) {this.id = id;} //made this for testing, as the db isn't up and running yet.
+
+    public void setParentBoard(Board parentBoard) {
+        this.parentBoard = parentBoard;
+    }
 
     public void deleteCard(long id){
         //TODO

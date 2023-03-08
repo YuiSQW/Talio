@@ -50,6 +50,7 @@ public class Board {
     }
     public void addList(BoardList boardList){
         lists.add(boardList);
+        boardList.setParentBoard(this);
     }
 
     public void deleteList(long id){
