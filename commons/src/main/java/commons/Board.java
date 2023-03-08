@@ -45,11 +45,22 @@ public class Board {
     @Override
     public boolean equals(Object other){
         return other instanceof Board &&
-               ((Board) other).lists.equals(this.lists) &&
-               ((Board) other).name.equals(this.name);
+                ((Board) other).lists.equals(this.lists) &&
+                ((Board) other).name.equals(this.name);
+    }
+    public void addList(BoardList boardList){
+        lists.add(boardList);
+        boardList.setParentBoard(this);
     }
 
-
+    public void deleteList(long id){
+        for(BoardList list:lists){
+            if(list.getId() == id){
+                lists.remove(list);
+                break;
+            }
+        }
+    }
 
 
 
