@@ -19,9 +19,9 @@ class BoardTest {
     void setLists() {
         Board testBoard = new Board("testboard", new ArrayList<BoardList>());
         List<BoardList> testList = new ArrayList<BoardList>();
-        testList.add(new BoardList());
+        testList.add(new BoardList("", new ArrayList<>(), testBoard));
         testBoard.setLists(testList);
-        assertEquals(new BoardList(), testBoard.getLists().get(0));
+        assertEquals(new BoardList("", new ArrayList<>(), testBoard), testBoard.getLists().get(0));
     }
 
     @Test
@@ -37,12 +37,7 @@ class BoardTest {
         assertEquals("new name", testBoard.getName());
     }
 
-    @Test
-    void emptyConstructorTest(){
-        Board testBoard = new Board();
-        assertEquals(new ArrayList<BoardList>(), testBoard.getLists());
-        assertEquals("", testBoard.getName());
-    }
+
     @Test
     void testEquals() {
         Board testBoard = new Board("testboard", new ArrayList<BoardList>());

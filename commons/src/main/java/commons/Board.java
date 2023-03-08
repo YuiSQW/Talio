@@ -1,17 +1,24 @@
 package commons;
 
 
-import java.util.ArrayList;
+import javax.persistence.*;
 import java.util.List;
 
 
+@Entity
 public class Board {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    public long id;
+
+
+    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "parentBoard")
     private List<BoardList> lists;
     private String name;
 
-    public Board(){
-        this.name = "";
-        this.lists = new ArrayList<BoardList>();
+    Board(){
+        // default constructor that is necessary for Jackson to work properly don't use this!!
     }
 
     public Board(String name, List<BoardList> lists){
@@ -41,7 +48,6 @@ public class Board {
                 ((Board) other).lists.equals(this.lists) &&
                 ((Board) other).name.equals(this.name);
     }
-
     public void addList(BoardList boardList){
         lists.add(boardList);
     }
