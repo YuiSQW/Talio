@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package client.scenes.quotes_app;
+package client.scenes;
 
 import client.scenes.MainCtrl;
 import com.google.inject.Inject;
@@ -49,48 +49,49 @@ public class AddQuoteCtrl {
 
     }
 
-//    public void cancel() {
-//        clearFields();
-//        mainCtrl.showOverview();
-//    }
+    public void cancel() {
+        clearFields();
+        mainCtrl.showOverview();
+    }
 
-//    public void ok() {
-//        try {
-//            server.addQuote(getQuote());
-//        } catch (WebApplicationException e) {
-//
-//            var alert = new Alert(Alert.AlertType.ERROR);
-//            alert.initModality(Modality.APPLICATION_MODAL);
-//            alert.setContentText(e.getMessage());
-//            alert.showAndWait();
-//            return;
-//        }
-//
-//        clearFields();
-//        mainCtrl.showOverview();
-//    }
+    public void ok() {
+        try {
+            server.addQuote(getQuote());
+        } catch (WebApplicationException e) {
 
-//    private Quote getQuote() {
-//        var p = new Person(firstName.getText(), lastName.getText());
-//        var q = quote.getText();
-//        return new Quote(p, q);
-//    }
-//
-//    private void clearFields() {
-//        firstName.clear();
-//        lastName.clear();
-//        quote.clear();
-//    }
+            var alert = new Alert(Alert.AlertType.ERROR);
+            alert.initModality(Modality.APPLICATION_MODAL);
+            alert.setContentText(e.getMessage());
+            alert.showAndWait();
+            return;
+        }
 
-//    public void keyPressed(KeyEvent e) {
-//        switch (e.getCode()) {
-//        case ENTER:
-//            ok();
-//            break;
-//        case ESCAPE:
-//            cancel();
-//            break;
-//        default:
-//            break;
-//        }
+        clearFields();
+        mainCtrl.showOverview();
+    }
+
+    private Quote getQuote() {
+        var p = new Person(firstName.getText(), lastName.getText());
+        var q = quote.getText();
+        return new Quote(p, q);
+    }
+
+    private void clearFields() {
+        firstName.clear();
+        lastName.clear();
+        quote.clear();
+    }
+
+    public void keyPressed(KeyEvent e) {
+        switch (e.getCode()) {
+            case ENTER:
+                ok();
+                break;
+            case ESCAPE:
+                cancel();
+                break;
+            default:
+                break;
+        }
+    }
 }

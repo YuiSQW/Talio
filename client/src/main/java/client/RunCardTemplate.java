@@ -30,23 +30,18 @@ import java.util.Objects;
 
 
 public class RunCardTemplate extends Application {
-
-
     public static void main(String[] args)  {
         launch();
 
     }
-
     @Override
     public void start(Stage primaryStage) throws IOException {
 
-        var xml = getClass().getClassLoader().getResource("client/scenes/CardOverview.fxml");
+        var xml = getClass().getClassLoader().getResource("client/scenes/AddCardOverview.fxml");
         Parent root = FXMLLoader.load((Objects.requireNonNull(xml)));
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
         primaryStage.show();
-
-
     }
 
 
