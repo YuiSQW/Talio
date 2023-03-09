@@ -58,14 +58,14 @@ public class QuoteOverviewCtrl implements Initializable {
         colLastName.setCellValueFactory(q -> new SimpleStringProperty(q.getValue().person.lastName));
         colQuote.setCellValueFactory(q -> new SimpleStringProperty(q.getValue().quote));
     }
-
-    public void addQuote() {
-        mainCtrl.showAdd();
-    }
-
-    public void refresh() {
-        var quotes = server.getQuotes();
-        data = FXCollections.observableList(quotes);
-        table.setItems(data);
-    }
+//
+//    public void addQuote() {
+//        mainCtrl.showAdd();
+//    }
+//
+//    public void refresh() {
+//        var quotes = server.getQuotes();
+//        data = FXCollections.observableList(quotes);
+//        table.setItems(data);
+//    }
 }
