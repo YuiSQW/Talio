@@ -1,40 +1,23 @@
 package client.scenes;
 
-import client.Main;
-import client.utils.ServerUtils;
 import commons.Board;
 import commons.BoardList;
 import commons.Card;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.Pane;
-import javafx.stage.Stage;
 
-import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Objects;
 
 public class AddCardCtrl {
 
-    private MainCtrl mainCtrl;
-    private ServerUtils serverUtils;
     @FXML
     private TextField title;
     @FXML
     private TextArea description;
-    @FXML
-    private Pane toolBar;
-    @FXML
-    private Button saveButton, closeButton, minimizeButton;
-    private double x,y;
 
-    @Inject
-    public AddCardCtrl(MainCtrl mainCtrl, ServerUtils serverUtils){
-        this.mainCtrl=mainCtrl;
-        this.serverUtils=serverUtils;
-    }
+
     //TODO need to change it to private when delegating to other class
     public Card getCard() {
         var p = title.getText();
@@ -66,30 +49,14 @@ public class AddCardCtrl {
         title.clear();
         description.clear();
     }
+
     public void clearTitle() {
         title.clear();
     }
+
     public void clearDescription() {
         description.clear();
     }
-    /**
-     * The function initializes the functionality of dragging the
-     * window of the application
-     * @param stage the primary stage of the application
-     */
-    public void init(Stage stage){
-        toolBar.setOnMousePressed( mouseEvent -> {
-            this.x= mouseEvent.getSceneX();
-            this.y= mouseEvent.getSceneY();
-        });
-        toolBar.setOnMouseDragged(mouseEvent -> {
-            stage.setX(mouseEvent.getScreenX()-this.x);
-            stage.setY(mouseEvent.getScreenY()-this.y);
-        });
-    }
-    public void closeCard(){
-        this.mainCtrl.showBoardOverview();
-    }
-    public void minimize(){this.mainCtrl.minimizeStage();}
+
 
 }

@@ -15,7 +15,6 @@
  */
 package client.scenes;
 
-import client.scenes.MainCtrl;
 import com.google.inject.Inject;
 
 import client.utils.ServerUtils;
@@ -84,14 +83,14 @@ public class AddQuoteCtrl {
 
     public void keyPressed(KeyEvent e) {
         switch (e.getCode()) {
-            case ENTER:
-                ok();
-                break;
-            case ESCAPE:
-                cancel();
-                break;
-            default:
-                break;
+        case ENTER:
+            ok();
+            break;
+        case ESCAPE:
+            cancel();
+            break;
+        default:
+            break;
         }
     }
 }
