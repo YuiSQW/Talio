@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane prefHeight="485.0" prefWidth="686.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.BoardCtrl">
+    <children>
+        <TextField layoutX="42.0" layoutY="35.0" prefHeight="42.0" prefWidth="174.0" text="Board title">
+            <font>
+                <Font size="15.0" />
+            </font>
+        </TextField>
+        <VBox layoutX="42.0" layoutY="107.0" prefHeight="360.0" prefWidth="180.0">
+            <children>
+                <Button minHeight="-Infinity" minWidth="35.0" mnemonicParsing="false" prefHeight="41.0" prefWidth="174.0" style="-fx-background-radius: 100;" text="+ Add another list" textFill="#080808" />
+            </children>
+        </VBox>
+        <VBox layoutX="261.0" layoutY="107.0" prefHeight="360.0" prefWidth="180.0" />
+        <VBox layoutX="474.0" layoutY="107.0" prefHeight="360.0" prefWidth="180.0" />
+    </children>
+</AnchorPane>
