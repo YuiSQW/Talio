@@ -3,8 +3,10 @@ package server.api;
 import commons.Board;
 import commons.BoardList;
 import commons.Card;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import server.database.BoardListRepository;
 import server.database.BoardRepository;
 
@@ -59,6 +61,19 @@ public class BoardListController {
         BoardList listToBeAdded = new BoardList(name, new ArrayList<Card>(), parent);
         BoardList addedList = repo.save(listToBeAdded);
         return ResponseEntity.ok(addedList);
+    }
+
+    @PutMapping("/{id}/{newName}")
+    public BoardList renameList(@PathVariable("id") long id, @PathVariable("newName") String newName) {
+        BoardList currentList = repo.findById(id).orElseThrow(() -> new ResponseStatusException(
+            HttpStatus.NOT_FOUND));
+        currentList.setName(newName);
+        return repo.save(currentList);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteList(@PathVariable("id") long id) {
+        repo.deleteById(id);
     }
 
 
