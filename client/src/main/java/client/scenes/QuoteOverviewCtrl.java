@@ -18,7 +18,6 @@ package client.scenes;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import client.scenes.MainCtrl;
 import com.google.inject.Inject;
 
 import client.utils.ServerUtils;
