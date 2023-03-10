@@ -4,17 +4,20 @@ package commons;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class Card {
     /**
      * Cards contain a title and a description
-     * In the future Cards can contain a List of type 'Task' which is to be implemented
      */
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     public long id;
+
+    @OneToMany(mappedBy = "parentCard")
+    private List<Task> taskList;
 
     @JsonIgnore //this field needs to be ignored if converted to json, since it would otherwise be stuck in infinite loop
     @ManyToOne
