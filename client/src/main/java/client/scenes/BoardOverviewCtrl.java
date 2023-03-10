@@ -3,21 +3,26 @@ package client.scenes;
 import client.utils.ServerUtils;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-
 import javax.inject.Inject;
 
-public class CardOverviewCtrl {
-    private MainCtrl mainCtrl;
-    private ServerUtils serverUtils;
+public class BoardOverviewCtrl {
+    private final MainCtrl mainCtrl;
+    private final ServerUtils serverUtils;
+    private double x,y;
     @FXML
-    private Button closeButton,minimizeButton;
+    private Button closeButton, minimizeButton;
     @FXML
     private Pane toolBar;
-    private double x,y;
+    @FXML
+    private Button addList;
+    @FXML
+    private TextField boardTitle;
+
     @Inject
-    public CardOverviewCtrl(MainCtrl mainCtrl, ServerUtils serverUtils){
+    public BoardOverviewCtrl(MainCtrl mainCtrl, ServerUtils serverUtils){
         this.mainCtrl=mainCtrl;
         this.serverUtils=serverUtils;
     }
@@ -37,11 +42,17 @@ public class CardOverviewCtrl {
         });
     }
     /**
-     * Method linked to the closeButton which switches the scene of the primary stage to the BoardOverview
-     * after the changes to card were/were not saved
+     * Function that is connected to the closeButton of the controller
+     * It delegates the function of closing the app to the Main Controller
      */
-    public void closeCard(){
-        this.mainCtrl.showBoardOverview();
+    public void close(){ this.mainCtrl.closeApp();}
+    /**
+     * Function that is connected to the minimizeButton of the controller
+     * It delegates the function of minimizing the window of the app
+     * to the Main Controller
+     */
+    public void minimize(){ this.mainCtrl.minimizeStage();}
+    public void addNewList(){
+        this.mainCtrl.showListOverview();
     }
-    public void minimizeStage(){ this.mainCtrl.minimizeStage();}
 }
