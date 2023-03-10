@@ -17,7 +17,9 @@ package client.scenes;
 
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Pair;
 
 public class MainCtrl {
@@ -29,29 +31,94 @@ public class MainCtrl {
 
     private AddQuoteCtrl addCtrl;
     private Scene add;
+    private BoardOverviewCtrl boardOverviewCtrl;
+    private Scene boardOverview;
+    private CardOverviewCtrl cardOverviewCtrl;
+    private Scene cardOverview;
 
-    public void initialize(Stage primaryStage, Pair<QuoteOverviewCtrl, Parent> overview,
-            Pair<AddQuoteCtrl, Parent> add) {
+    private AddCardCtrl addCardCtrl;
+    private Scene addCardOverview;
+
+    private ListOverviewCtrl listOverviewCtrl;
+    private Scene listOverview;
+
+    public void initialize(Stage primaryStage,
+                           Pair<QuoteOverviewCtrl, Parent> overview,
+                           Pair<AddQuoteCtrl, Parent> add,
+                           Pair<BoardOverviewCtrl, Parent> board,
+                           Pair<ListOverviewCtrl, Parent> list,
+                           Pair<CardOverviewCtrl, Parent> card,
+                           Pair<AddCardCtrl, Parent> addCard
+    ) {
         this.primaryStage = primaryStage;
         this.overviewCtrl = overview.getKey();
         this.overview = new Scene(overview.getValue());
-
         this.addCtrl = add.getKey();
         this.add = new Scene(add.getValue());
-
-        showOverview();
+        this.boardOverviewCtrl=board.getKey();
+        this.boardOverview= new Scene(board.getValue());
+        this.listOverviewCtrl=list.getKey();
+        this.listOverview=new Scene(list.getValue());
+        this.cardOverviewCtrl=card.getKey();
+        this.cardOverview=new Scene(card.getValue());
+        this.addCardCtrl=addCard.getKey();
+        this.addCardOverview=new Scene(addCard.getValue());
+//        OBSOLETE CODE FOR QUOTE APP
+//        showOverview();
+        primaryStage.initStyle(StageStyle.TRANSPARENT);
+        showBoardOverview();
         primaryStage.show();
     }
+    public void showBoardOverview(){
+        primaryStage.setTitle("Main Board");
+        boardOverview.setFill(Color.TRANSPARENT);
+        primaryStage.setScene(boardOverview);
+        this.boardOverviewCtrl.init(primaryStage);
+    }
+    public void showCardOverview(){
+        primaryStage.setTitle("Card Overview");
+        cardOverview.setFill(Color.TRANSPARENT);
+        primaryStage.setScene(this.cardOverview);
+        this.cardOverviewCtrl.init(primaryStage);
+    }
+    public void addCardOverview(){
+        primaryStage.setTitle("Add new card");
+        addCardOverview.setFill(Color.TRANSPARENT);
+        primaryStage.setScene(this.addCardOverview);
+        this.addCardCtrl.init(primaryStage);
+    }
+    public void showListOverview(){
+        primaryStage.setTitle("Add new List");
+        listOverview.setFill(Color.TRANSPARENT);
+        primaryStage.setScene(this.listOverview);
+        this.listOverviewCtrl.init(primaryStage);
+    }
+    /**
+     * Method which causes the primary stage of the app to be close
+     */
+    public void closeApp(){
+        this.primaryStage.close();
+    }
 
+    /**
+     * Method which causes the primary stage of the application to be minimized
+     */
+    public void minimizeStage(){
+        this.primaryStage.setIconified(true);
+    }
+
+    //   OBSOLETE METHOD FOR QUOTE APPLICATION
     public void showOverview() {
         primaryStage.setTitle("Quotes: Overview");
         primaryStage.setScene(overview);
         overviewCtrl.refresh();
     }
 
+    //    OBSOLETE METHOD FOR THE QUOTE APPLICATION
     public void showAdd() {
         primaryStage.setTitle("Quotes: Adding Quote");
         primaryStage.setScene(add);
         add.setOnKeyPressed(e -> addCtrl.keyPressed(e));
     }
+
 }
