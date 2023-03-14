@@ -15,16 +15,12 @@
  */
 package client;
 
-import static com.google.inject.Guice.createInjector;
-
-import java.io.IOException;
-import java.net.URISyntaxException;
-
 import client.scenes.*;
 import com.google.inject.Injector;
-
 import javafx.application.Application;
 import javafx.stage.Stage;
+
+import static com.google.inject.Guice.createInjector;
 
 public class Main extends Application {
 

@@ -10,7 +10,6 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import javax.inject.Inject;
-import java.io.IOException;
 
 public class BoardOverviewCtrl {
     private final MainCtrl mainCtrl;
