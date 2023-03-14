@@ -15,14 +15,10 @@
  */
 package client;
 
-import client.scenes.AddQuoteCtrl;
-import client.scenes.BoardOverviewCtrl;
-import client.scenes.QuoteOverviewCtrl;
+import client.scenes.*;
 import com.google.inject.Binder;
 import com.google.inject.Module;
 import com.google.inject.Scopes;
-
-import client.scenes.MainCtrl;
 
 public class MyModule implements Module {
     @Override
@@ -35,5 +31,7 @@ public class MyModule implements Module {
          * Temporary for Single-board implementation
          */
         binder.bind(BoardOverviewCtrl.class).in(Scopes.SINGLETON);
+        binder.bind(WelcomeCtrl.class).in(Scopes.SINGLETON);
+
     }
 }

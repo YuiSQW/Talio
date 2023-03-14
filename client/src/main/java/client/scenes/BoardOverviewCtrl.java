@@ -3,10 +3,14 @@ package client.scenes;
 import client.utils.ServerUtils;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.TilePane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+
 import javax.inject.Inject;
+import java.io.IOException;
 
 public class BoardOverviewCtrl {
     private final MainCtrl mainCtrl;
@@ -19,10 +23,15 @@ public class BoardOverviewCtrl {
     @FXML
     private Button addList;
     @FXML
-    private TextField boardTitle;
+    private TilePane tilePane;
+
+    //This hBox is right now just for testing which design is better
+    @FXML
+    private HBox hBox;
+
 
     @Inject
-    public BoardOverviewCtrl(MainCtrl mainCtrl, ServerUtils serverUtils){
+    public BoardOverviewCtrl(MainCtrl mainCtrl, ServerUtils serverUtils) {
         this.mainCtrl=mainCtrl;
         this.serverUtils=serverUtils;
     }
@@ -52,7 +61,29 @@ public class BoardOverviewCtrl {
      * to the Main Controller
      */
     public void minimize(){ this.mainCtrl.minimizeStage();}
+
     public void addNewList(){
         this.mainCtrl.showListOverview();
+
+        //Function to get a new List template
+        addNewVbox();
     }
+
+    public  void addNewVbox() {
+        //Creates a child right after the last added list
+        tilePane.getChildren().add((tilePane.getChildren().size() - 1), new ListContainerCtrl(tilePane));
+
+    }
+
+    /**
+     * Retrieves the list based on the order of the tilePane parent
+     * right now it doesn't have any usage
+     * @param num which list needs to be retrieved
+     * @return the vBox with its elements
+     */
+    public VBox getChild(int num) {
+        return (VBox) tilePane.getChildren().get(num);
+    }
+
+
 }
