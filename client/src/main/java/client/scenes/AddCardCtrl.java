@@ -86,6 +86,8 @@ public class AddCardCtrl {
             stage.setX(mouseEvent.getScreenX()-this.x);
             stage.setY(mouseEvent.getScreenY()-this.y);
         });
+
+        saveButton.disableProperty().bind(title.textProperty().isEmpty());
     }
     public void closeCard(){
         this.stage.close();
