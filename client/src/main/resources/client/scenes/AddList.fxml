@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.Pane?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="160.0" prefWidth="174.0" style="-fx-background-radius: 20;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.ListOverviewCtrl">
+   <children>
+      <TextField fx:id="listName" layoutX="14.0" layoutY="33.0" onMouseClicked="#clearFields" text="List name" />
+      <Pane fx:id="toolBar" layoutY="2.0" prefHeight="25.0" prefWidth="171.0">
+         <children>
+            <Button fx:id="closeButton" layoutX="135.0" mnemonicParsing="false" onAction="#close" prefHeight="25.0" prefWidth="13.0" style="-fx-background-radius: 1em;" text="x" />
+            <Button fx:id="minimizeButton" layoutX="105.0" mnemonicParsing="false" onAction="#minimize" prefHeight="25.0" prefWidth="13.0" style="-fx-background-radius: 1em;" text="-" />
+         </children>
+      </Pane>
+      <Button fx:id="addCard" alignment="CENTER" layoutX="97.0" layoutY="115.0" mnemonicParsing="false" onAction="#addNewCard" text="Add Card" />
+      <Button fx:id="addList" alignment="CENTER" layoutX="14.0" layoutY="115.0" mnemonicParsing="false" onAction="#AddNewBoardList" text="Add List" />
+   </children>
+</Pane>

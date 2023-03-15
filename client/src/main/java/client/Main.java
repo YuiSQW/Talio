@@ -15,38 +15,36 @@
  */
 package client;
 
-import static com.google.inject.Guice.createInjector;
-
-import java.io.IOException;
-import java.net.URISyntaxException;
-
 import client.scenes.*;
 import com.google.inject.Injector;
-
 import javafx.application.Application;
 import javafx.stage.Stage;
+
+import static com.google.inject.Guice.createInjector;
 
 public class Main extends Application {
 
     private static final Injector INJECTOR = createInjector(new MyModule());
     private static final MyFXML FXML = new MyFXML(INJECTOR);
 
-    public static void main(String[] args) throws URISyntaxException, IOException {
+    public static void main(String[] args)  {
         launch();
     }
 
     @Override
-    public void start(Stage primaryStage) throws IOException {
+    public void start(Stage primaryStage)  {
 
 //        OBSOLETE CODE FROM QUOTE APPLICATION
         var overview = FXML.load(QuoteOverviewCtrl.class, "client", "scenes", "QuoteOverview.fxml");
         var add = FXML.load(AddQuoteCtrl.class, "client", "scenes", "AddQuote.fxml");
 
-        var boardOverview = FXML.load(BoardOverviewCtrl.class,"client","scenes","BoardOverview.fxml");
-        var listOverview = FXML.load(ListOverviewCtrl.class,"client","scenes","ListOverview.fxml");
+        var boardOverview = FXML.load(BoardOverviewCtrl.class,"client","scenes","BoardListOverviewNew.fxml");
+        var listOverview = FXML.load(ListOverviewCtrl.class,"client","scenes","AddList.fxml");
         var addCardOverview=FXML.load(AddCardCtrl.class,"client","scenes","AddCardOverview.fxml");
         var cardOverview= FXML.load(CardOverviewCtrl.class,"client","scenes","CardOverview.fxml");
+        var welcomeOverview =FXML.load(WelcomeCtrl.class,"client","scenes","Welcome.fxml");
+
         var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
-        mainCtrl.initialize(primaryStage, overview, add, boardOverview, listOverview, cardOverview, addCardOverview);
+        mainCtrl.initialize(primaryStage, overview, add, boardOverview, listOverview, cardOverview, addCardOverview, welcomeOverview );
     }
 }

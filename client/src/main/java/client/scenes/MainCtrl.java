@@ -42,6 +42,8 @@ public class MainCtrl {
 
     private ListOverviewCtrl listOverviewCtrl;
     private Scene listOverview;
+    private WelcomeCtrl welcomeCtrl;
+    private Scene welcome;
 
     public void initialize(Stage primaryStage,
                            Pair<QuoteOverviewCtrl, Parent> overview,
@@ -49,8 +51,8 @@ public class MainCtrl {
                            Pair<BoardOverviewCtrl, Parent> board,
                            Pair<ListOverviewCtrl, Parent> list,
                            Pair<CardOverviewCtrl, Parent> card,
-                           Pair<AddCardCtrl, Parent> addCard
-    ) {
+                           Pair<AddCardCtrl, Parent> addCard,
+                           Pair<WelcomeCtrl, Parent> welcome) {
         this.primaryStage = primaryStage;
         this.overviewCtrl = overview.getKey();
         this.overview = new Scene(overview.getValue());
@@ -58,13 +60,20 @@ public class MainCtrl {
         this.add = new Scene(add.getValue());
         this.boardOverviewCtrl=board.getKey();
         this.boardOverview= new Scene(board.getValue());
+
         this.listOverviewCtrl=list.getKey();
         this.listOverview=new Scene(list.getValue());
+
+        this.welcomeCtrl = welcome.getKey();
+        this.welcome = new Scene(welcome.getValue());
+
         this.cardOverviewCtrl=card.getKey();
         this.cardOverview=new Scene(card.getValue());
         this.addCardCtrl=addCard.getKey();
         this.addCardOverview=new Scene(addCard.getValue());
         primaryStage.initStyle(StageStyle.TRANSPARENT);
+
+        //showWelcomeOverview();
         showBoardOverview();
         primaryStage.show();
     }
@@ -72,7 +81,15 @@ public class MainCtrl {
         primaryStage.setTitle("Main Board");
         boardOverview.setFill(Color.TRANSPARENT);
         primaryStage.setScene(boardOverview);
+
         this.boardOverviewCtrl.init(primaryStage);
+    }
+
+    public void showWelcomeOverview() {
+        primaryStage.setTitle("Welcome");
+        boardOverview.setFill(Color.TRANSPARENT);
+        primaryStage.setScene(welcome);
+
     }
     public void showCardOverview(){
         Stage secondaryStage = new Stage(StageStyle.TRANSPARENT);
@@ -129,5 +146,7 @@ public class MainCtrl {
         primaryStage.setScene(add);
         add.setOnKeyPressed(e -> addCtrl.keyPressed(e));
     }
+
+
 
 }
