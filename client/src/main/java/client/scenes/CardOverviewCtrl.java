@@ -11,6 +11,7 @@ import javax.inject.Inject;
 public class CardOverviewCtrl {
     private MainCtrl mainCtrl;
     private ServerUtils serverUtils;
+    private Stage stage;
     @FXML
     private Button closeButton,minimizeButton;
     @FXML
@@ -41,7 +42,8 @@ public class CardOverviewCtrl {
      * after the changes to card were/were not saved
      */
     public void closeCard(){
+        this.stage.close();
         this.mainCtrl.showBoardOverview();
     }
-    public void minimizeStage(){ this.mainCtrl.minimizeStage();}
+    public void minimizeStage(){ this.stage.setIconified(true);}
 }
