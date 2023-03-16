@@ -49,31 +49,34 @@ public class BoardListController {
     /**
      * Creates a new BoardList as a child of the board for which the id is passed
      * @param boardId - the id of the board to which the BoardList should be added
-     * @param name - the name that will be given to the newly created BoardList
      * @return a ResponseEntity containing the newly created BoardList or a badrequest error if id is invalid
      */
-    @GetMapping("/new-boardlist/{boardId}/{name}")
-    ResponseEntity<BoardList> getNewList(@PathVariable("boardId") long boardId, @PathVariable("name") String name){
+    @PostMapping("/new-boardlist/{boardId}")
+    ResponseEntity<BoardList> getNewList(@RequestBody BoardList newList,@PathVariable("boardId") long boardId){
         if(boardId < 0 || !parentRepo.existsById(boardId)){
             return ResponseEntity.badRequest().build();
         }
-        Board parent = parentRepo.getById(boardId);
-        BoardList listToBeAdded = new BoardList(name, new ArrayList<Card>(), parent);
-        BoardList addedList = repo.save(listToBeAdded);
+        newList.setParentBoard(parentRepo.getById(boardId));
+        BoardList addedList = repo.save(newList);
         return ResponseEntity.ok(addedList);
     }
 
     @PutMapping("/{id}/{newName}")
-    public BoardList renameList(@PathVariable("id") long id, @PathVariable("newName") String newName) {
-        BoardList currentList = repo.findById(id).orElseThrow(() -> new ResponseStatusException(
-            HttpStatus.NOT_FOUND));
+    public ResponseEntity<BoardList> renameList(@PathVariable("id") long id, @PathVariable("newName") String newName) {
+        if(!repo.existsById(id))return ResponseEntity.badRequest().build();
+        BoardList currentList = repo.findById(id).get();
         currentList.setName(newName);
-        return repo.save(currentList);
+        return ResponseEntity.ok(repo.save(currentList));
     }
 
     @DeleteMapping("/{id}")
     public void deleteList(@PathVariable("id") long id) {
-        repo.deleteById(id);
+        try {
+            repo.deleteById(id);
+        }catch(IllegalArgumentException e){
+            System.out.println("The id for deleteList cannot be null");
+            e.printStackTrace();
+        }
     }
 
 

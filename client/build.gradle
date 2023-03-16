@@ -28,5 +28,5 @@ dependencies {
 	
 	implementation 'org.openjfx:javafx-controls:17.0.2'
 	implementation 'org.openjfx:javafx-fxml:17.0.2'
-	
+	testImplementation "com.github.tomakehurst:wiremock-jre8-standalone:2.35.0"
 }

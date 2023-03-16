@@ -4,10 +4,7 @@ package server.api;
 import commons.BoardList;
 import commons.Card;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import server.database.BoardListRepository;
 import server.database.CardRepository;
 
@@ -49,20 +46,16 @@ public class CardController {
 
     /**
      * Creates and adds a new card to a boardlist, the card is also added to the database
-     * @param boardListId - the id of the boardlist to which the card should be added to, the boardlist should
-     * @param title - the title of the card that should be created
-     * @param description - the description of the card that should be created
+     * @param boardListId - the id of the boardlist to which the card should be added to, the boardlist should already exist in the jparepository
      * @return a ResponseEntity that contains the newly created card
      */
-    @GetMapping("/new-card/{boardListId}/{title}/{description}")
-    public ResponseEntity<Card> getNewCard(@PathVariable("boardListId") long boardListId, @PathVariable("title") String title, @PathVariable("description") String description){
-        if(boardListId < 0 || !parentRepo.existsById(boardListId)){
-            return ResponseEntity.badRequest().build();
-        }
 
-        BoardList parent = parentRepo.getById(boardListId);
-        Card cardToAdd = new Card(title, description, parent);
-        Card addedCard = repo.save(cardToAdd);
-        return ResponseEntity.ok(addedCard);
+    @PostMapping("/new-card/{boardListId}")
+    public ResponseEntity<Card> getNewCard(@RequestBody Card newCard, @PathVariable("boardListId") long boardListId){
+        if(newCard == null || newCard.getTitle() == null || newCard.getDescription() == null || !parentRepo.existsById(boardListId))
+            return ResponseEntity.badRequest().build();
+        newCard.setParentList(parentRepo.findById(boardListId).get());
+        Card saved = repo.save(newCard);
+        return ResponseEntity.ok(saved);
     }
 }

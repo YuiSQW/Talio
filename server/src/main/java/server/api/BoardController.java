@@ -1,13 +1,22 @@
 package server.api;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import commons.Board;
 import commons.BoardList;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.async.DeferredResult;
 import server.database.BoardRepository;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @RestController
 @RequestMapping("/api/boards")
@@ -18,8 +27,19 @@ public class BoardController {
      */
     private final BoardRepository repo;
 
+    // set the timeout for the long polling request to 5 seconds
+    //private final Long LONG_POLLING_TIMEOUT = 5000L;
+
+    // service that facilitates the busy waiting of polling client requests to be outsourced to other threads,
+    // so that the request thread gets freed up
+    //private ExecutorService waitingUsersService;
+
+    // Thread-safe HashMap that keeps the
+    //private ConcurrentMap<Long, LocalDateTime> boardUpdates;
     public BoardController(BoardRepository repo){
         this.repo = repo;
+        //this.waitingUsersService = Executors.newCachedThreadPool();
+        //this.boardUpdates = new ConcurrentHashMap<>();
     }
 
     /**
@@ -35,15 +55,39 @@ public class BoardController {
         return ResponseEntity.ok(repo.findById(id).get());
     }
 
+    /*@GetMapping("/polling/{id}")
+    public DeferredResult<ResponseEntity<Board>> pollBoard(@PathVariable("id") long id) throws Exception{
+        DeferredResult<ResponseEntity<Board>> output = new DeferredResult<>(LONG_POLLING_TIMEOUT);
+
+        this.waitingUsersService.execute( () -> {
+            try {
+                // this for loop will be changed to keep running until the value of the LocalDateTime in the hashmap gets updated,
+                // signalling that the resource has been updated.
+                while (this.boardUpdates.get(id) == null || true) {
+
+                }
+                output.setResult(ResponseEntity.ok(repo.findById(id).get()));
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+        });
+        output.onTimeout(() -> {
+            try{
+            output.setResult(ResponseEntity.ok(repo.findById(id).get()));
+        }catch(Exception e){
+                e.printStackTrace();
+            }
+        });
+        return output;
+    }*/
     /**
      * Creates a new Board and sets its name, the new board is added to the database
-     * @param name - the name of the new Board
-     * @return a ResponseEntity containing the newly created Board or a badrequest error if the name is invalid
+     * @return a ResponseEntity containing the newly created Board or a badrequest error if the board is invalid
      */
-    @GetMapping("/new-board/{name}")
-    public ResponseEntity<Board> getNewBoard(@PathVariable("name") String name){
-        if(name == null || name.equals(""))return ResponseEntity.badRequest().build();
-        Board board = new Board(name, new ArrayList<BoardList>());
+
+    @PostMapping("/new-board")
+    public ResponseEntity<Board> getNewBoard(@RequestBody Board board){
+        if(board.getLists() == null || board.getName() == null)return ResponseEntity.badRequest().build();
         Board saved = repo.save(board);
         return ResponseEntity.ok(saved);
     }
