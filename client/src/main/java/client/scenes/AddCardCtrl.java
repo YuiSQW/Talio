@@ -27,6 +27,7 @@ public class AddCardCtrl {
     @FXML
     private Button saveButton, closeButton, minimizeButton;
     private double x,y;
+    private Stage stage;
 
     @Inject
     public AddCardCtrl(MainCtrl mainCtrl, ServerUtils serverUtils){
@@ -76,6 +77,7 @@ public class AddCardCtrl {
      * @param stage the primary stage of the application
      */
     public void init(Stage stage){
+        this.stage=stage;
         toolBar.setOnMousePressed( mouseEvent -> {
             this.x= mouseEvent.getSceneX();
             this.y= mouseEvent.getSceneY();
@@ -84,10 +86,13 @@ public class AddCardCtrl {
             stage.setX(mouseEvent.getScreenX()-this.x);
             stage.setY(mouseEvent.getScreenY()-this.y);
         });
+
+        saveButton.disableProperty().bind(title.textProperty().isEmpty());
     }
     public void closeCard(){
+        this.stage.close();
         this.mainCtrl.showBoardOverview();
     }
-    public void minimize(){this.mainCtrl.minimizeStage();}
+    public void minimize(){this.stage.setIconified(true);}
 
 }

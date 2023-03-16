@@ -23,11 +23,12 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.List;
 
+
 import commons.Board;
 import commons.BoardList;
 import commons.Card;
-import jakarta.ws.rs.client.Client;
-import org.checkerframework.checker.units.qual.A;
+
+
 import org.glassfish.jersey.client.ClientConfig;
 
 import commons.Quote;
@@ -137,5 +138,13 @@ public class ServerUtils {
     }
 
 
+
+    public List<BoardList> getLists(){
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("/api/boardlists")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .get(new GenericType<List<BoardList>>() {});
+    }
 
 }

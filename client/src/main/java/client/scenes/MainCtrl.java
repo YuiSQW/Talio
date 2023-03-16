@@ -15,6 +15,7 @@
  */
 package client.scenes;
 
+import javafx.application.Platform;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.paint.Color;
@@ -41,6 +42,8 @@ public class MainCtrl {
 
     private ListOverviewCtrl listOverviewCtrl;
     private Scene listOverview;
+    private WelcomeCtrl welcomeCtrl;
+    private Scene welcome;
 
     public void initialize(Stage primaryStage,
                            Pair<QuoteOverviewCtrl, Parent> overview,
@@ -48,8 +51,8 @@ public class MainCtrl {
                            Pair<BoardOverviewCtrl, Parent> board,
                            Pair<ListOverviewCtrl, Parent> list,
                            Pair<CardOverviewCtrl, Parent> card,
-                           Pair<AddCardCtrl, Parent> addCard
-    ) {
+                           Pair<AddCardCtrl, Parent> addCard,
+                           Pair<WelcomeCtrl, Parent> welcome) {
         this.primaryStage = primaryStage;
         this.overviewCtrl = overview.getKey();
         this.overview = new Scene(overview.getValue());
@@ -57,15 +60,20 @@ public class MainCtrl {
         this.add = new Scene(add.getValue());
         this.boardOverviewCtrl=board.getKey();
         this.boardOverview= new Scene(board.getValue());
+
         this.listOverviewCtrl=list.getKey();
         this.listOverview=new Scene(list.getValue());
+
+        this.welcomeCtrl = welcome.getKey();
+        this.welcome = new Scene(welcome.getValue());
+
         this.cardOverviewCtrl=card.getKey();
         this.cardOverview=new Scene(card.getValue());
         this.addCardCtrl=addCard.getKey();
         this.addCardOverview=new Scene(addCard.getValue());
-//        OBSOLETE CODE FOR QUOTE APP
-//        showOverview();
         primaryStage.initStyle(StageStyle.TRANSPARENT);
+
+        //showWelcomeOverview();
         showBoardOverview();
         primaryStage.show();
     }
@@ -73,19 +81,31 @@ public class MainCtrl {
         primaryStage.setTitle("Main Board");
         boardOverview.setFill(Color.TRANSPARENT);
         primaryStage.setScene(boardOverview);
+
         this.boardOverviewCtrl.init(primaryStage);
     }
+
+    public void showWelcomeOverview() {
+        primaryStage.setTitle("Welcome");
+        boardOverview.setFill(Color.TRANSPARENT);
+        primaryStage.setScene(welcome);
+
+    }
     public void showCardOverview(){
-        primaryStage.setTitle("Card Overview");
+        Stage secondaryStage = new Stage(StageStyle.TRANSPARENT);
+        secondaryStage.setTitle("Card Overview:");
+        secondaryStage.show();
         cardOverview.setFill(Color.TRANSPARENT);
-        primaryStage.setScene(this.cardOverview);
-        this.cardOverviewCtrl.init(primaryStage);
+        secondaryStage.setScene(this.cardOverview);
+        this.cardOverviewCtrl.init(secondaryStage);
     }
     public void addCardOverview(){
-        primaryStage.setTitle("Add new card");
+        Stage secondaryStage = new Stage(StageStyle.TRANSPARENT);
+        secondaryStage.setTitle("Add new Card:");
+        secondaryStage.show();
         addCardOverview.setFill(Color.TRANSPARENT);
-        primaryStage.setScene(this.addCardOverview);
-        this.addCardCtrl.init(primaryStage);
+        secondaryStage.setScene(this.addCardOverview);
+        this.addCardCtrl.init(secondaryStage);
     }
     public void showListOverview(){
         primaryStage.setTitle("Add new List");
@@ -97,14 +117,20 @@ public class MainCtrl {
      * Method which causes the primary stage of the app to be close
      */
     public void closeApp(){
-        this.primaryStage.close();
+        Platform.exit();
     }
-
     /**
      * Method which causes the primary stage of the application to be minimized
      */
     public void minimizeStage(){
         this.primaryStage.setIconified(true);
+    }
+    /**
+     * Method which causes the primary stage of the application to fill up the screen
+     */
+    public void MAX_MIN_Stage(){
+        if(!this.primaryStage.isMaximized()){this.primaryStage.setMaximized(true);}
+        else{this.primaryStage.setMaximized(false);}
     }
 
     //   OBSOLETE METHOD FOR QUOTE APPLICATION
@@ -120,5 +146,7 @@ public class MainCtrl {
         primaryStage.setScene(add);
         add.setOnKeyPressed(e -> addCtrl.keyPressed(e));
     }
+
+
 
 }
