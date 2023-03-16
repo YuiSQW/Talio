@@ -6,30 +6,35 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.effect.Glow?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.TilePane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
 <AnchorPane prefHeight="529.0" prefWidth="671.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.BoardOverviewCtrl">
    <children>
-      <TextField layoutX="29.0" layoutY="35.0" prefHeight="42.0" prefWidth="174.0" text="Board title">
-         <font>
-            <Font size="15.0" />
-         </font>
-      </TextField>
-      <Pane fx:id="toolBar" prefHeight="26.0" prefWidth="686.0">
+      <AnchorPane fx:id="toolBar" layoutX="203.0" layoutY="-23.0" prefHeight="30.0" prefWidth="671.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <Button fx:id="closeButton" layoutX="645.0" layoutY="6.0" mnemonicParsing="false" onAction="#close" prefHeight="25.0" prefWidth="22.0" style="-fx-background-radius: 1em;" text="x" />
-            <Button fx:id="maximizeButton" layoutX="615.0" layoutY="6.0" mnemonicParsing="false" onAction="#MAX_MIN" prefHeight="25.0" prefWidth="15.0" style="-fx-background-radius: 1em;" text="□">
+            <Button fx:id="closeButton" mnemonicParsing="false" onAction="#close" prefHeight="25.0" prefWidth="22.0" style="-fx-background-radius: 1em;" text="x" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="3.0">
+               <effect>
+                  <Glow />
+               </effect></Button>
+            <Button fx:id="maximizeButton" mnemonicParsing="false" onAction="#MAX_MIN" prefHeight="25.0" prefWidth="15.0" style="-fx-background-radius: 1em;" text="□" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="3.0">
                <effect>
                   <Glow />
                </effect>
             </Button>
-            <Button fx:id="minimizeButton" layoutX="584.0" layoutY="6.0" mnemonicParsing="false" onAction="#minimize" prefHeight="25.0" prefWidth="23.0" style="-fx-background-radius: 1em;" text="-" />
+            <Button fx:id="minimizeButton" mnemonicParsing="false" onAction="#minimize" prefHeight="25.0" prefWidth="23.0" style="-fx-background-radius: 1em;" text="-" AnchorPane.rightAnchor="57.0" AnchorPane.topAnchor="3.0">
+               <effect>
+                  <Glow />
+               </effect></Button>
          </children>
-      </Pane>
-      <ScrollPane  layoutX="2.0" layoutY="106.0" prefHeight="422.0" prefWidth="686.0">
+      </AnchorPane>
+      <TextField layoutX="29.0" layoutY="35.0" prefHeight="42.0" prefWidth="174.0" text="Board title" AnchorPane.leftAnchor="29.0" AnchorPane.topAnchor="35.0">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </TextField>
+      <ScrollPane layoutX="2.0" layoutY="106.0" prefHeight="427.0" prefWidth="686.0" AnchorPane.bottomAnchor="2.0" AnchorPane.leftAnchor="2.0" AnchorPane.rightAnchor="2.0" AnchorPane.topAnchor="100.0">
          <content>
             <TilePane fx:id="tilePane" hgap="50.0" prefHeight="422.0" prefWidth="686.0">
                <children>
