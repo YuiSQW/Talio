@@ -21,7 +21,7 @@
                 <TextField alignment="CENTER" prefHeight="26.0" prefWidth="64.0" style="-fx-background-radius: 1em;" text="Tag" />
                 <TextField alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="26.0" prefWidth="64.0" style="-fx-background-radius: 1em;" text="Tag" />
                 <TextField alignment="CENTER" layoutX="74.0" layoutY="10.0" prefHeight="23.0" prefWidth="30.0" style="-fx-background-radius: 1em;" text="+" />
-                <Button fx:id="saveButton" mnemonicParsing="false" onAction="#getCard" style="-fx-background-radius: 1em;" text="Save" textAlignment="CENTER" />
+                <Button fx:id="saveButton" mnemonicParsing="false" onAction="#saveCard" style="-fx-background-radius: 1em;" text="Save" textAlignment="CENTER" />
             </children>
         </HBox>
         <Pane fx:id="toolBar" layoutX="6.0" layoutY="1.0" prefHeight="34.0" prefWidth="518.0">

@@ -99,20 +99,23 @@ public class MainCtrl {
         secondaryStage.setScene(this.cardOverview);
         this.cardOverviewCtrl.init(secondaryStage);
     }
-    public void addCardOverview(){
+    public void addCardOverview(ListOverviewCtrl listOverviewCtrl){
         Stage secondaryStage = new Stage(StageStyle.TRANSPARENT);
         secondaryStage.setTitle("Add new Card:");
         secondaryStage.show();
         addCardOverview.setFill(Color.TRANSPARENT);
         secondaryStage.setScene(this.addCardOverview);
-        this.addCardCtrl.init(secondaryStage);
+        this.addCardCtrl.init(secondaryStage,listOverviewCtrl);
     }
-    public void showListOverview(){
-        primaryStage.setTitle("Add new List");
+    public void showListOverview(BoardOverviewCtrl boardOverviewCtrl){
+        Stage secondaryStage = new Stage(StageStyle.TRANSPARENT);
+        secondaryStage.setTitle("Add new List");
+        secondaryStage.show();
         listOverview.setFill(Color.TRANSPARENT);
-        primaryStage.setScene(this.listOverview);
-        this.listOverviewCtrl.init(primaryStage);
+        secondaryStage.setScene(this.listOverview);
+        this.listOverviewCtrl.init(secondaryStage,boardOverviewCtrl);
     }
+
     /**
      * Method which causes the primary stage of the app to be close
      */

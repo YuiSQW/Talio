@@ -1,14 +1,17 @@
 package client.scenes;
 
 import client.utils.ServerUtils;
+import commons.Board;
+import commons.BoardList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-
 import javax.inject.Inject;
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -16,16 +19,16 @@ import java.util.TimerTask;
 public class BoardOverviewCtrl {
     private final MainCtrl mainCtrl;
     private final ServerUtils serverUtils;
+    private Board board;
     private double x,y;
     @FXML
-    private Button closeButton,minimizeButton,maximizeButton;
+    private Button closeButton,minimizeButton,maximizeButton,addList;
     @FXML
     private Pane toolBar;
     @FXML
-    private Button addList;
-    @FXML
     private TilePane tilePane;
-
+    @FXML
+    private TextField boardTitle;
 
     @Inject
     public BoardOverviewCtrl(MainCtrl mainCtrl, ServerUtils serverUtils) {
@@ -38,6 +41,7 @@ public class BoardOverviewCtrl {
      * @param stage the primary stage of the application
      */
     public void init(Stage stage){
+        this.board=new Board(this.boardTitle.getText(),new ArrayList<BoardList>());
         toolBar.setOnMousePressed( mouseEvent -> {
             this.x= mouseEvent.getSceneX();
             this.y= mouseEvent.getSceneY();
@@ -53,49 +57,30 @@ public class BoardOverviewCtrl {
                 refresh();
             }
         },0,1000L);
-
+        //Update the name of the board based on user input
+        this.boardTitle.textProperty().addListener((observable,oldValue,newValue )->{
+            this.board.setName(newValue);
+        });
     }
-    /**
-     * Function that is connected to the closeButton of the controller
-     * It delegates the function of closing the app to the Main Controller
-     */
-    public void close(){ this.mainCtrl.closeApp();}
-    /**
-     * Function that is connected to the minimizeButton of the controller
-     * It delegates the function of minimizing the window of the app
-     * to the Main Controller
-     */
-    public void minimize(){ this.mainCtrl.minimizeStage();}
-
+    public Board getBoard() {
+        return board;
+    }
 
     /**
-     * Method that is connected to the maximizeButton of the controller
-     * It delegates the function of maximizing the window of the app
+     * Connected to the Add List button
      */
-    public void MAX_MIN(){ this.mainCtrl.MAX_MIN_Stage();}
-
-
     public void addNewList(){
-        this.mainCtrl.showListOverview();
-
-        //Function to get a new List template
-        addNewVbox();
+        this.mainCtrl.showListOverview(this);
     }
-
-    /**
-     * Refreshes the overview of the board with all the updates of the database
-     */
-    public void refresh(){
-        //TODO implements the logic related to retrieving the lists and displaying them
-    }
-
 
     /**
      * Adds a new list everytime a new list gets created
+     * @param - new created child BoardList of the Board
      */
-    public void addNewVbox() {
+    public void addNewVbox(BoardList list) {
+        this.board.addList(list);
         //Creates a child right after the last added list
-        tilePane.getChildren().add((tilePane.getChildren().size() - 1), new ListContainerCtrl(tilePane));
+        tilePane.getChildren().add((tilePane.getChildren().size() - 1), new ListContainerCtrl(tilePane,list));
 
     }
 
@@ -109,4 +94,27 @@ public class BoardOverviewCtrl {
         return (VBox) tilePane.getChildren().get(num);
     }
 
+    /**
+     * Refreshes the overview of the board with all the updates of the database
+     */
+    public void refresh(){
+        //TODO implements the logic related to retrieving the lists and displaying them
+    }
+    /**
+     * Function that is connected to the closeButton of the controller
+     * It delegates the function of closing the app to the Main Controller
+     */
+    public void close(){ this.mainCtrl.closeApp();}
+    /**
+     * Function that is connected to the minimizeButton of the controller
+     * It delegates the function of minimizing the window of the app
+     * to the Main Controller
+     */
+    public void minimize(){ this.mainCtrl.minimizeStage();}
+
+    /**
+     * Method that is connected to the maximizeButton of the controller
+     * It delegates the function of maximizing the window of the app
+     */
+    public void MAX_MIN(){ this.mainCtrl.MAX_MIN_Stage();}
 }
