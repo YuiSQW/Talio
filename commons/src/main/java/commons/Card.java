@@ -1,9 +1,12 @@
 package commons;
 
 
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+
 import javax.persistence.*;
+
 import java.util.List;
 
 @Entity
@@ -34,8 +37,6 @@ public class Card {
         this.description = description;
         this.parentList = parentList;
     }
-
-
     public String getDescription() {
         return this.description;
     }
@@ -51,6 +52,8 @@ public class Card {
     public void setDescription(String description){
         this.description = description;
     }
+
+    public void setParentList(BoardList list){this.parentList = list;}
 
     @Override
     public boolean equals(Object other){

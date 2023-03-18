@@ -23,7 +23,12 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.List;
 
+
+import commons.Board;
 import commons.BoardList;
+import commons.Card;
+
+
 import org.glassfish.jersey.client.ClientConfig;
 
 import commons.Quote;
@@ -61,6 +66,79 @@ public class ServerUtils {
                 .post(Entity.entity(quote, APPLICATION_JSON), Quote.class);
     }
 
+    public Card getCard(long cardId){
+        return ClientBuilder.newClient(new ClientConfig())
+            .target(SERVER).path("api/cards/" + cardId)
+            .request(APPLICATION_JSON)
+            .accept(APPLICATION_JSON)
+            .get(new GenericType<Card>(){});
+    }
+
+    public Card postNewCard(Card newCard, BoardList parentBoardList){
+        Card card = ClientBuilder.newClient(new ClientConfig())
+            .target(SERVER).path("api/cards/new-card/" + parentBoardList.id)
+            .request(APPLICATION_JSON)
+            .accept(APPLICATION_JSON)
+            .post(Entity.entity(newCard, APPLICATION_JSON), Card.class);
+        card.setParentList(parentBoardList);
+        return card;
+    }
+
+    public BoardList getList(long listId){
+        return ClientBuilder.newClient(new ClientConfig())
+            .target(SERVER).path("api/boardlists/" + listId)
+            .request(APPLICATION_JSON)
+            .accept(APPLICATION_JSON)
+            .get(new GenericType<BoardList>(){});
+    }
+
+
+    public BoardList postNewList(BoardList newBoardList, Board parent){
+        BoardList createdList = ClientBuilder.newClient(new ClientConfig())
+            .target(SERVER).path("api/boardlists/new-boardlist/" + parent.id)
+            .request(APPLICATION_JSON)
+            .accept(APPLICATION_JSON)
+            .post(Entity.entity(newBoardList, APPLICATION_JSON), BoardList.class);
+        createdList.setParentBoard(parent);
+        return createdList;
+    }
+
+    public BoardList renameList(BoardList changedList, Board parent){
+        BoardList list = ClientBuilder.newClient(new ClientConfig())
+            .target(SERVER).path("api/boardlists/" + changedList.id + "/" + changedList.getName())
+            .request(APPLICATION_JSON)
+            .accept(APPLICATION_JSON)
+            .put(Entity.entity(changedList, APPLICATION_JSON), BoardList.class);
+        list.setParentBoard(parent);
+        return list;
+    }
+
+    public void deleteList(BoardList listToDelete){
+        ClientBuilder.newClient(new ClientConfig())
+            .target(SERVER).path("api/boardlists/" + listToDelete.id)
+            .request(APPLICATION_JSON)
+            .accept(APPLICATION_JSON)
+            .delete();
+    }
+    public Board getBoard(long boardId){
+        return ClientBuilder.newClient(new ClientConfig())
+            .target(SERVER).path("api/boards/" + boardId)
+            .request(APPLICATION_JSON)
+            .accept(APPLICATION_JSON)
+            .get(new GenericType<Board>(){});
+    }
+
+
+    public Board postNewBoard(Board newBoard){
+        return ClientBuilder.newClient(new ClientConfig())
+            .target(SERVER).path("api/boards/new-board")
+            .request(APPLICATION_JSON)
+            .accept(APPLICATION_JSON)
+            .post(Entity.entity(newBoard, APPLICATION_JSON), Board.class);
+    }
+
+
+
     public List<BoardList> getLists(){
         return ClientBuilder.newClient(new ClientConfig())
                 .target(SERVER).path("/api/boardlists")
@@ -68,4 +146,5 @@ public class ServerUtils {
                 .accept(APPLICATION_JSON)
                 .get(new GenericType<List<BoardList>>() {});
     }
+
 }
