@@ -1,7 +1,7 @@
 package server.api;
 
 
-import commons.BoardList;
+
 import commons.Card;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

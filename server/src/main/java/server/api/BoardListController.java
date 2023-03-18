@@ -1,16 +1,14 @@
 package server.api;
 
-import commons.Board;
+
 import commons.BoardList;
-import commons.Card;
-import org.springframework.http.HttpStatus;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 import server.database.BoardListRepository;
 import server.database.BoardRepository;
 
-import java.util.ArrayList;
+
 
 @RestController
 @RequestMapping("/api/boardlists")
