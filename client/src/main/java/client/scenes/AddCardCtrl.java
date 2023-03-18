@@ -1,8 +1,6 @@
 package client.scenes;
 
 import client.utils.ServerUtils;
-import commons.Board;
-import commons.BoardList;
 import commons.Card;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -11,13 +9,14 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javax.inject.Inject;
-import java.util.ArrayList;
 import java.util.Objects;
 
 public class AddCardCtrl {
 
     private MainCtrl mainCtrl;
     private ServerUtils serverUtils;
+    private Stage stage;
+    private ListOverviewCtrl listOverviewCtrl;
     @FXML
     private TextField title;
     @FXML
@@ -27,57 +26,21 @@ public class AddCardCtrl {
     @FXML
     private Button saveButton, closeButton, minimizeButton;
     private double x,y;
-    private Stage stage;
 
     @Inject
     public AddCardCtrl(MainCtrl mainCtrl, ServerUtils serverUtils){
         this.mainCtrl=mainCtrl;
         this.serverUtils=serverUtils;
     }
-    //TODO need to change it to private when delegating to other class
-    public Card getCard() {
-        var p = title.getText();
-        var q = description.getText();
 
-        if(!emptyCheck()) {
-            System.out.println(p);
-            System.out.println(q);
-        }
-
-        //TODO delegate card to CardOverviewCtrl to let it store the card in the database
-        return new Card(p, q, new BoardList("", new ArrayList<>(), new Board("", new ArrayList<>())));
-    }
-
-    //Still has no usage & needs to get replaced when data can get stored in database
-    public boolean emptyCheck() {
-        return Objects.equals(title.getText(), "") || Objects.equals(description.getText(), "");
-    }
-
-    //Still has no usage
-    public void cancel() {
-        clearFields();
-    }
-
-
-    //Gets used with eventOnMouseClick, not working 100% because every time you click the fields clear
-    //TODO delegate this to CardOverviewCtrl, so it doesn't get executed more than once
-    public void clearFields() {
-        title.clear();
-        description.clear();
-    }
-    public void clearTitle() {
-        title.clear();
-    }
-    public void clearDescription() {
-        description.clear();
-    }
     /**
      * The function initializes the functionality of dragging the
      * window of the application
      * @param stage the primary stage of the application
      */
-    public void init(Stage stage){
+    public void init(Stage stage,ListOverviewCtrl listOverviewCtrl){
         this.stage=stage;
+        this.listOverviewCtrl=listOverviewCtrl;
         toolBar.setOnMousePressed( mouseEvent -> {
             this.x= mouseEvent.getSceneX();
             this.y= mouseEvent.getSceneY();
@@ -89,10 +52,44 @@ public class AddCardCtrl {
 
         saveButton.disableProperty().bind(title.textProperty().isEmpty());
     }
+
+    /**
+     * Creates new Card object based on the String values of the text fields
+     * Delegates the new Card to the parent BoardList
+     * If both text fields are empty, no Card object is created and the stage is closed
+     */
+    public void saveCard(){
+        var p = title.getText();
+        var q = description.getText();
+        Card card= new Card(p,q,this.listOverviewCtrl.getBoardList());
+        this.listOverviewCtrl.saveNewCard(card);
+        this.closeCard();
+    }
+    //Still has no usage & needs to get replaced when data can get stored in database
+    public boolean emptyCheck() {
+        return Objects.equals(title.getText(), "") || Objects.equals(description.getText(), "");
+    }
+
+    //Still has no usage
+    //Gets used with eventOnMouseClick, not working 100% because every time you click the fields clear
+    public void clearFields() {
+        title.clear();
+        description.clear();
+    }
+    public void clearTitle() {
+        title.clear();
+    }
+    public void cancel() {
+        clearFields();
+    }
+    public void clearDescription() {
+        description.clear();
+    }
     public void closeCard(){
+        cancel();
         this.stage.close();
-        this.mainCtrl.showBoardOverview();
     }
     public void minimize(){this.stage.setIconified(true);}
+
 
 }

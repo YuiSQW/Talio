@@ -29,7 +29,7 @@
                </effect></Button>
          </children>
       </AnchorPane>
-      <TextField layoutX="29.0" layoutY="35.0" prefHeight="42.0" prefWidth="174.0" text="Board title" AnchorPane.leftAnchor="29.0" AnchorPane.topAnchor="35.0">
+      <TextField fx:id="boardTitle" layoutX="29.0" layoutY="35.0" prefHeight="42.0" prefWidth="174.0" text="Title" AnchorPane.leftAnchor="29.0" AnchorPane.topAnchor="35.0">
          <font>
             <Font size="15.0" />
          </font>

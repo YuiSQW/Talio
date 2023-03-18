@@ -1,5 +1,9 @@
 package client.scenes;
 
+import commons.BoardList;
+import commons.Card;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.layout.VBox;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
@@ -19,11 +23,11 @@ public class ListContainerCtrl extends VBox {
      * Constructor to create VBox with all its elements, needed for the user
      * to create their own list
      * @param tilePane the parent which the vbox is part of
+     * @param list the BoardList object that is represented by the vbox
      */
-    public ListContainerCtrl(TilePane tilePane) {
+    public ListContainerCtrl(TilePane tilePane, BoardList list) {
 
-        //TODO change this into the title from user input
-        TextField listName = new TextField("BoardListTitle");
+        TextField listName = new TextField(list.getName());
         listName.setPrefHeight(47.0);
         listName.setPrefWidth(150.0);
 
@@ -33,22 +37,26 @@ public class ListContainerCtrl extends VBox {
         removeBtn.setPrefWidth(34.0);
         removeBtn.setStyle("-fx-background-radius: 1em;");
 
-        // The HBox which needs to hold the listName and removebtn
+        // The HBox which needs to hold the listName and removeBtn
         HBox boardListTitle = new HBox(listName, removeBtn);
         boardListTitle.setPrefHeight(38.0);
         boardListTitle.setPrefWidth(214.0);
         boardListTitle.setSpacing(15.0);
         boardListTitle.setPadding(new Insets(10.0));
 
-        //TODO let listview use card objects
+        // ListView is completed with the titles of the Cards
         ListView<String> listView = new ListView<>();
         listView.setPrefHeight(306.0);
         listView.setPrefWidth(214.0);
+        ObservableList<String> cards = FXCollections.observableArrayList();
+        for(Card card:list.getCardList()){
+            cards.add(card.getTitle());
+        }
+        listView.setItems(cards);
 
         //Spacing between the nodes, for reference, look at the FXML file
         setSpacing(10.0);
         getChildren().addAll(boardListTitle, listView);
-
 
         //Every vbox has the ability to delete itself
         //TODO also delete the ID of the list in the database
