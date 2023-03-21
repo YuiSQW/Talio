@@ -23,8 +23,8 @@ import org.junit.jupiter.api.Test;
 
 public class PersonTest {
 
-	@Test
-	public void checkConstructor() {
+    @Test
+    public void checkConstructor() {
 		var p = new Person("f", "l");
 		assertEquals("f", p.firstName);
 		assertEquals("l", p.lastName);

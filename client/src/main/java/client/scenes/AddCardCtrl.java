@@ -11,6 +11,9 @@ import javafx.stage.Stage;
 import javax.inject.Inject;
 import java.util.Objects;
 
+/**
+ * The class with it responsible for giving the CardOverview control
+ */
 public class AddCardCtrl {
 
     private MainCtrl mainCtrl;

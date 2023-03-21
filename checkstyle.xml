@@ -4,7 +4,6 @@
         "https://checkstyle.org/dtds/configuration_1_3.dtd">
 
 <module name = "Checker">
-    <module name="FileTabCharacter"/>
     <module name="TreeWalker">
         <module name="UnusedImports" />
         <module name="RightCurly" />
@@ -16,6 +15,8 @@
         <module name="ParameterName" />
         <module name="MemberName" />
         <module name="MethodName" />
+        <module name="UnusedLocalVariable" />
+
     </module>
 
 </module>
