@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="client.scenes.ClientConnectCtrl"
+            prefHeight="400.0" prefWidth="600.0">
+
+    <!-- Top Section -->
+    <top>
+        <HBox style="-fx-background-color: #2F4F4F;">
+            <Label text="Talio"
+                   style="-fx-font-size: 24; -fx-text-fill: white; -fx-padding: 20;"/>
+        </HBox>
+    </top>
+
+    <!-- Center Section -->
+    <center>
+        <VBox spacing="20" alignment="CENTER" style="-fx-padding: 50;">
+            <Label text="Server Address:"
+                   style="-fx-font-size: 16;"/>
+
+            <TextField fx:id="ipAddressField"
+                       promptText="123.123.123.123"
+                       onKeyPressed="#handleKeyPressed"
+                       style="-fx-background-color: #f5f5f5;
+                       -fx-border-color: #cccccc;
+                       -fx-border-width: 1px;
+                       -fx-border-radius: 5px;
+                       -fx-padding: 5px;"/>
+
+            <Button fx:id="connectButton"
+                    text="Connect"
+                    onAction="#connectToServer"
+                    style="-fx-background-color: #2F4F4F;
+                    -fx-text-fill: white;
+                    -fx-font-size: 16;
+                    -fx-padding: 10px 20px;
+                    -fx-border-radius: 5px"/>
+        </VBox>
+    </center>
+
+</BorderPane>

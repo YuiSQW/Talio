@@ -38,7 +38,7 @@ import jakarta.ws.rs.core.GenericType;
 
 public class ServerUtils {
 
-    private static final String SERVER = "http://localhost:8080/";
+    private static String SERVER = "http://localhost:8080/";
 
     public void getQuotesTheHardWay() throws IOException {
         var url = new URL("http://localhost:8080/api/quotes");
@@ -147,4 +147,24 @@ public class ServerUtils {
                 .get(new GenericType<List<BoardList>>() {});
     }
 
+    /**
+     * This method lets a user connect to the server with an IP address.
+     * The user can access the localhost using ngrok.
+     * @param ipAddress The IP address of the server to connect to
+     * @throws Exception exception thrown when connection can't be established
+     */
+    public void connect(String ipAddress) throws Exception{
+        SERVER = "http://" + ipAddress + ":4040";
+
+        try{
+            ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("/")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .get(new GenericType<String>() {});
+        }
+        catch (Exception exception){
+            throw new Exception();
+        }
+    }
 }

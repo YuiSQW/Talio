@@ -1,12 +1,15 @@
 package client.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 import commons.Board;
 import commons.BoardList;
 import commons.Card;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import wiremock.org.apache.hc.client5.http.impl.io.BasicHttpClientConnectionManager;
 
 
 import java.util.ArrayList;
@@ -127,5 +130,14 @@ class ServerUtilsTest {
         ServerUtils server = new ServerUtils();
         assertDoesNotThrow(() -> server.deleteList(list));
 
+    }
+
+    @Test
+    void connectFailTest() {
+        ServerUtils server = new ServerUtils();
+        String invalidIpAddress = "invalid";
+        assertThrows(Exception.class, () -> {
+            server.connect(invalidIpAddress);
+        });
     }
 }

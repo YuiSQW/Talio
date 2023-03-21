@@ -42,8 +42,8 @@ public class MainCtrl {
 
     private ListOverviewCtrl listOverviewCtrl;
     private Scene listOverview;
-    private WelcomeCtrl welcomeCtrl;
-    private Scene welcome;
+    private ClientConnectCtrl clientConnectCtrl;
+    private Scene clientConnect;
 
     public void initialize(Stage primaryStage,
                            Pair<QuoteOverviewCtrl, Parent> overview,
@@ -52,7 +52,7 @@ public class MainCtrl {
                            Pair<ListOverviewCtrl, Parent> list,
                            Pair<CardOverviewCtrl, Parent> card,
                            Pair<AddCardCtrl, Parent> addCard,
-                           Pair<WelcomeCtrl, Parent> welcome) {
+                           Pair<ClientConnectCtrl, Parent> clientConnect) {
         this.primaryStage = primaryStage;
         this.overviewCtrl = overview.getKey();
         this.overview = new Scene(overview.getValue());
@@ -64,8 +64,8 @@ public class MainCtrl {
         this.listOverviewCtrl=list.getKey();
         this.listOverview=new Scene(list.getValue());
 
-        this.welcomeCtrl = welcome.getKey();
-        this.welcome = new Scene(welcome.getValue());
+        this.clientConnectCtrl = clientConnect.getKey();
+        this.clientConnect = new Scene(clientConnect.getValue());
 
         this.cardOverviewCtrl=card.getKey();
         this.cardOverview=new Scene(card.getValue());
@@ -73,8 +73,7 @@ public class MainCtrl {
         this.addCardOverview=new Scene(addCard.getValue());
         primaryStage.initStyle(StageStyle.TRANSPARENT);
 
-        //showWelcomeOverview();
-        showBoardOverview();
+        showWelcomeOverview();
         primaryStage.show();
     }
     public void showBoardOverview(){
@@ -88,7 +87,7 @@ public class MainCtrl {
     public void showWelcomeOverview() {
         primaryStage.setTitle("Welcome");
         boardOverview.setFill(Color.TRANSPARENT);
-        primaryStage.setScene(welcome);
+        primaryStage.setScene(clientConnect);
 
     }
     public void showCardOverview(){
