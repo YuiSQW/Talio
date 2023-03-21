@@ -41,6 +41,10 @@ public class Task {
         this.name = name;
     }
 
+    public void setParentCard(Card parentCard) {
+        this.parentCard = parentCard;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
