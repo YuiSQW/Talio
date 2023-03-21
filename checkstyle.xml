@@ -15,6 +15,7 @@
         <module name="ParameterName" />
         <module name="MemberName" />
         <module name="MethodName" />
+        <module name="MethodLength" />
     </module>
 
 
