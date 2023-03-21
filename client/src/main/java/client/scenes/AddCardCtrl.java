@@ -89,7 +89,9 @@ public class AddCardCtrl {
         cancel();
         this.stage.close();
     }
-    public void minimize(){this.stage.setIconified(true);}
+    public void minimize() {
+        this.stage.setIconified(true);
+    }
 
 
 }

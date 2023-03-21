@@ -45,5 +45,6 @@ public class CardOverviewCtrl {
         this.stage.close();
         this.mainCtrl.showBoardOverview();
     }
-    public void minimizeStage(){ this.stage.setIconified(true);}
+    public void minimizeStage(){
+        this.stage.setIconified(true);}
 }

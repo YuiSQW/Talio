@@ -27,7 +27,7 @@ public class ListOverviewCtrl {
     private Pane toolBar;
     @FXML
     private ListView<String> listView;
-    private ObservableList<String> OLcards;
+    private ObservableList<String> oLcards;
     private double x,y;
 
     @Inject
@@ -45,8 +45,8 @@ public class ListOverviewCtrl {
         this.stage=stage;
         this.boardOverviewCtrl=boardOverviewCtrl;
         this.list= new BoardList(this.listName.getText(),new ArrayList<Card>());
-        this.OLcards= FXCollections.observableArrayList();
-        this.listView.setItems(OLcards);
+        this.oLcards = FXCollections.observableArrayList();
+        this.listView.setItems(oLcards);
 
         toolBar.setOnMousePressed( mouseEvent -> {
             this.x= mouseEvent.getSceneX();
@@ -69,7 +69,7 @@ public class ListOverviewCtrl {
     }
     public void saveNewCard(Card card) {
         this.list.getCardList().add(card);
-        this.OLcards.add(card.getTitle());
+        this.oLcards.add(card.getTitle());
         }
 
     /**
@@ -82,7 +82,7 @@ public class ListOverviewCtrl {
     /**
      * Saves and adds the BoardList object to the parent board
      */
-    public void AddNewBoardList() {
+    public void addNewBoardList() {
         this.list.setParentBoard(this.boardOverviewCtrl.getBoard());
         this.boardOverviewCtrl.addNewVbox(list);
         this.close();
@@ -105,7 +105,8 @@ public class ListOverviewCtrl {
     public void close(){
         this.stage.close();
         this.mainCtrl.showBoardOverview();}
-    public void minimize(){this.mainCtrl.minimizeStage();}
+    public void minimize(){
+        this.mainCtrl.minimizeStage();}
 
 
 

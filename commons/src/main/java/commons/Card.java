@@ -53,7 +53,8 @@ public class Card {
         this.description = description;
     }
 
-    public void setParentList(BoardList list){this.parentList = list;}
+    public void setParentList(BoardList list){
+        this.parentList = list;}
 
     @Override
     public boolean equals(Object other){

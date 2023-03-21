@@ -104,17 +104,21 @@ public class BoardOverviewCtrl {
      * Function that is connected to the closeButton of the controller
      * It delegates the function of closing the app to the Main Controller
      */
-    public void close(){ this.mainCtrl.closeApp();}
+    public void close(){
+        this.mainCtrl.closeApp();
+    }
     /**
      * Function that is connected to the minimizeButton of the controller
      * It delegates the function of minimizing the window of the app
      * to the Main Controller
      */
-    public void minimize(){ this.mainCtrl.minimizeStage();}
+    public void minimize(){
+        this.mainCtrl.minimizeStage();}
 
     /**
      * Method that is connected to the maximizeButton of the controller
      * It delegates the function of maximizing the window of the app
      */
-    public void MAX_MIN(){ this.mainCtrl.MAX_MIN_Stage();}
+    public void maxMin(){
+        this.mainCtrl.maxMinStage();}
 }
