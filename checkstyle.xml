@@ -16,7 +16,5 @@
         <module name="MemberName" />
         <module name="MethodName" />
         <module name="UnusedLocalVariable" />
-
     </module>
-
 </module>
