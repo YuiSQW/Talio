@@ -71,7 +71,8 @@ public class ServerUtils {
             .target(SERVER).path("api/cards/" + cardId)
             .request(APPLICATION_JSON)
             .accept(APPLICATION_JSON)
-            .get(new GenericType<Card>(){});
+            .get(new GenericType<>() {
+            });
     }
 
     public Card postNewCard(Card newCard, BoardList parentBoardList){
@@ -89,7 +90,8 @@ public class ServerUtils {
             .target(SERVER).path("api/boardlists/" + listId)
             .request(APPLICATION_JSON)
             .accept(APPLICATION_JSON)
-            .get(new GenericType<BoardList>(){});
+            .get(new GenericType<>() {
+            });
     }
 
 
@@ -125,7 +127,8 @@ public class ServerUtils {
             .target(SERVER).path("api/boards/" + boardId)
             .request(APPLICATION_JSON)
             .accept(APPLICATION_JSON)
-            .get(new GenericType<Board>(){});
+            .get(new GenericType<>() {
+            });
     }
 
 
@@ -144,7 +147,8 @@ public class ServerUtils {
                 .target(SERVER).path("/api/boardlists")
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
-                .get(new GenericType<List<BoardList>>() {});
+                .get(new GenericType<>() {
+                });
     }
 
     /**
