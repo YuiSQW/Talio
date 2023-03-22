@@ -1,8 +1,10 @@
 package server.api;
 
 
+import commons.Board;
 import commons.BoardList;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import server.database.BoardListRepository;
@@ -18,6 +20,9 @@ public class BoardListController {
      * repo - the JpaRepository that is used for all items of type BoardList
      */
     private final BoardListRepository repo;
+
+    @Autowired
+    private BoardUpdateListener boardUpdateListener;
 
     /**
      * parentRepo - the JpaRepository that is used for all items of type Board. This repo is necessary
@@ -56,6 +61,7 @@ public class BoardListController {
         }
         newList.setParentBoard(parentRepo.getById(boardId));
         BoardList addedList = repo.save(newList);
+        boardUpdateListener.add(addedList.getParentBoard());
         return ResponseEntity.ok(addedList);
     }
 
@@ -64,12 +70,15 @@ public class BoardListController {
         if(!repo.existsById(id))return ResponseEntity.badRequest().build();
         BoardList currentList = repo.findById(id).get();
         currentList.setName(newName);
-        return ResponseEntity.ok(repo.save(currentList));
+        BoardList updatedList = repo.save(currentList);
+        boardUpdateListener.add(updatedList.getParentBoard());
+        return ResponseEntity.ok(updatedList);
     }
 
     @DeleteMapping("/{id}")
     public void deleteList(@PathVariable("id") long id) {
         try {
+            boardUpdateListener.add(repo.getById(id).getParentBoard());
             repo.deleteById(id);
         }catch(IllegalArgumentException e){
             System.out.println("The id for deleteList cannot be null");

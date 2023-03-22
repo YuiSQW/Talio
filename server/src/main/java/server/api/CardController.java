@@ -3,6 +3,7 @@ package server.api;
 
 
 import commons.Card;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import server.database.BoardListRepository;
@@ -22,7 +23,8 @@ public class CardController {
      */
     private final BoardListRepository parentRepo;
 
-
+    @Autowired
+    private BoardUpdateListener boardUpdateListener;
 
     public CardController(CardRepository repo, BoardListRepository parentRepo){
         this.repo = repo;
@@ -56,6 +58,7 @@ public class CardController {
             return ResponseEntity.badRequest().build();
         newCard.setParentList(parentRepo.findById(boardListId).get());
         Card saved = repo.save(newCard);
+        boardUpdateListener.add(saved.getParentList().getParentBoard());
         return ResponseEntity.ok(saved);
     }
 }
