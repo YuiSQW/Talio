@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="529.0" prefWidth="671.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.BoardOverviewCtrl">
+<AnchorPane xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.BoardOverviewCtrl">
    <children>
       <AnchorPane fx:id="toolBar" layoutX="203.0" layoutY="-23.0" prefHeight="30.0" prefWidth="671.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -34,9 +34,9 @@
             <Font size="15.0" />
          </font>
       </TextField>
-      <ScrollPane layoutX="2.0" layoutY="106.0" prefHeight="427.0" prefWidth="686.0" AnchorPane.bottomAnchor="2.0" AnchorPane.leftAnchor="2.0" AnchorPane.rightAnchor="2.0" AnchorPane.topAnchor="100.0">
+      <ScrollPane layoutX="2.0" layoutY="106.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="427.0" prefWidth="686.0" AnchorPane.bottomAnchor="2.0" AnchorPane.leftAnchor="2.0" AnchorPane.rightAnchor="2.0" AnchorPane.topAnchor="100.0">
          <content>
-            <TilePane fx:id="tilePane" hgap="50.0" prefHeight="422.0" prefWidth="686.0">
+            <TilePane fx:id="tilePane" hgap="50.0">
                <children>
                   <VBox fx:id="v1" prefHeight="360.0" prefWidth="180.0">
                      <children>
