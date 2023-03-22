@@ -33,7 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 @WebMvcTest(BoardController.class)
-@MockBeans({@MockBean(BoardRepository.class)})
+@MockBeans({@MockBean(BoardRepository.class), @MockBean(BoardUpdateListener.class)})
 class BoardControllerTest {
 
     @Autowired
@@ -41,6 +41,9 @@ class BoardControllerTest {
 
     @Autowired
     private BoardRepository repo;
+
+    @Autowired
+    private BoardUpdateListener boardUpdateListener;
 
     //Checks whether invalid id is correctly handled
     @Test
