@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -19,7 +20,7 @@ public class Card {
     @GeneratedValue(strategy = GenerationType.AUTO)
     public long id;
 
-    @OneToMany(mappedBy = "parentCard")
+    @OneToMany(mappedBy = "parentCard", fetch = FetchType.EAGER)
     private List<Task> taskList;
 
     @JsonIgnore //this field needs to be ignored if converted to json, since it would otherwise be stuck in infinite loop
@@ -28,7 +29,7 @@ public class Card {
     private String title;
     private String description;
 
-    Card(){
+    public Card(){
         // default constructor that is necessary for Jackson, don't use!!
         // Jackson starts complaining if it is private access
     }
@@ -55,6 +56,9 @@ public class Card {
 
     public void setParentList(BoardList list){this.parentList = list;}
 
+    public BoardList getParentList(){
+        return this.parentList;
+    }
     @Override
     public boolean equals(Object other){
         return other instanceof Card &&

@@ -17,7 +17,7 @@ public class Task {
     @JsonIgnore
     @ManyToOne
     private Card parentCard;
-    Task(){
+    public Task(){
     }
 
     public Task(Card parentCard,String name){
@@ -40,7 +40,9 @@ public class Task {
     public void setName(String name) {
         this.name = name;
     }
-
+    public Card getParentCard(){
+        return this.parentCard;
+    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
