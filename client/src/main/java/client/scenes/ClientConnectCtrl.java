@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.AnchorPane;
 
 import javax.inject.Inject;
 
@@ -15,6 +16,16 @@ public class ClientConnectCtrl {
     private final ServerUtils serverUtils;
 
     private final MainCtrl mainCtrl;
+
+    @FXML
+    public AnchorPane toolBar;
+
+    @FXML
+    public Button closeButton;
+
+    @FXML
+    public Button minimizeButton;
+
     @FXML
     private TextField ipAddressField;
 
@@ -81,4 +92,16 @@ public class ClientConnectCtrl {
             connectToServer();
         }
     }
+
+    /**
+     * Function that is connected to the closeButton of the controller
+     * It delegates the function of closing the app to the Main Controller
+     */
+    public void close(){ this.mainCtrl.closeApp();}
+    /**
+     * Function that is connected to the minimizeButton of the controller
+     * It delegates the function of minimizing the window of the app
+     * to the Main Controller
+     */
+    public void minimize(){ this.mainCtrl.minimizeStage();}
 }

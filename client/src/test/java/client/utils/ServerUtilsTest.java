@@ -135,8 +135,6 @@ class ServerUtilsTest {
     void connectFailTest() {
         ServerUtils server = new ServerUtils();
         String invalidIpAddress = "invalid";
-        assertThrows(Exception.class, () -> {
-            server.connect(invalidIpAddress);
-        });
+        assertThrows(Exception.class, () -> server.connect(invalidIpAddress));
     }
 }
