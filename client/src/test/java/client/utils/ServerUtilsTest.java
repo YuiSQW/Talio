@@ -29,9 +29,9 @@ class ServerUtilsTest {
             aResponse().withHeader("Content-Type","application/json").withBody(new ObjectMapper().writeValueAsString(new Card("test", "", list))))
             );
         ServerUtils server = new ServerUtils();
-        Card card = server.getCard(33);
-        assertNotNull(card);
-        assertEquals("test", card.getTitle());
+        Card c = server.getCard(33);
+        assertNotNull(c);
+        assertEquals("test", c.getTitle());
     }
 
     @Test
@@ -98,10 +98,10 @@ class ServerUtilsTest {
         stubFor(post("/api/boardlists/new-boardlist/1").willReturn(
             aResponse().withHeader("Content-Type", "application/json").withBody(new ObjectMapper().writeValueAsString(list))));
         ServerUtils server = new ServerUtils();
-        BoardList createdList = server.postNewList(list,board);
-        assertNotNull(createdList);
-        assertEquals("", createdList.getName());
-        assertEquals(new ArrayList<Card>(), createdList.getCardList());
+        BoardList l = server.postNewList(list,board);
+        assertNotNull(l);
+        assertEquals("", l.getName());
+        assertEquals(new ArrayList<Card>(), l.getCardList());
     }
 
     @Test
@@ -112,10 +112,10 @@ class ServerUtilsTest {
         stubFor(put("/api/boardlists/1/newname").willReturn(
             aResponse().withHeader("Content-Type", "application/json").withBody(new ObjectMapper().writeValueAsString(list))));
         ServerUtils server = new ServerUtils();
-        BoardList changedList = server.renameList(list, board);
-        assertNotNull(changedList);
-        assertEquals("newname", changedList.getName());
-        assertEquals(new ArrayList<Card>(), changedList.getCardList());
+        BoardList l = server.renameList(list, board);
+        assertNotNull(l);
+        assertEquals("newname", l.getName());
+        assertEquals(new ArrayList<Card>(), l.getCardList());
     }
 
     @Test
