@@ -20,7 +20,7 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 public class WebsocketServerUtils {
 
     // ip-address of the server
-    private String SERVER = "ws://localhost:8080";
+    private String server = "ws://localhost:8080";
 
     // the board is constantly updated by the websocket, so this is where the most recent version of the board is stored
     private Board currentBoard = null;
@@ -38,7 +38,7 @@ public class WebsocketServerUtils {
         this.client = new WebSocketStompClient(new StandardWebSocketClient());
         this.client.setMessageConverter(new MappingJackson2MessageConverter());
 
-        this.session = this.client.connect(SERVER + "/boardsession", new StompSessionHandlerAdapter() {}).get(10, SECONDS);
+        this.session = this.client.connect(server + "/boardsession", new StompSessionHandlerAdapter() {}).get(10, SECONDS);
     }
 
     /**
@@ -66,7 +66,7 @@ public class WebsocketServerUtils {
      * @param server - ip-address of the server
      */
     public void setServer(String server){
-        this.SERVER = server;
+        this.server = server;
     }
 
     /**

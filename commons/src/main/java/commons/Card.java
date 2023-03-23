@@ -7,7 +7,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -54,7 +53,8 @@ public class Card {
         this.description = description;
     }
 
-    public void setParentList(BoardList list){this.parentList = list;}
+    public void setParentList(BoardList list){
+        this.parentList = list;}
 
     public BoardList getParentList(){
         return this.parentList;

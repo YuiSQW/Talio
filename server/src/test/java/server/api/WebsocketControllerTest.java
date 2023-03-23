@@ -31,7 +31,7 @@ class WebsocketControllerTest {
 
     @Value("${local.server.port}")
     private Integer port;
-    private String URL;
+    private String url;
     private CompletableFuture<Board> comFut;
 
     private Board receivedBoard;
@@ -40,7 +40,7 @@ class WebsocketControllerTest {
 
     @BeforeEach
     public void setup(){
-        this.URL = "ws://localhost:" + port + "/boardsession";
+        this.url = "ws://localhost:" + port + "/boardsession";
         this.comFut = new CompletableFuture<>();
         this.receivedBoard = null;
     }
@@ -49,7 +49,7 @@ class WebsocketControllerTest {
         WebSocketStompClient socket = new WebSocketStompClient(new StandardWebSocketClient());
         socket.setMessageConverter(new MappingJackson2MessageConverter());
 
-        StompSession session = socket.connect(URL, new StompSessionHandlerAdapter(){}).get(10, SECONDS);
+        StompSession session = socket.connect(url, new StompSessionHandlerAdapter(){}).get(10, SECONDS);
 
 
         session.subscribe("/boards/boardfeed/1", new GetBoardStompFrameHandler());
@@ -62,7 +62,7 @@ class WebsocketControllerTest {
         WebSocketStompClient socket = new WebSocketStompClient(new StandardWebSocketClient());
         socket.setMessageConverter(new MappingJackson2MessageConverter());
 
-        StompSession session = socket.connect(URL, new StompSessionHandlerAdapter() {}).get();
+        StompSession session = socket.connect(url, new StompSessionHandlerAdapter() {}).get();
         String randString = RandomStringUtils.random(6, true, false);
         session.subscribe("/boards/boardfeed/1", new GetBoardStompFrameHandler());
         mockMvc.perform(put("/api/boards/change-name/1/" + randString));

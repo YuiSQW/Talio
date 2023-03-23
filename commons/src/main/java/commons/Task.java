@@ -40,9 +40,17 @@ public class Task {
     public void setName(String name) {
         this.name = name;
     }
+
     public Card getParentCard(){
         return this.parentCard;
     }
+
+
+    public void setParentCard(Card parentCard) {
+        this.parentCard = parentCard;
+    }
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

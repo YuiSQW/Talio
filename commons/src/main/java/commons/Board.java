@@ -5,6 +5,9 @@ import javax.persistence.*;
 import java.util.List;
 
 
+/**
+ * Class used for creating boards
+ */
 @Entity
 public class Board {
 

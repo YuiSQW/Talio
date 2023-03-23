@@ -9,7 +9,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import server.database.BoardRepository;
 
-import java.util.Queue;
+
 
 
 @Controller

@@ -31,15 +31,17 @@ public class TaskController {
         return ResponseEntity.ok(repo.findById(id).get());
     }
 
-    @GetMapping("/new-task/{cardId}/{name}")
-    public ResponseEntity<Task> getNewTask(@PathVariable("cardId") long cardId,@PathVariable("name") String name){
-        if(cardId < 0 || !parentRepo.existsById(cardId)){
+    @PostMapping("/new-task/{cardId}")
+    public ResponseEntity<Task> getNewTask(@PathVariable("cardId") long cardId,@RequestBody Task newTask){
+        if(newTask == null || newTask.getName() == null || !parentRepo.existsById(cardId)){
             return ResponseEntity.badRequest().build();
         }
+
         Card parentCard=parentRepo.getById(cardId);
-        Task taskToAdd=new Task(parentCard,name);
-        Task addedTask=repo.save(taskToAdd);
+        newTask.setParentCard(parentCard);
+        Task addedTask=repo.save(newTask);
         boardUpdateListener.add(addedTask.getParentCard().getParentList().getParentBoard());
+
         return ResponseEntity.ok(addedTask);
     }
 }

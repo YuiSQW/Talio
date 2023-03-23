@@ -1,7 +1,7 @@
 package server.api;
 
 
-import commons.Board;
+
 import commons.BoardList;
 
 import org.springframework.beans.factory.annotation.Autowired;

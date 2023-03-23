@@ -15,6 +15,7 @@
  */
 package client.scenes;
 
+import commons.Card;
 import javafx.application.Platform;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -32,16 +33,18 @@ public class MainCtrl {
 
     private AddQuoteCtrl addCtrl;
     private Scene add;
+
     private BoardOverviewCtrl boardOverviewCtrl;
     private Scene boardOverview;
+
+    private EditListNameCtrl editListNameCtrl;
+    private Scene editListNameOverview;
     private CardOverviewCtrl cardOverviewCtrl;
     private Scene cardOverview;
 
     private AddCardCtrl addCardCtrl;
     private Scene addCardOverview;
 
-    private ListOverviewCtrl listOverviewCtrl;
-    private Scene listOverview;
     private WelcomeCtrl welcomeCtrl;
     private Scene welcome;
 
@@ -49,7 +52,7 @@ public class MainCtrl {
                            Pair<QuoteOverviewCtrl, Parent> overview,
                            Pair<AddQuoteCtrl, Parent> add,
                            Pair<BoardOverviewCtrl, Parent> board,
-                           Pair<ListOverviewCtrl, Parent> list,
+                           Pair<EditListNameCtrl, Parent> editList,
                            Pair<CardOverviewCtrl, Parent> card,
                            Pair<AddCardCtrl, Parent> addCard,
                            Pair<WelcomeCtrl, Parent> welcome) {
@@ -58,11 +61,12 @@ public class MainCtrl {
         this.overview = new Scene(overview.getValue());
         this.addCtrl = add.getKey();
         this.add = new Scene(add.getValue());
+
         this.boardOverviewCtrl=board.getKey();
         this.boardOverview= new Scene(board.getValue());
 
-        this.listOverviewCtrl=list.getKey();
-        this.listOverview=new Scene(list.getValue());
+        this.editListNameCtrl=editList.getKey();
+        this.editListNameOverview=new Scene(editList.getValue());
 
         this.welcomeCtrl = welcome.getKey();
         this.welcome = new Scene(welcome.getValue());
@@ -72,7 +76,6 @@ public class MainCtrl {
         this.addCardCtrl=addCard.getKey();
         this.addCardOverview=new Scene(addCard.getValue());
         primaryStage.initStyle(StageStyle.TRANSPARENT);
-
         //showWelcomeOverview();
         showBoardOverview();
         primaryStage.show();
@@ -81,7 +84,6 @@ public class MainCtrl {
         primaryStage.setTitle("Main Board");
         boardOverview.setFill(Color.TRANSPARENT);
         primaryStage.setScene(boardOverview);
-
         this.boardOverviewCtrl.init(primaryStage);
     }
 
@@ -91,29 +93,30 @@ public class MainCtrl {
         primaryStage.setScene(welcome);
 
     }
-    public void showCardOverview(){
+    public void editListName(ListContainerCtrl listContainerCtrl){
+        Stage secondaryStage= new Stage(StageStyle.TRANSPARENT);
+        secondaryStage.setTitle("Edit List Name:");
+        secondaryStage.show();
+        editListNameOverview.setFill(Color.TRANSPARENT);
+        secondaryStage.setScene(editListNameOverview);
+        this.editListNameCtrl.init(secondaryStage,listContainerCtrl);
+    }
+    public void showCardOverview(ListContainerCtrl listContainerCtrl,Card card){
         Stage secondaryStage = new Stage(StageStyle.TRANSPARENT);
         secondaryStage.setTitle("Card Overview:");
         secondaryStage.show();
         cardOverview.setFill(Color.TRANSPARENT);
         secondaryStage.setScene(this.cardOverview);
-        this.cardOverviewCtrl.init(secondaryStage);
+        this.cardOverviewCtrl.init(secondaryStage,listContainerCtrl,card);
     }
-    public void addCardOverview(ListOverviewCtrl listOverviewCtrl){
+
+    public void addCardOverview(ListContainerCtrl listContainerCtrl){
         Stage secondaryStage = new Stage(StageStyle.TRANSPARENT);
-        secondaryStage.setTitle("Add new Card:");
+        secondaryStage.setTitle(("Add new Card:"));
         secondaryStage.show();
         addCardOverview.setFill(Color.TRANSPARENT);
         secondaryStage.setScene(this.addCardOverview);
-        this.addCardCtrl.init(secondaryStage,listOverviewCtrl);
-    }
-    public void showListOverview(BoardOverviewCtrl boardOverviewCtrl){
-        Stage secondaryStage = new Stage(StageStyle.TRANSPARENT);
-        secondaryStage.setTitle("Add new List");
-        secondaryStage.show();
-        listOverview.setFill(Color.TRANSPARENT);
-        secondaryStage.setScene(this.listOverview);
-        this.listOverviewCtrl.init(secondaryStage,boardOverviewCtrl);
+        this.addCardCtrl.init(secondaryStage,listContainerCtrl);
     }
 
     /**
@@ -131,9 +134,8 @@ public class MainCtrl {
     /**
      * Method which causes the primary stage of the application to fill up the screen
      */
-    public void MAX_MIN_Stage(){
-        if(!this.primaryStage.isMaximized()){this.primaryStage.setMaximized(true);}
-        else{this.primaryStage.setMaximized(false);}
+    public void maxMinStage(){
+        this.primaryStage.setMaximized(!this.primaryStage.isMaximized());
     }
 
     //   OBSOLETE METHOD FOR QUOTE APPLICATION
