@@ -22,9 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 
 public class QuoteTest {
-
 	private static final Person SOME_PERSON = new Person("a", "b");
-
 	@Test
 	public void checkConstructor() {
 		var q = new Quote(SOME_PERSON, "q");

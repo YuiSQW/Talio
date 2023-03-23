@@ -8,6 +8,9 @@ import javafx.scene.control.Button;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
+/**
+ * The controller for the Welcome.FXML
+ */
 public class WelcomeCtrl {
 
     @FXML

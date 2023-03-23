@@ -6,6 +6,9 @@ import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+/**
+ * Tests for the task class
+ */
 public class TaskTest {
     @Test
     void getNameTest(){
@@ -21,7 +24,7 @@ public class TaskTest {
         assertEquals(testTask.getName(),"Name2");
     }
     @Test
-    void IdTest(){
+    void idTest(){
         Task testTask=new Task(null,"Name");
         testTask.setId(12);
         assertEquals(testTask.getId(),12);

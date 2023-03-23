@@ -134,9 +134,8 @@ public class MainCtrl {
     /**
      * Method which causes the primary stage of the application to fill up the screen
      */
-    public void MAX_MIN_Stage(){
-        if(!this.primaryStage.isMaximized()){this.primaryStage.setMaximized(true);}
-        else{this.primaryStage.setMaximized(false);}
+    public void maxMinStage(){
+        this.primaryStage.setMaximized(!this.primaryStage.isMaximized());
     }
 
     //   OBSOLETE METHOD FOR QUOTE APPLICATION
