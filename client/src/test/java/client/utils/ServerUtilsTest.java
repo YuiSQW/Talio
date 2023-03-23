@@ -43,6 +43,7 @@ class ServerUtilsTest {
         assertNotNull(board);
         assertEquals("testname", board.getName());
     }
+    
 
     @Test
     void postNewCardTest() throws Exception{
@@ -59,6 +60,19 @@ class ServerUtilsTest {
         assertNotNull(card);
         assertEquals("title", card.getTitle());
         assertEquals("desc", card.getDescription());
+    }
+    
+    @Test
+    void deleteCardTest() throws Exception {
+        Board board = new Board("", new ArrayList<>());
+        Card cardToDelete = new Card("testname", "bla", new BoardList("", new ArrayList<>(), board));
+        cardToDelete.id = 1;
+        stubFor(delete("api/cards/delete/1").willReturn(
+                aResponse().withHeader("Content-Type", "application/json").withBody(new ObjectMapper().writeValueAsString(cardToDelete))
+        ));
+        ServerUtils server = new ServerUtils();
+        assertDoesNotThrow(() -> server.deleteCard(cardToDelete));
+        
     }
     @Test
     void postNewBoardTest() throws Exception{
@@ -115,6 +129,21 @@ class ServerUtilsTest {
         assertEquals("newname", changedList.getName());
         assertEquals(new ArrayList<Card>(), changedList.getCardList());
     }
+    
+    //doesnt work yet
+//    @Test
+//    void changedCardTest() throws Exception{
+//        Board board = new Board("", new ArrayList<>());
+//        BoardList list = new BoardList("", new ArrayList<>(), board);
+//        list.id = 1;
+//        Card testCard = new Card("title", "desc", list);
+//        stubFor(put("/api/cards/1").willReturn(
+//                aResponse().withHeader("Content-Type", "application/json").withBody(new ObjectMapper().writeValueAsString(list))));
+//        ServerUtils server = new ServerUtils();
+//        Card newCard = server.changedCard(testCard, list);
+//        assertNotNull(newCard);
+//        assertEquals("newname", newCard.getTitle());
+//    }
 
     @Test
     void deleteListTest() throws Exception{

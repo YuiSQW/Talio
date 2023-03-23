@@ -68,8 +68,9 @@ public class CardOverviewCtrl {
         this.closeCard();
     }
     public void removeCard(){
+        
         this.listContainerCtrl.removeCard(this.card);
-        serverUtils.deleteCard(this.card);
+        //TODO make it work
         this.card.setParentList(null);
         closeCard();
     }

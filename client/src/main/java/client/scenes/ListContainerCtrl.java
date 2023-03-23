@@ -189,8 +189,11 @@ public class ListContainerCtrl extends VBox {
         System.out.println(card.id);
         this.list.getCardList().remove(card);
         this.cards.remove(card);
-        
-        
+        //works
+        serverUtils.deleteCard(card);
+    
+    
+    
     }
 
 
