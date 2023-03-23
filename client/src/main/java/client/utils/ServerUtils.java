@@ -83,6 +83,16 @@ public class ServerUtils {
         card.setParentList(parentBoardList);
         return card;
     }
+    
+    //TODO make it work
+    public void deleteCard(Card cardToDelete){
+        ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/cards/" + cardToDelete.id)
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .delete();
+    }
+    
 
     public BoardList getList(long listId){
         return ClientBuilder.newClient(new ClientConfig())
@@ -120,6 +130,7 @@ public class ServerUtils {
             .accept(APPLICATION_JSON)
             .delete();
     }
+    
     public Board getBoard(long boardId){
         return ClientBuilder.newClient(new ClientConfig())
             .target(SERVER).path("api/boards/" + boardId)

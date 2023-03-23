@@ -41,7 +41,10 @@ public class BoardOverviewCtrl {
      * @param stage the primary stage of the application
      */
     public void init(Stage stage){
-        this.board=new Board(this.boardTitle.getText(),new ArrayList<BoardList>());
+        Board board = new Board(this.boardTitle.getText(),new ArrayList<BoardList>());
+        this.board = serverUtils.postNewBoard(board);
+        System.out.println(this.board.id);
+        
         toolBar.setOnMousePressed( mouseEvent -> {
             this.x= mouseEvent.getSceneX();
             this.y= mouseEvent.getSceneY();
