@@ -67,22 +67,22 @@ public class BoardOverviewCtrl {
     }
 
     /**
-     * Connected to the Add List button
+     * Connected to the addList button
      */
     public void addNewList(){
-        this.mainCtrl.showListOverview(this);
+        this.addNewVbox();
     }
 
     /**
-     * Adds a new list everytime a new list gets created
-     * @param - new created child BoardList of the Board
+     * Method which creates a new ListContainer object
+     * which contains a child BoardList instance of the Board
      */
-    public void addNewVbox(BoardList list) {
-        this.board.addList(list);
-        //Creates a child right after the last added list
-        tilePane.getChildren().add((tilePane.getChildren().size() - 1), new ListContainerCtrl(tilePane,list));
-
+    public void addNewVbox() {
+        ListContainerCtrl listContainerCtrl= new ListContainerCtrl(this.mainCtrl,this.serverUtils);
+        listContainerCtrl.init(tilePane,this);
+        tilePane.getChildren().add((tilePane.getChildren().size() - 1), listContainerCtrl);
     }
+
 
     /**
      * Retrieves the list based on the order of the tilePane parent

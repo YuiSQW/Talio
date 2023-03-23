@@ -11,23 +11,22 @@ import javafx.stage.Stage;
 import javax.inject.Inject;
 import java.util.Objects;
 
-/**
- * The class with it responsible for giving the CardOverview control
- */
 public class AddCardCtrl {
 
     private MainCtrl mainCtrl;
     private ServerUtils serverUtils;
     private Stage stage;
-    private ListOverviewCtrl listOverviewCtrl;
+    private ListContainerCtrl listContainerCtrl;
     @FXML
     private TextField title;
     @FXML
-    private TextArea description;
+    private TextArea description,tasks;
     @FXML
     private Pane toolBar;
     @FXML
     private Button saveButton, closeButton, minimizeButton;
+    @FXML
+    private Button clearTitleButton, clearDescriptionButton, clearTasksButton;
     private double x,y;
 
     @Inject
@@ -36,14 +35,12 @@ public class AddCardCtrl {
         this.serverUtils=serverUtils;
     }
 
-    /**
-     * The function initializes the functionality of dragging the
-     * window of the application
-     * @param stage the primary stage of the application
-     */
-    public void init(Stage stage,ListOverviewCtrl listOverviewCtrl){
+    public void init(Stage stage,ListContainerCtrl listContainerCtrl){
         this.stage=stage;
-        this.listOverviewCtrl=listOverviewCtrl;
+        this.listContainerCtrl=listContainerCtrl;
+        this.title.setText("Title");
+        this.description.setText("Description of the task");
+        this.tasks.setText("Subtasks");
         toolBar.setOnMousePressed( mouseEvent -> {
             this.x= mouseEvent.getSceneX();
             this.y= mouseEvent.getSceneY();
@@ -64,8 +61,8 @@ public class AddCardCtrl {
     public void saveCard(){
         var p = title.getText();
         var q = description.getText();
-        Card card= new Card(p,q,this.listOverviewCtrl.getBoardList());
-        this.listOverviewCtrl.saveNewCard(card);
+        Card card= new Card(p,q,this.listContainerCtrl.getList());
+        this.listContainerCtrl.saveNewCard(card);
         this.closeCard();
     }
     //Still has no usage & needs to get replaced when data can get stored in database
@@ -78,21 +75,27 @@ public class AddCardCtrl {
     public void clearFields() {
         title.clear();
         description.clear();
+        tasks.clear();
     }
     public void clearTitle() {
         title.clear();
     }
+    public void clearDescription(){
+        description.clear();
+    }
+    public void clearTasks(){
+        tasks.clear();
+    }
+
     public void cancel() {
         clearFields();
     }
-    public void clearDescription() {
-        description.clear();
-    }
+
     public void closeCard(){
         cancel();
         this.stage.close();
     }
-    public void minimize() {
+    public void minimize(){
         this.stage.setIconified(true);
     }
 

@@ -15,7 +15,7 @@
                 <Font size="15.0" />
             </font></TextField>
         <TextArea fx:id="description" layoutX="52.0" layoutY="100.0" onMouseClicked="#clearDescription" prefHeight="70.0" prefWidth="442.0" text="Description&#10;&#10;" />
-        <TextArea layoutX="52.0" layoutY="189.0" prefHeight="103.0" prefWidth="442.0" text="Tasks" />
+        <TextArea fx:id="tasks" layoutX="52.0" layoutY="189.0" onMouseClicked="#clearTasks" prefHeight="103.0" prefWidth="442.0" text="Tasks" />
         <HBox layoutX="52.0" layoutY="309.0" prefHeight="50.0" prefWidth="442.0" spacing="5.0">
             <children>
                 <TextField alignment="CENTER" prefHeight="26.0" prefWidth="64.0" style="-fx-background-radius: 1em;" text="Tag" />
