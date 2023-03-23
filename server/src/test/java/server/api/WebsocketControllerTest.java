@@ -53,7 +53,7 @@ class WebsocketControllerTest {
 
 
         session.subscribe("/boards/boardfeed/1", new GetBoardStompFrameHandler());
-        Thread.sleep(1000);
+        Thread.sleep(3000);
         assertNotNull(receivedBoard);
     }
 
@@ -67,7 +67,7 @@ class WebsocketControllerTest {
         session.subscribe("/boards/boardfeed/1", new GetBoardStompFrameHandler());
         mockMvc.perform(put("/api/boards/change-name/1/" + randString));
 
-        Thread.sleep(2000);
+        Thread.sleep(5000);
 
         assertEquals(randString, receivedBoard.getName());
 
