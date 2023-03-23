@@ -62,10 +62,11 @@ public class CardController {
     
   
     /**
+     * Deletes the card from the database
      * @param id the ID of the card to delete
      * @throws IllegalArgumentException if the provided ID is null
      */
- @DeleteMapping("delete/{id}")
+    @DeleteMapping("delete/{id}")
     public void deleteCard(@PathVariable("id") long id) {
         try {
             repo.deleteById(id);
@@ -74,4 +75,5 @@ public class CardController {
             e.printStackTrace();
         }
     }
+    
 }

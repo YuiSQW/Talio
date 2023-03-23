@@ -70,7 +70,6 @@ public class CardOverviewCtrl {
     public void removeCard(){
         
         this.listContainerCtrl.removeCard(this.card);
-        //TODO make it work
         this.card.setParentList(null);
         closeCard();
     }

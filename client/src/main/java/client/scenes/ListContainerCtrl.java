@@ -156,12 +156,13 @@ public class ListContainerCtrl extends VBox {
      */
     public void saveNewCard(Card card) {
         //Adds the card with id and not the old one
+        //Create a new card, so that the old one (without id) doesn't get used anymore
         Card newCard = serverUtils.postNewCard(card, this.list);
-        System.out.println(newCard.id);
+        
+        //Add the Card with ID to the lists
         this.cards.add(newCard);
         this.list.getCardList().add(newCard);
-        //test works
-        System.out.println(this.list.getCardList().get(cards.size()-1).id);
+
         
     }
 
@@ -175,7 +176,7 @@ public class ListContainerCtrl extends VBox {
         HBox hbox=(HBox) this.getChildren().get(0);
         Label listName=(Label)hbox.getChildren().get(0);
         listName.setText(newName);
-        //works
+        //The new name gets saved to the server
         serverUtils.renameList(this.list, this.boardOverviewCtrl.getBoard());
         
     }
@@ -186,10 +187,9 @@ public class ListContainerCtrl extends VBox {
      * @param card the Card object to be removed
      */
     public void removeCard(Card card){
-        System.out.println(card.id);
         this.list.getCardList().remove(card);
         this.cards.remove(card);
-        //works
+        //Delete the card from the server
         serverUtils.deleteCard(card);
     
     

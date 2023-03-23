@@ -62,6 +62,11 @@ class ServerUtilsTest {
         assertEquals("desc", card.getDescription());
     }
     
+    /**
+     * Tests the behavior of the deleteCard method in the ServerUtils class when
+     * called with a valid card to delete.
+     * @throws Exception is there is an error with the test
+     */
     @Test
     void deleteCardTest() throws Exception {
         Board board = new Board("", new ArrayList<>());
@@ -100,8 +105,7 @@ class ServerUtilsTest {
         assertEquals("", receivedList.getName());
         assertEquals(new ArrayList<Card>(), receivedList.getCardList());
     }
-
-
+    
     @Test
     void postListTest() throws Exception{
         Board board = new Board("", new ArrayList<>());
@@ -130,21 +134,6 @@ class ServerUtilsTest {
         assertEquals(new ArrayList<Card>(), changedList.getCardList());
     }
     
-    //doesnt work yet
-//    @Test
-//    void changedCardTest() throws Exception{
-//        Board board = new Board("", new ArrayList<>());
-//        BoardList list = new BoardList("", new ArrayList<>(), board);
-//        list.id = 1;
-//        Card testCard = new Card("title", "desc", list);
-//        stubFor(put("/api/cards/1").willReturn(
-//                aResponse().withHeader("Content-Type", "application/json").withBody(new ObjectMapper().writeValueAsString(list))));
-//        ServerUtils server = new ServerUtils();
-//        Card newCard = server.changedCard(testCard, list);
-//        assertNotNull(newCard);
-//        assertEquals("newname", newCard.getTitle());
-//    }
-
     @Test
     void deleteListTest() throws Exception{
         Board board = new Board("", new ArrayList<>());

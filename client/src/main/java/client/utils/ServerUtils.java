@@ -84,24 +84,16 @@ public class ServerUtils {
         return card;
     }
     
-    //is tested
+    /**
+     * Deletes a card from the server
+     * @param cardToDelete the card to be deleted
+     */
     public void deleteCard(Card cardToDelete){
         ClientBuilder.newClient(new ClientConfig())
                 .target(SERVER).path("api/cards/delete/" + cardToDelete.id)
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .delete();
-    }
-    
-    //Stil need to write path for
-    public Card changedCard(Card changedCard, BoardList parentBoardList){
-        Card card = ClientBuilder.newClient(new ClientConfig())
-                .target(SERVER).path("api/cards/" + changedCard.id)
-                .request(APPLICATION_JSON)
-                .accept(APPLICATION_JSON)
-                .put(Entity.entity(changedCard, APPLICATION_JSON), Card.class);
-        card.setParentList(parentBoardList);
-        return changedCard;
     }
     
     public BoardList getList(long listId){
@@ -157,9 +149,7 @@ public class ServerUtils {
             .accept(APPLICATION_JSON)
             .post(Entity.entity(newBoard, APPLICATION_JSON), Board.class);
     }
-
-
-
+    
     public List<BoardList> getLists(){
         return ClientBuilder.newClient(new ClientConfig())
                 .target(SERVER).path("/api/boardlists")

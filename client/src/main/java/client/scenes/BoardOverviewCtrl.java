@@ -41,9 +41,10 @@ public class BoardOverviewCtrl {
      * @param stage the primary stage of the application
      */
     public void init(Stage stage){
+        //Board without the id
         Board board = new Board(this.boardTitle.getText(),new ArrayList<BoardList>());
+        //Assign the board to the one serverUtils, makes (the one with has its id included)
         this.board = serverUtils.postNewBoard(board);
-        System.out.println(this.board.id);
         
         toolBar.setOnMousePressed( mouseEvent -> {
             this.x= mouseEvent.getSceneX();
