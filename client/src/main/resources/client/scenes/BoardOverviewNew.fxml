@@ -18,7 +18,7 @@
                <effect>
                   <Glow />
                </effect></Button>
-            <Button fx:id="maximizeButton" mnemonicParsing="false" onAction="#MAX_MIN" prefHeight="25.0" prefWidth="15.0" style="-fx-background-radius: 1em;" text="□" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="3.0">
+            <Button fx:id="maximizeButton" mnemonicParsing="false" onAction="#maxMin" prefHeight="25.0" prefWidth="15.0" style="-fx-background-radius: 1em;" text="□" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="3.0">
                <effect>
                   <Glow />
                </effect>
@@ -40,7 +40,7 @@
                <children>
                   <VBox fx:id="v1" prefHeight="360.0" prefWidth="180.0">
                      <children>
-                        <Button fx:id="addList" minHeight="-Infinity" minWidth="35.0" mnemonicParsing="false" onAction="#addNewList" prefHeight="41.0" prefWidth="174.0" style="-fx-background-radius: 100;" text="+ Add another list" textFill="#080808" />
+                        <Button fx:id="addList" minHeight="-Infinity" minWidth="35.0" mnemonicParsing="false" onAction="#addNewList" prefHeight="41.0" prefWidth="174.0" style="-fx-background-radius: 100;" text="+ Add New List" textFill="#080808" />
                      </children>
                   </VBox>
                </children>

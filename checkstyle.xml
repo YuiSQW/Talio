@@ -6,8 +6,17 @@
 <module name = "Checker">
     <module name="TreeWalker">
         <module name="UnusedImports" />
+        <module name="RightCurly" />
+        <module name="LeftCurly" />
+        <module name="Regexp" />
+        <module name="PackageName" />
+        <module name="UpperEll" />
+        <module name="TypeName" />
+        <module name="ParameterName" />
+        <module name="MemberName" />
+        <module name="MethodName" />
+        <module name="MethodLength" />
     </module>
 
-    <!-- TODO: decide in your team with other checkers to add! -->
 
 </module>
