@@ -26,7 +26,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(CardController.class)
-@MockBeans({@MockBean(CardRepository.class), @MockBean(BoardListRepository.class)})
+@MockBeans({@MockBean(CardRepository.class), @MockBean(BoardListRepository.class), @MockBean(BoardUpdateListener.class)})
 class CardControllerTest {
 
     @Autowired
@@ -38,6 +38,7 @@ class CardControllerTest {
     @Autowired
     private BoardListRepository parentRepo;
 
+    @Autowired BoardUpdateListener boardUpdateListener;
     private Board testBoard;
     private BoardList list;
     @BeforeEach

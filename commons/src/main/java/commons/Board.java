@@ -16,11 +16,11 @@ public class Board {
     public long id;
 
 
-    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "parentBoard")
+    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "parentBoard", fetch = FetchType.EAGER)
     private List<BoardList> lists;
     private String name;
 
-    Board(){
+    public Board(){
         // default constructor that is necessary for Jackson to work properly don't use this!!
     }
 
@@ -64,7 +64,6 @@ public class Board {
             }
         }
     }
-
 
 
 }

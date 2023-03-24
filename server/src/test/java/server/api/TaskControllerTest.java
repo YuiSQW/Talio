@@ -35,7 +35,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 @WebMvcTest(TaskController.class)
-@MockBeans({@MockBean(TaskRepository.class), @MockBean(CardRepository.class)})
+@MockBeans({@MockBean(TaskRepository.class), @MockBean(CardRepository.class), @MockBean(BoardUpdateListener.class)})
 public class TaskControllerTest {
 
     @Autowired
@@ -46,6 +46,9 @@ public class TaskControllerTest {
 
     @Autowired
     private CardRepository parentRepo;
+
+    @Autowired
+    private BoardUpdateListener boardUpdateListener;
 
     private Board testBoard;
     private BoardList testList;
