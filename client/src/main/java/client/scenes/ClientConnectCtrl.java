@@ -61,8 +61,7 @@ public class ClientConnectCtrl {
             try{
                 serverUtils.connect(ipAddress);
                 mainCtrl.showBoardOverview();
-            }
-            catch (Exception exception){
+            } catch (Exception exception){
                 invalidIpAddressAlert();
             }
         }
