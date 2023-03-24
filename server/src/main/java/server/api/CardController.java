@@ -61,4 +61,22 @@ public class CardController {
         boardUpdateListener.add(saved.getParentList().getParentBoard());
         return ResponseEntity.ok(saved);
     }
+    
+    
+  
+    /**
+     * Deletes the card from the database
+     * @param id the ID of the card to delete
+     * @throws IllegalArgumentException if the provided ID is null
+     */
+    @DeleteMapping("delete/{id}")
+    public void deleteCard(@PathVariable("id") long id) {
+        try {
+            repo.deleteById(id);
+        }catch(IllegalArgumentException e){
+            System.out.println("The id for deleteCard cannot be null");
+            e.printStackTrace();
+        }
+    }
+    
 }

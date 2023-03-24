@@ -29,7 +29,7 @@ public class ListContainerCtrl extends VBox {
     // ListView which displays the content of the ObservableList instance
     private ListView<Card> listView;
     private MainCtrl mainCtrl;
-    private ServerUtils serverUtils;
+    private final ServerUtils serverUtils;
     @Inject
     public ListContainerCtrl(MainCtrl mainCtrl, ServerUtils serverUtils){
         this.mainCtrl=mainCtrl;
@@ -45,6 +45,7 @@ public class ListContainerCtrl extends VBox {
         this.boardOverviewCtrl=boardOverviewCtrl;
         // Creates the new BoardList object and sets it parent Board
         this.list= new BoardList("Empty List",new ArrayList<Card>(),this.boardOverviewCtrl.getBoard());
+        this.list = serverUtils.postNewList(this.list, this.boardOverviewCtrl.getBoard());
 
         Label listName = new Label("Empty List");
         listName.setPrefHeight(47.0);
@@ -119,9 +120,14 @@ public class ListContainerCtrl extends VBox {
         setStyle("-fx-border-color:black;-fx-border-radius:15;");
 
         //Every vbox has the ability to delete itself
-        //TODO also delete the ID of the list in the database
-        removeBtn.setOnAction(event -> tilePane.getChildren().remove(ListContainerCtrl.this));
-        addCardButton.setOnAction(event -> this.mainCtrl.addCardOverview(this));
+        removeBtn.setOnAction(event -> {
+            tilePane.getChildren().remove(ListContainerCtrl.this);
+            serverUtils.deleteList(this.list);
+        });
+        addCardButton.setOnAction(event -> {
+            this.mainCtrl.addCardOverview(this);
+            
+        });
         editButton.setOnAction(event -> this.mainCtrl.editListName(this));
 
     }
@@ -149,8 +155,15 @@ public class ListContainerCtrl extends VBox {
      * @param card the new Card object
      */
     public void saveNewCard(Card card) {
-        this.list.getCardList().add(card);
-        this.cards.add(card);
+        //Adds the card with id and not the old one
+        //Create a new card, so that the old one (without id) doesn't get used anymore
+        Card newCard = serverUtils.postNewCard(card, this.list);
+        
+        //Add the Card with ID to the lists
+        this.cards.add(newCard);
+        this.list.getCardList().add(newCard);
+
+        
     }
 
     /**
@@ -163,6 +176,9 @@ public class ListContainerCtrl extends VBox {
         HBox hbox=(HBox) this.getChildren().get(0);
         Label listName=(Label)hbox.getChildren().get(0);
         listName.setText(newName);
+        //The new name gets saved to the server
+        serverUtils.renameList(this.list, this.boardOverviewCtrl.getBoard());
+        
     }
 
     /**
@@ -173,6 +189,11 @@ public class ListContainerCtrl extends VBox {
     public void removeCard(Card card){
         this.list.getCardList().remove(card);
         this.cards.remove(card);
+        //Delete the card from the server
+        serverUtils.deleteCard(card);
+    
+    
+    
     }
 
 
