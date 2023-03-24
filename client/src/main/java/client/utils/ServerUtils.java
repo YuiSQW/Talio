@@ -169,8 +169,7 @@ public class ServerUtils {
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .get(new GenericType<String>() {});
-        }
-        catch (Exception exception){
+        } catch (Exception exception){
             throw new Exception();
         }
     }
