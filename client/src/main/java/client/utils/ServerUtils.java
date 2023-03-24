@@ -158,7 +158,7 @@ public class ServerUtils {
      * @throws Exception exception thrown when connection can't be established
      */
     public void connect(String ipAddress) throws Exception{
-        SERVER = "http://" + ipAddress + ":4040";
+        SERVER = "https://" + ipAddress + ".eu.ngrok.io";
 
         try{
             ClientBuilder.newClient(new ClientConfig())

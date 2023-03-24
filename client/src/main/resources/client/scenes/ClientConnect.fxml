@@ -27,7 +27,7 @@
                 <VBox alignment="CENTER" spacing="20" style="-fx-padding: 50;">
                     <Label style="-fx-font-size: 16;" text="Server Address:" />
 
-                    <TextField fx:id="ipAddressField" onKeyPressed="#handleKeyPressed" promptText="123.123.123.123" style="-fx-background-color: #f5f5f5; -fx-border-color: #cccccc; -fx-border-width: 1px; -fx-border-radius: 5px; -fx-padding: 5px;" />
+                    <TextField fx:id="ipAddressField" onKeyPressed="#handleKeyPressed" promptText="1234-12-123-123-123" style="-fx-background-color: #f5f5f5; -fx-border-color: #cccccc; -fx-border-width: 1px; -fx-border-radius: 5px; -fx-padding: 5px;" />
 
                     <Button fx:id="connectButton" onAction="#connectToServer" style="-fx-background-color: #2F4F4F; -fx-text-fill: white; -fx-font-size: 16; -fx-padding: 10px 20px; -fx-border-radius: 5px" text="Connect" />
                 </VBox>
