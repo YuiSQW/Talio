@@ -3,6 +3,7 @@ package client.scenes;
 import client.utils.ServerUtils;
 import client.utils.WebsocketServerUtils;
 import commons.Board;
+import commons.BoardList;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.fxml.FXML;
@@ -14,6 +15,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import javax.inject.Inject;
+import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class BoardOverviewCtrl {
@@ -52,10 +54,10 @@ public class BoardOverviewCtrl {
         /*
          * Note: this is the board, with its id I use, to test syncing
          */
-        this.board = serverUtils.getBoard(330);
+        //this.board = serverUtils.getBoard(330);
         
         //You can delete this line in principle, but then the client sees "Title shortly" instead of the database title
-        this.boardTitle.setText(this.board.getName());
+        //this.boardTitle.setText(this.board.getName());
     
         /*
          * ATTENTION: Steps to make sure that the syncing works on your local host (make sure 2 clients connect to the same board)
@@ -67,10 +69,10 @@ public class BoardOverviewCtrl {
     
         
         //This board is the one without id
-        //Board board = new Board(this.boardTitle.getText(),new ArrayList<BoardList>());
+        Board board = new Board(this.boardTitle.getText(), new ArrayList<>());
         
         //Assign the board to the one postNewBoard creates (the one with generated id)
-        //this.board = serverUtils.postNewBoard(board);
+        this.board = serverUtils.postNewBoard(board);
         
     
         toolBar.setOnMousePressed( mouseEvent -> {
