@@ -92,6 +92,24 @@ class ServerUtilsTest {
         assertEquals("testname", createdBoard.getName());
         assertEquals(new ArrayList<BoardList>(),createdBoard.getLists() );
     }
+    
+    /**
+     * Test to verify if the renaming of a board works
+     * Sends a put request to the server with the specified id + new name of the board
+     * Checks if the response of the server is the board with the expected new name
+     * @throws Exception if test fails
+     */
+    @Test
+    void renameBoard() throws Exception{
+        Board board = new Board("newname", new ArrayList<>());
+        board.id = 1;
+        stubFor(put("/api/boards/1/newname").willReturn(
+                aResponse().withHeader("Content-Type", "application/json").withBody(new ObjectMapper().writeValueAsString(board))));
+        ServerUtils server = new ServerUtils();
+        Board changedBoard = server.renameBoard(board);
+        assertNotNull(changedBoard);
+        assertEquals("newname", changedBoard.getName());
+    }
 
     @Test
     void getListTest() throws Exception{
@@ -133,6 +151,8 @@ class ServerUtilsTest {
         assertEquals("newname", changedList.getName());
         assertEquals(new ArrayList<Card>(), changedList.getCardList());
     }
+    
+
     
     @Test
     void deleteListTest() throws Exception{
