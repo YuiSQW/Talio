@@ -86,7 +86,6 @@ class WebsocketControllerTest {
         mockMvc.perform(put("/api/boards/1/" + randString));
     
         Thread.sleep(5000);
-
         assertEquals(randString, receivedBoard.getName());
 
     }
