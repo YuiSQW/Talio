@@ -42,6 +42,12 @@
                      <children>
                         <Button fx:id="addList" minHeight="-Infinity" minWidth="35.0" mnemonicParsing="false" onAction="#addNewList" prefHeight="41.0" prefWidth="174.0" style="-fx-background-radius: 100;" text="+ Add New List" textFill="#080808" />
                      </children>
+                     <TilePane.margin>
+                        <Insets top="10.0" />
+                     </TilePane.margin>
+                     <padding>
+                        <Insets bottom="100.0" />
+                     </padding>
                   </VBox>
                </children>
                <padding>
