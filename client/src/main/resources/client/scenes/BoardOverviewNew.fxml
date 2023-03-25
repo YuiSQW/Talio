@@ -50,6 +50,7 @@
             </TilePane>
          </content>
       </ScrollPane>
+      <Button fx:id="renameBoardBtn" layoutX="211.0" layoutY="43.0" mnemonicParsing="false" onAction="#renameBoardTitle" text="Rename" />
 
    </children>
 </AnchorPane>

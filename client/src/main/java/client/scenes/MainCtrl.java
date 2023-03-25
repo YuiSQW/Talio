@@ -55,7 +55,7 @@ public class MainCtrl {
                            Pair<EditListNameCtrl, Parent> editList,
                            Pair<CardOverviewCtrl, Parent> card,
                            Pair<AddCardCtrl, Parent> addCard,
-                           Pair<WelcomeCtrl, Parent> welcome) {
+                           Pair<WelcomeCtrl, Parent> welcome) throws Exception {
         this.primaryStage = primaryStage;
         this.overviewCtrl = overview.getKey();
         this.overview = new Scene(overview.getValue());
@@ -80,7 +80,7 @@ public class MainCtrl {
         showBoardOverview();
         primaryStage.show();
     }
-    public void showBoardOverview(){
+    public void showBoardOverview() throws Exception {
         primaryStage.setTitle("Main Board");
         boardOverview.setFill(Color.TRANSPARENT);
         primaryStage.setScene(boardOverview);

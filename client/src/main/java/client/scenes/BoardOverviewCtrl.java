@@ -1,8 +1,10 @@
 package client.scenes;
 
 import client.utils.ServerUtils;
+import client.utils.WebsocketServerUtils;
 import commons.Board;
-import commons.BoardList;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
@@ -10,19 +12,20 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
-
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class BoardOverviewCtrl {
     private final MainCtrl mainCtrl;
     private final ServerUtils serverUtils;
+    
+    private final WebsocketServerUtils websocketServerUtils;
     private Board board;
     private double x,y;
+    
     @FXML
-    private Button closeButton,minimizeButton,maximizeButton,addList;
+    private Button closeButton,minimizeButton,maximizeButton,addList, renameBoardBtn;
     @FXML
     private Pane toolBar;
     @FXML
@@ -31,21 +34,45 @@ public class BoardOverviewCtrl {
     private TextField boardTitle;
 
     @Inject
-    public BoardOverviewCtrl(MainCtrl mainCtrl, ServerUtils serverUtils) {
+    public BoardOverviewCtrl(MainCtrl mainCtrl, ServerUtils serverUtils, WebsocketServerUtils websocketServerUtils) {
         this.mainCtrl=mainCtrl;
         this.serverUtils=serverUtils;
+        this.websocketServerUtils = websocketServerUtils;
     }
     /**
      * The function initializes the functionality of dragging the
      * window of the application
      * @param stage the primary stage of the application
      */
-    public void init(Stage stage){
-        //Board without the id
-        Board board = new Board(this.boardTitle.getText(),new ArrayList<BoardList>());
-        //Assign the board to the one postNewBoard creates (the one with generated id)
-        this.board = serverUtils.postNewBoard(board);
+    public void init(Stage stage) throws Exception {
         
+        //TODO Get the client to choose its board, so that you automatically get a board based on ID,
+        // and you don't have to follow the procedure below
+        
+        /*
+         * Note: this is the board, with its id I use, to test syncing
+         */
+        this.board = serverUtils.getBoard(330);
+        
+        //You can delete this line in principle, but then the client sees "Title shortly" instead of the database title
+        this.boardTitle.setText(this.board.getName());
+    
+        /*
+         * ATTENTION: Steps to make sure that the syncing works on your local host (make sure 2 clients connect to the same board)
+         * 1. Create a boardObject and propagate it to the database
+         * 2. Look in the H2 console or via printing what your board id is
+         * 3. When running a second client, comment out the postNewBoard function
+         * 4. Use the serverUtils.getBoard method and enter the ID you got from the already existing board.
+         */
+    
+        
+        //This board is the one without id
+        //Board board = new Board(this.boardTitle.getText(),new ArrayList<BoardList>());
+        
+        //Assign the board to the one postNewBoard creates (the one with generated id)
+        //this.board = serverUtils.postNewBoard(board);
+        
+    
         toolBar.setOnMousePressed( mouseEvent -> {
             this.x= mouseEvent.getSceneX();
             this.y= mouseEvent.getSceneY();
@@ -54,18 +81,51 @@ public class BoardOverviewCtrl {
             stage.setX(mouseEvent.getScreenX()-this.x);
             stage.setY(mouseEvent.getScreenY()-this.y);
         });
-
-        new Timer().scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                refresh();
-            }
-        },0,1000L);
-        //Update the name of the board based on user input
-        this.boardTitle.textProperty().addListener((observable,oldValue,newValue )->{
-            this.board.setName(newValue);
+    
+        //Initializes the socket
+        websocketServerUtils.initSocket();
+        
+        //Makes sure that the client is subscribed to this board
+        websocketServerUtils.subscribeToBoard(this.board.id);
+    
+        //Using AtomicBoolean, because it is more tread safe and to prevent data inconsistency when dealing with multiple threads
+        AtomicBoolean userChangesField = new AtomicBoolean(false);
+        
+        // Set up a Timeline to update the GUI every second, this is better as the timer,
+        // because this is mostly used for JavaFX applications, firstly I implemented it with AnimatedTimer,
+        // but that took so much CPU resources
+        
+        Timeline timeline = new Timeline(
+                //Call the refresh method every second
+                new KeyFrame(Duration.seconds(1), event -> {
+                    refresh(userChangesField.get());
+                })
+        );
+        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.play();
+        
+        boardTitle.setOnMousePressed(event -> {
+            userChangesField.set(true);
         });
+    
+        boardTitle.setOnKeyTyped(event -> {
+            userChangesField.set(true);
+        });
+        
     }
+    
+    /**
+     * The function which is connected to the renameBtn
+     * sets the board name to the new title
+     * sets the label to the new title
+     */
+    public void renameBoardTitle(){
+        this.board.setName(boardTitle.getText());
+        this.board = serverUtils.renameBoard(this.board);
+        boardTitle.setText(boardTitle.getText());
+        
+    }
+    
     public Board getBoard() {
         return board;
     }
@@ -101,16 +161,33 @@ public class BoardOverviewCtrl {
     /**
      * Refreshes the overview of the board with all the updates of the database
      */
-    public void refresh(){
+    public void refresh(boolean isUserEditing){
         //TODO implements the logic related to retrieving the lists and displaying them
+        this.board = websocketServerUtils.getCurrentBoard();
+        this.board = serverUtils.getBoard(this.board.id);
+        
+        //Disables the button when field is either empty, or the same as the value in the database
+        renameBoardBtn.disableProperty().bind((boardTitle.textProperty().isEqualTo(serverUtils.getBoard(this.board.id).getName()))
+                .or(boardTitle.textProperty().isEmpty()));
+        
+    
+        //If the user is not editing the textField, then you can set the boardTitle textField to the new value
+        //Otherwise the clients get constantly interrupted
+        if (!isUserEditing) {
+            boardTitle.setText(this.board.getName());
+        }
+
     }
+    
     /**
      * Function that is connected to the closeButton of the controller
      * It delegates the function of closing the app to the Main Controller
      */
     public void close(){
         this.mainCtrl.closeApp();
+        
     }
+    
     /**
      * Function that is connected to the minimizeButton of the controller
      * It delegates the function of minimizing the window of the app
