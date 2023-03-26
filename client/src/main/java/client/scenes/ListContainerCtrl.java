@@ -119,6 +119,9 @@ public class ListContainerCtrl extends VBox {
         getChildren().addAll(boardListTitle, cardList);
         setStyle("-fx-border-color:black;-fx-border-radius:15;");
 
+        //Adds spacing between the rows of lists
+        TilePane.setMargin(this, new Insets(10,0,0,0));
+
         //Every vbox has the ability to delete itself
         removeBtn.setOnAction(event -> {
             tilePane.getChildren().remove(ListContainerCtrl.this);
