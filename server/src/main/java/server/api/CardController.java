@@ -2,7 +2,9 @@ package server.api;
 
 
 
+import commons.BoardList;
 import commons.Card;
+import commons.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -77,6 +79,54 @@ public class CardController {
             System.out.println("The id for deleteCard cannot be null");
             e.printStackTrace();
         }
+    }
+    /**
+     * Method that moves a task from one position (taskToMove) to a different one (newPos).
+     * The method first removes the task and then add it to the correct position, so if we have card with 3 tasks(task0, task1, task2), to put task0 at the back
+     * we would do a call with taskToMove=0 ad newPos=2.
+     * @return a ResponseEntity that contains the modified card or a badrequests error if the method fails.
+     */
+    @PutMapping("/move-task/{id}/{taskToMove}/{newPos}")
+    public ResponseEntity<Card> reorderTasks(@PathVariable("id") long id, @PathVariable("taskToMove") long taskToMove, @PathVariable("newPos") long newPos){
+        if(!repo.existsById(id) || taskToMove <0 || newPos<0) {
+            return ResponseEntity.badRequest().build();
+
+        }
+        Card card=repo.findById(id).get();
+        var lists=card.getTaskList();
+        if(taskToMove >=lists.size() || newPos>=lists.size()) {
+            return ResponseEntity.badRequest().build();
+        }
+        Task movedTask=lists.get((int) taskToMove);
+        lists.remove(movedTask);
+        lists.add((int) newPos,movedTask);
+        card.setTaskList(lists);
+        Card updatedCard = repo.save(card);
+        boardUpdateListener.add(updatedCard.getParentList().getParentBoard());
+        return ResponseEntity.ok(updatedCard);
+    }
+
+    @PutMapping("/change-name/{id}/{newName}")
+    public ResponseEntity<Card> renameCard(@PathVariable("id") long id, @PathVariable("newName") String newName) {
+        if(!repo.existsById(id)) {
+            return ResponseEntity.badRequest().build();
+        }
+        Card currentCard = repo.findById(id).get();
+        currentCard.setTitle(newName);
+        Card updatedCard = repo.save(currentCard);
+        boardUpdateListener.add(updatedCard.getParentList().getParentBoard());
+        return ResponseEntity.ok(updatedCard);
+    }
+    @PutMapping("/change-description/{id}/{newDescription}")
+    public ResponseEntity<Card> changeCardDescription(@PathVariable("id") long id, @PathVariable("newDescription") String newDescription) {
+        if(!repo.existsById(id)) {
+            return ResponseEntity.badRequest().build();
+        }
+        Card currentCard = repo.findById(id).get();
+        currentCard.setDescription(newDescription);
+        Card updatedCard = repo.save(currentCard);
+        boardUpdateListener.add(updatedCard.getParentList().getParentBoard());
+        return ResponseEntity.ok(updatedCard);
     }
     
 }

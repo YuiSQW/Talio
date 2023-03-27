@@ -89,9 +89,9 @@ public class BoardListController {
 
     /**
      * Method that moves a card from one position (cardToMove) to a different one (newPos).
-     * The method first removes the card and then add it to the correct position, so if we have board with 3 cards(card0, card1, card2), to put card0 at the back
+     * The method first removes the card and then add it to the correct position, so if we have boardlist with 3 cards(card0, card1, card2), to put card0 at the back
      * we would do a call with cardToMove=0 ad newPos=2.
-     * @return a ResponseEntity that contains the modified board or a badrequests error if the method fails.
+     * @return a ResponseEntity that contains the modified boardlist or a badrequests error if the method fails.
      */
     @PutMapping("/move-card/{id}/{cardToMove}/{newPos}")
     public ResponseEntity<BoardList> reorderCards(@PathVariable("id") long id, @PathVariable("cardToMove") long cardToMove, @PathVariable("newPos") long newPos){
