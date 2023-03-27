@@ -56,7 +56,7 @@ public class BoardOverviewCtrl {
         //this.board = serverUtils.getBoard(330);
         
         //You can delete this line in principle, but then the client sees "Title shortly" instead of the database title
-        //this.boardTitle.setText(this.board.getName());
+        this.boardTitle.setText(this.board.getName());
     
         /*
          * ATTENTION: Steps to make sure that the syncing works on your local host (make sure 2 clients connect to the same board)
@@ -99,7 +99,11 @@ public class BoardOverviewCtrl {
         Timeline timeline = new Timeline(
                 //Call the refresh method every second
                 new KeyFrame(Duration.seconds(1), event -> {
-                    refresh(userChangesField.get());
+                    
+                    boolean hasChanged = refresh(userChangesField.get());
+                    //Set the userChangesField to the value from the refresh() func
+                    userChangesField.set(hasChanged);
+                    
                 })
         );
         timeline.setCycleCount(Timeline.INDEFINITE);
@@ -107,11 +111,16 @@ public class BoardOverviewCtrl {
         
         boardTitle.setOnMousePressed(event -> {
             userChangesField.set(true);
+            System.out.println("true");
+            //TODO send the changed flag to the server
         });
     
         boardTitle.setOnKeyTyped(event -> {
             userChangesField.set(true);
+            System.out.println("true");
+            //TODO send the changed flag to the server
         });
+    
         
     }
     
@@ -161,8 +170,10 @@ public class BoardOverviewCtrl {
 
     /**
      * Refreshes the overview of the board with all the updates of the database
+     *
+     * @return the boolean if a client is editing the field
      */
-    public void refresh(boolean isUserEditing){
+    public boolean refresh(boolean isUserEditing){
         //TODO implements the logic related to retrieving the lists and displaying them
         this.board = websocketServerUtils.getCurrentBoard();
         this.board = serverUtils.getBoard(this.board.id);
@@ -176,8 +187,12 @@ public class BoardOverviewCtrl {
         //Otherwise the clients get constantly interrupted
         if (!isUserEditing) {
             boardTitle.setText(this.board.getName());
+            //TODO sent the isUserEditing flag to the server
+            
         }
-
+        
+        //Return false again after the label has been set
+        return false;
     }
     
     /**
