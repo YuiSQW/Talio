@@ -2,7 +2,6 @@ package server.api;
 
 
 
-import commons.BoardList;
 import commons.Card;
 import commons.Task;
 import org.springframework.beans.factory.annotation.Autowired;
