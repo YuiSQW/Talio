@@ -30,9 +30,9 @@ import server.database.TaskRepository;
 import java.util.ArrayList;
 import java.util.Optional;
 
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.hamcrest.Matchers.is;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 @WebMvcTest(TaskController.class)
 @MockBeans({@MockBean(TaskRepository.class), @MockBean(CardRepository.class), @MockBean(BoardUpdateListener.class)})
@@ -91,6 +91,27 @@ public class TaskControllerTest {
         Mockito.when(parentRepo.existsById(Mockito.anyLong())).thenReturn(false);
         String content = new ObjectMapper().writeValueAsString(new Task(testCard, ""));
         this.mockMvc.perform(post("/api/tasks/new-task/-1").contentType("application/json").content(content)).andExpect(status().isBadRequest());
+    }
+    @Test
+    void changeNameTestCorrect() throws Exception{
+        Task task=new Task(testCard,"name");
+        testCard.addTask(task);
+        Mockito.when(this.repo.existsById(Mockito.anyLong())).thenReturn(true);
+        Mockito.when(this.repo.findById(Mockito.anyLong())).thenReturn(Optional.of(task));
+        Mockito.when(this.repo.save(Mockito.any(Task.class))).thenReturn(task);
+        this.mockMvc.perform(put("/api/tasks/change-name/1/newname"))
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(jsonPath("$.name",is("newname")));
+    }
+    @Test
+    void changeNameTestError() throws Exception{
+        Task task=new Task(testCard,"name");
+        testCard.addTask(task);
+        Mockito.when(this.repo.existsById(Mockito.anyLong())).thenReturn(false);
+        Mockito.when(this.repo.findById(Mockito.anyLong())).thenReturn(Optional.of(task));
+        Mockito.when(this.repo.save(Mockito.any(Task.class))).thenReturn(task);
+        this.mockMvc.perform(put("/api/tasks/change-name/1/newname"))
+                .andExpect(status().isBadRequest());
     }
 
 
