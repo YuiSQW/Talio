@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -36,6 +37,7 @@ public class Card {
         this.title = title;
         this.description = description;
         this.parentList = parentList;
+        this.taskList=new ArrayList<>();
     }
     public String getDescription() {
         return this.description;
@@ -55,6 +57,17 @@ public class Card {
 
     public void setParentList(BoardList list){
         this.parentList = list;}
+
+    public List<Task> getTaskList() {
+        return taskList;
+    }
+
+    public void setTaskList(List<Task> taskList) {
+        this.taskList = taskList;
+    }
+    public void addTask(Task task){
+        this.taskList.add(task);
+    }
 
     public BoardList getParentList(){
         return this.parentList;

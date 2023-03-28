@@ -3,6 +3,7 @@ package server.api;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import commons.Board;
 import commons.BoardList;
+import commons.Card;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +18,12 @@ import server.database.BoardRepository;
 import java.util.ArrayList;
 import java.util.Optional;
 
+import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(BoardListController.class)
@@ -91,5 +94,71 @@ class BoardListControllerTest {
             BoardListController c = new BoardListController(repo, parentRepo);
             c.deleteList(0);
         }));
+    }
+
+    @Test
+    void reorderCardsTestCorrect() throws Exception {
+        Board board = new Board("test1", new ArrayList<>());
+        BoardList boardList=new BoardList("test",new ArrayList<>(),board);
+        Card card1=new Card("card1","testcard",boardList);
+        Card card2=new Card("card2","testcard",boardList);
+        boardList.addCard(card1);
+        boardList.addCard(card2);
+        Mockito.when(this.repo.existsById(Mockito.anyLong())).thenReturn(true);
+        Mockito.when(this.repo.findById(Mockito.anyLong())).thenReturn(Optional.of(boardList));
+        Mockito.when(this.repo.save(Mockito.any(BoardList.class))).thenReturn(boardList);
+
+        this.mockMvc.perform(put("/api/boardlists/move-card/1/0/1"))
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(jsonPath("$.cardList[0].title",is("card2")))
+                .andExpect(jsonPath("$.cardList[1].title",is("card1")));
+    }
+
+    @Test
+    void reorderCardsTestErrorNoSuchBoardList() throws Exception {
+        Board board = new Board("test1", new ArrayList<>());
+        BoardList boardList=new BoardList("test",new ArrayList<>(),board);
+        Card card1=new Card("card1","testcard",boardList);
+        Card card2=new Card("card2","testcard",boardList);
+        boardList.addCard(card1);
+        boardList.addCard(card2);
+        Mockito.when(this.repo.existsById(Mockito.anyLong())).thenReturn(false);
+        Mockito.when(this.repo.findById(Mockito.anyLong())).thenReturn(Optional.of(boardList));
+        Mockito.when(this.repo.save(Mockito.any(BoardList.class))).thenReturn(boardList);
+
+        this.mockMvc.perform(put("/api/boardlists/move-card/1/0/1"))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void reorderCardsTestErrorCardIndexTooBig() throws Exception {
+        Board board = new Board("test1", new ArrayList<>());
+        BoardList boardList=new BoardList("test",new ArrayList<>(),board);
+        Card card1=new Card("card1","testcard",boardList);
+        Card card2=new Card("card2","testcard",boardList);
+        boardList.addCard(card1);
+        boardList.addCard(card2);
+        Mockito.when(this.repo.existsById(Mockito.anyLong())).thenReturn(true);
+        Mockito.when(this.repo.findById(Mockito.anyLong())).thenReturn(Optional.of(boardList));
+        Mockito.when(this.repo.save(Mockito.any(BoardList.class))).thenReturn(boardList);
+
+        this.mockMvc.perform(put("/api/boardlists/move-card/1/2/1"))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void reorderCardsTestErrorInvalidNewPosition() throws Exception {
+        Board board = new Board("test1", new ArrayList<>());
+        BoardList boardList=new BoardList("test",new ArrayList<>(),board);
+        Card card1=new Card("card1","testcard",boardList);
+        Card card2=new Card("card2","testcard",boardList);
+        boardList.addCard(card1);
+        boardList.addCard(card2);
+        Mockito.when(this.repo.existsById(Mockito.anyLong())).thenReturn(true);
+        Mockito.when(this.repo.findById(Mockito.anyLong())).thenReturn(Optional.of(boardList));
+        Mockito.when(this.repo.save(Mockito.any(BoardList.class))).thenReturn(boardList);
+
+        this.mockMvc.perform(put("/api/boardlists/move-card/1/0/2"))
+                .andExpect(status().isBadRequest());
     }
 }
