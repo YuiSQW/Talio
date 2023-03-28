@@ -89,19 +89,18 @@ public class BoardListController {
     @DeleteMapping("/{id}")
     public void deleteList(@PathVariable("id") long id){
         try {
-            var boardList=repo.getById(id);
-            var listCards=boardList.getCardList();
-            for(int i = 0; i< listCards.size(); i++){
-                var listTasks= listCards.get(i).getTaskList();
-                for(int j=0;j<listTasks.size();j++) {
+            var boardList = repo.getById(id);
+            var listCards = boardList.getCardList();
+            for (int i = 0; i < listCards.size(); i++) {
+                var listTasks = listCards.get(i).getTaskList();
+                for (int j = 0; j < listTasks.size(); j++) {
                     taskRepo.delete(listTasks.get(j));
                 }
                 cardRepo.delete(listCards.get(i));
             }
             repo.deleteById(id);
             boardUpdateListener.add(repo.getById(id).getParentBoard());
-        }
-        catch(IllegalArgumentException e){
+        }catch(IllegalArgumentException e){
             System.out.println("The id for deleteList cannot be null");
             e.printStackTrace();
         }
