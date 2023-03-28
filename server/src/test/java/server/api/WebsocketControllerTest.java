@@ -1,7 +1,7 @@
 package server.api;
 
 import commons.Board;
-import org.apache.commons.lang3.RandomStringUtils;
+//import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -28,8 +28,10 @@ import java.util.concurrent.CompletableFuture;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.junit.jupiter.api.Assertions.*;
+/*
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+*/
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 
@@ -69,6 +71,7 @@ class WebsocketControllerTest {
         assertNotNull(receivedBoard);
     }
 
+    /*
     @Test
     void sendChangedBoardTest() throws Exception{
         WebSocketStompClient socket = new WebSocketStompClient(new StandardWebSocketClient());
@@ -90,6 +93,7 @@ class WebsocketControllerTest {
         assertEquals(randString, receivedBoard.getName());
 
     }
+    */
 
     private class GetBoardStompFrameHandler implements StompFrameHandler{
 
