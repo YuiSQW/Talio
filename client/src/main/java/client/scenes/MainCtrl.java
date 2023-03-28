@@ -27,13 +27,6 @@ import javafx.util.Pair;
 public class MainCtrl {
 
     private Stage primaryStage;
-
-    private QuoteOverviewCtrl overviewCtrl;
-    private Scene overview;
-
-    private AddQuoteCtrl addCtrl;
-    private Scene add;
-
     private BoardOverviewCtrl boardOverviewCtrl;
     private Scene boardOverview;
 
@@ -49,18 +42,12 @@ public class MainCtrl {
     private Scene welcome;
 
     public void initialize(Stage primaryStage,
-                           Pair<QuoteOverviewCtrl, Parent> overview,
-                           Pair<AddQuoteCtrl, Parent> add,
                            Pair<BoardOverviewCtrl, Parent> board,
                            Pair<EditListNameCtrl, Parent> editList,
                            Pair<CardOverviewCtrl, Parent> card,
                            Pair<AddCardCtrl, Parent> addCard,
                            Pair<WelcomeCtrl, Parent> welcome) throws Exception {
         this.primaryStage = primaryStage;
-        this.overviewCtrl = overview.getKey();
-        this.overview = new Scene(overview.getValue());
-        this.addCtrl = add.getKey();
-        this.add = new Scene(add.getValue());
 
         this.boardOverviewCtrl=board.getKey();
         this.boardOverview= new Scene(board.getValue());
@@ -138,19 +125,6 @@ public class MainCtrl {
         this.primaryStage.setMaximized(!this.primaryStage.isMaximized());
     }
 
-    //   OBSOLETE METHOD FOR QUOTE APPLICATION
-    public void showOverview() {
-        primaryStage.setTitle("Quotes: Overview");
-        primaryStage.setScene(overview);
-        overviewCtrl.refresh();
-    }
-
-    //    OBSOLETE METHOD FOR THE QUOTE APPLICATION
-    public void showAdd() {
-        primaryStage.setTitle("Quotes: Adding Quote");
-        primaryStage.setScene(add);
-        add.setOnKeyPressed(e -> addCtrl.keyPressed(e));
-    }
 
 
 

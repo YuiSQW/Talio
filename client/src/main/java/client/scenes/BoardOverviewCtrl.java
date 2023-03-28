@@ -56,7 +56,7 @@ public class BoardOverviewCtrl {
         //this.board = serverUtils.getBoard(330);
         
         //You can delete this line in principle, but then the client sees "Title shortly" instead of the database title
-        this.boardTitle.setText(this.board.getName());
+        //this.boardTitle.setText(this.board.getName());
     
         /*
          * ATTENTION: Steps to make sure that the syncing works on your local host (make sure 2 clients connect to the same board)

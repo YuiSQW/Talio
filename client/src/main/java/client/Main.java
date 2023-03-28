@@ -34,10 +34,6 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
 
-//        OBSOLETE CODE FROM QUOTE APPLICATION
-        var overview = FXML.load(QuoteOverviewCtrl.class, "client", "scenes", "QuoteOverview.fxml");
-        var add = FXML.load(AddQuoteCtrl.class, "client", "scenes", "AddQuote.fxml");
-
         var boardOverview = FXML.load(BoardOverviewCtrl.class,"client","scenes","BoardOverviewNew.fxml");
         var editListName= FXML.load(EditListNameCtrl.class,"client","scenes","EditListNameOverview.fxml");
         var addCard=FXML.load(AddCardCtrl.class,"client","scenes","AddCardOverview.fxml");
@@ -45,6 +41,6 @@ public class Main extends Application {
         var welcomeOverview =FXML.load(WelcomeCtrl.class,"client","scenes","Welcome.fxml");
 
         var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
-        mainCtrl.initialize(primaryStage, overview, add, boardOverview,editListName, cardOverview, addCard, welcomeOverview );
+        mainCtrl.initialize(primaryStage, boardOverview,editListName, cardOverview, addCard, welcomeOverview );
     }
 }
