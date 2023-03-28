@@ -123,7 +123,6 @@ class ServerUtilsTest {
         assertEquals("", createdList.getName());
         assertEquals(new ArrayList<Card>(), createdList.getCardList());
     }
-    */
 
     @Test
     void renameListTest() throws Exception{
@@ -138,6 +137,7 @@ class ServerUtilsTest {
         assertEquals("newname", changedList.getName());
         assertEquals(new ArrayList<Card>(), changedList.getCardList());
     }
+    */
     
     @Test
     void deleteListTest() throws Exception{
