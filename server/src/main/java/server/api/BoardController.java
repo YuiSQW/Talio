@@ -4,6 +4,7 @@ package server.api;
 
 import commons.Board;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,10 +21,11 @@ public class BoardController {
      */
     private final BoardRepository repo;
 
+    @Autowired
+    private BoardUpdateListener boardUpdateListener;
 
     public BoardController(BoardRepository repo){
         this.repo = repo;
-
     }
 
     /**
@@ -51,7 +53,18 @@ public class BoardController {
     public ResponseEntity<Board> getNewBoard(@RequestBody Board board){
         if(board.getLists() == null || board.getName() == null)return ResponseEntity.badRequest().build();
         Board saved = repo.save(board);
+        boardUpdateListener.add(saved);
         return ResponseEntity.ok(saved);
+    }
+
+    @PutMapping("/change-name/{id}/{newName}")
+    public ResponseEntity<Board> changeName(@PathVariable("id") long id, @PathVariable("newName") String newName){
+        if(!repo.existsById(id))return ResponseEntity.badRequest().build();
+        Board board = repo.findById(id).get();
+        board.setName(newName);
+        Board updatedBoard = repo.save(board);
+        boardUpdateListener.add(updatedBoard);
+        return ResponseEntity.ok(updatedBoard);
     }
 
 

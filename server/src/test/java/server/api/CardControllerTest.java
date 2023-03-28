@@ -21,12 +21,13 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(CardController.class)
-@MockBeans({@MockBean(CardRepository.class), @MockBean(BoardListRepository.class)})
+@MockBeans({@MockBean(CardRepository.class), @MockBean(BoardListRepository.class), @MockBean(BoardUpdateListener.class)})
 class CardControllerTest {
 
     @Autowired
@@ -38,41 +39,57 @@ class CardControllerTest {
     @Autowired
     private BoardListRepository parentRepo;
 
+    @Autowired BoardUpdateListener boardUpdateListener;
     private Board testBoard;
     private BoardList list;
+    
+    private Card card;
     @BeforeEach
     void setup(){
         testBoard = new Board("", new ArrayList<>());
         list = new BoardList("",new ArrayList<>(), testBoard);
         testBoard.addList(list);
-
+        card = new Card("", "", list);
+        
     }
     @Test
     void getByIdTestCorrect() throws Exception{
-        Mockito.when(repo.existsById(Mockito.anyLong())).thenReturn(true);
-        Mockito.when(repo.findById(Mockito.anyLong())).thenReturn(Optional.of(new Card("", "", list)));
+        when(repo.existsById(Mockito.anyLong())).thenReturn(true);
+        when(repo.findById(Mockito.anyLong())).thenReturn(Optional.of(new Card("", "", list)));
         this.mockMvc.perform(get("/api/cards/1")).andExpect(status().is2xxSuccessful());
     }
 
     @Test
     void getByIdTestError()throws Exception{
-        Mockito.when(repo.existsById(Mockito.anyLong())).thenReturn(false);
+        when(repo.existsById(Mockito.anyLong())).thenReturn(false);
         this.mockMvc.perform(get("/api/cards/-1")).andExpect(status().isBadRequest());
     }
 
     @Test
     void getNewCardTestCorrect() throws Exception{
-        Mockito.when(parentRepo.existsById(Mockito.anyLong())).thenReturn(true);
-        Mockito.when(repo.save(Mockito.any(Card.class))).thenReturn(new Card("", "", list));
-        Mockito.when(parentRepo.findById(Mockito.anyLong())).thenReturn(Optional.of(new BoardList("", new ArrayList<>(), new Board("", new ArrayList<>()))));
+        when(parentRepo.existsById(Mockito.anyLong())).thenReturn(true);
+        when(repo.save(Mockito.any(Card.class))).thenReturn(new Card("", "", list));
+        when(parentRepo.findById(Mockito.anyLong())).thenReturn(Optional.of(new BoardList("", new ArrayList<>(), new Board("", new ArrayList<>()))));
         String content = new ObjectMapper().writeValueAsString(new Card("", "", list));
         this.mockMvc.perform(post("/api/cards/new-card/1").contentType("application/json").content(content)).andExpect(status().is2xxSuccessful());
     }
 
     @Test
     void getNewCardTestError() throws Exception{
-        Mockito.when(parentRepo.existsById(Mockito.anyLong())).thenReturn(false);
+        when(parentRepo.existsById(Mockito.anyLong())).thenReturn(false);
         String content = new ObjectMapper().writeValueAsString(new Card("", "", list));
         this.mockMvc.perform(post("/api/cards/new-card/-1").contentType("application/json").content(content)).andExpect(status().isBadRequest());
     }
+    
+    /**
+     * Test the behavior of the deleteCard in the CardController class
+     */
+    @Test
+    void deleteCardCorrect() {
+        assertDoesNotThrow(() ->{
+            CardController c = new CardController(repo, parentRepo);
+            c.deleteCard(0);
+        });
+    }
+    
 }

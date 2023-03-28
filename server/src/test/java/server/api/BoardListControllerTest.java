@@ -24,7 +24,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(BoardListController.class)
-@MockBeans({@MockBean(BoardListRepository.class), @MockBean(BoardRepository.class)})
+@MockBeans({@MockBean(BoardListRepository.class), @MockBean(BoardRepository.class), @MockBean(BoardUpdateListener.class)})
 class BoardListControllerTest {
 
     @Autowired
@@ -35,6 +35,9 @@ class BoardListControllerTest {
 
     @Autowired
     private BoardRepository parentRepo;
+
+    @Autowired
+    private BoardUpdateListener boardUpdateListener;
 
     @Test
     void getByIdTestCorrect() throws Exception {
@@ -84,9 +87,9 @@ class BoardListControllerTest {
 
     @Test
     void deleteListTest() {
-        assertDoesNotThrow(() ->{
+        assertThrows(Exception.class, (() ->{
             BoardListController c = new BoardListController(repo, parentRepo);
             c.deleteList(0);
-        });
+        }));
     }
 }

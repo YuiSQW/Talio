@@ -1,6 +1,8 @@
 package server.api;
 
+import commons.Card;
 import commons.Task;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import server.database.CardRepository;
@@ -12,6 +14,9 @@ public class TaskController {
     private final TaskRepository repo;
 
     private final CardRepository parentRepo;
+
+    @Autowired
+    private BoardUpdateListener boardUpdateListener;
 
     public TaskController(TaskRepository repo, CardRepository parentRepo) {
         this.repo = repo;
@@ -31,8 +36,12 @@ public class TaskController {
         if(newTask == null || newTask.getName() == null || !parentRepo.existsById(cardId)){
             return ResponseEntity.badRequest().build();
         }
-        newTask.setParentCard(parentRepo.getById(cardId));
+
+        Card parentCard=parentRepo.getById(cardId);
+        newTask.setParentCard(parentCard);
         Task addedTask=repo.save(newTask);
+        boardUpdateListener.add(addedTask.getParentCard().getParentList().getParentBoard());
+
         return ResponseEntity.ok(addedTask);
     }
 }
