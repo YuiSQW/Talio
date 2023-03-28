@@ -153,12 +153,23 @@ public class ServerUtils {
             .post(Entity.entity(newBoard, APPLICATION_JSON), Board.class);
     }
     
+    public Board renameBoard(Board changedBoard){
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/boards/" + changedBoard.id + "/" + changedBoard.getName())
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .put(Entity.entity(changedBoard, APPLICATION_JSON), Board.class);
+    }
+    
+   
+    //TODO write server endpoint + write test
     public List<BoardList> getLists(){
         return ClientBuilder.newClient(new ClientConfig())
                 .target(SERVER).path("/api/boardlists")
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
-                .get(new GenericType<List<BoardList>>() {});
+                .get(new GenericType<>() {
+                });
     }
 
 }

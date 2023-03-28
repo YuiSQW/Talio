@@ -32,7 +32,7 @@ public class Main extends Application {
     }
 
     @Override
-    public void start(Stage primaryStage)  {
+    public void start(Stage primaryStage) throws Exception {
 
 //        OBSOLETE CODE FROM QUOTE APPLICATION
         var overview = FXML.load(QuoteOverviewCtrl.class, "client", "scenes", "QuoteOverview.fxml");

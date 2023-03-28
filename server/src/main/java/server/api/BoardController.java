@@ -57,7 +57,7 @@ public class BoardController {
         return ResponseEntity.ok(saved);
     }
 
-    @PutMapping("/change-name/{id}/{newName}")
+    @PutMapping("/{id}/{newName}")
     public ResponseEntity<Board> changeName(@PathVariable("id") long id, @PathVariable("newName") String newName){
         if(!repo.existsById(id))return ResponseEntity.badRequest().build();
         Board board = repo.findById(id).get();
