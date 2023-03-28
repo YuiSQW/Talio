@@ -2,7 +2,6 @@ package server.api;
 
 
 
-import commons.Board;
 import commons.BoardList;
 
 import commons.Card;
