@@ -145,7 +145,7 @@ class BoardControllerTest {
         Mockito.when(this.repo.existsById(Mockito.anyLong())).thenReturn(true);
         Mockito.when(this.repo.findById(Mockito.anyLong())).thenReturn(Optional.of(board));
         Mockito.when(this.repo.save(Mockito.any(Board.class))).thenReturn(board);
-        this.mockMvc.perform(put("/api/boards/change-name/1/test2"))
+        this.mockMvc.perform(put("/api/boards/1/test2"))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(jsonPath("$.name", is("test2")));
     }
@@ -153,7 +153,7 @@ class BoardControllerTest {
     void changeNameTestError() throws Exception{
         Board board=new Board("test",new ArrayList<>());
         Mockito.when(this.repo.existsById(Mockito.anyLong())).thenReturn(false);
-        this.mockMvc.perform(put("/api/boards/change-name/1/test2"))
+        this.mockMvc.perform(put("/api/boards/1/test2"))
                 .andExpect(status().isBadRequest());
     }
 

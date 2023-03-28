@@ -29,6 +29,8 @@ import commons.BoardList;
 import commons.Card;
 
 
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import org.glassfish.jersey.client.ClientConfig;
 
 import commons.Quote;
@@ -41,7 +43,7 @@ import jakarta.ws.rs.core.GenericType;
  */
 public class ServerUtils {
 
-    private static final String SERVER = "http://localhost:8080/";
+    private static String SERVER = "http://localhost:8080/";
 
     public void getQuotesTheHardWay() throws IOException {
         var url = new URL("http://localhost:8080/api/quotes");
@@ -172,4 +174,36 @@ public class ServerUtils {
                 });
     }
 
+    /**
+     * This method lets a user connect to the server with a server address.
+     * The user can access the localhost.
+     * The server address the user has to enter is localhost:8080
+     * @param serverAddress The server address of the server to connect to
+     * @throws Exception exception thrown when connection can't be established
+     */
+    public void connect(String serverAddress) throws Exception{
+        SERVER = "http://" + serverAddress + "/";
+        try{
+            ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/boards/connection-available")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .get(new GenericType<String>() {});
+        } catch (Exception exception){
+            connectionFailure();
+            throw new Exception("Could not connect to server: " + exception);
+
+        }
+    }
+
+    /**
+     * This method is called when the user tries to connect, but connection fails.
+     * We use an alert box with a message as a popup.
+     * The user can then click OK and try again.
+     */
+    public void connectionFailure(){
+        Alert alert = new Alert(Alert.AlertType.ERROR, "Could not connect to server", ButtonType.OK);
+        alert.setHeaderText("Something went wrong");
+        alert.showAndWait();
+    }
 }
