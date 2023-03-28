@@ -29,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(BoardListController.class)
-@MockBeans({@MockBean(BoardListRepository.class), @MockBean(BoardRepository.class), @MockBean(BoardUpdateListener.class)})
+@MockBeans({@MockBean(BoardListRepository.class), @MockBean(BoardRepository.class), @MockBean(BoardUpdateListener.class), @MockBean(CardRepository.class), @MockBean(TaskRepository.class)})
 class BoardListControllerTest {
 
     @Autowired
