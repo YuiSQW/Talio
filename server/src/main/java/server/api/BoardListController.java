@@ -113,6 +113,35 @@ public class BoardListController {
         return ResponseEntity.ok(updatedBoardList);
     }
 
+    /**
+     * Method that moves a card between two boards (fromListId and toListId). Specifically the card from position cardToMove from the first board is moved to
+     * position newPos of the second board
+     * @return  a ResponseEntity that contains the boardlist that received the new card or a badrequests error if the method fails.
+     */
+    @PutMapping("/exchange-card/{fromListId}/{toListId}/{cardToMove}/{newPos}")
+    public ResponseEntity<BoardList> exchangeCard(@PathVariable("fromListId")long fromListId,@PathVariable("toListId")long toListId,@PathVariable("cardToMove")long cardToMove, @PathVariable("newPos")long newPos){
+        if(!repo.existsById(fromListId) || !repo.existsById(toListId) || cardToMove<0 || newPos<0){
+            return ResponseEntity.badRequest().build();
+        }
+        BoardList oldList=repo.findById(fromListId).get();
+        BoardList newList=repo.findById(toListId).get();
+        var listsOld=oldList.getCardList();
+        var listsNew=newList.getCardList();
+        if(cardToMove>=listsOld.size() || newPos>listsNew.size()){//newPos can be equal to the size of the list, as that adds the element at the end of the list
+            return ResponseEntity.badRequest().build();
+        }
+        Card movedCard=listsOld.get((int) cardToMove);
+        listsOld.remove(movedCard);
+        listsNew.add((int) newPos,movedCard);
+        oldList.setCardList(listsOld);
+        newList.setCardList(listsNew);
+        BoardList updatedOldList=repo.save(oldList);
+        BoardList updatedNewList=repo.save(newList);
+        boardUpdateListener.add(updatedOldList.getParentBoard());
+        boardUpdateListener.add(updatedNewList.getParentBoard());
+        return ResponseEntity.ok(updatedNewList);
+    }
+
 
 
 }
