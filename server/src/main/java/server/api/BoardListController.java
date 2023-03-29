@@ -2,6 +2,7 @@ package server.api;
 
 
 
+import commons.Board;
 import commons.BoardList;
 
 import commons.Card;
@@ -79,9 +80,12 @@ public class BoardListController {
     @DeleteMapping("/{id}")
     public void deleteList(@PathVariable("id") long id) {
         try {
-            boardUpdateListener.add(repo.getById(id).getParentBoard());
+            Board board=repo.getById(id).getParentBoard();
+            var lists=board.getLists();
+            lists.remove(repo.getById(id));
+            board.setLists(lists);
             repo.deleteById(id);
-            
+            boardUpdateListener.add(repo.getById(id).getParentBoard());
         }catch(IllegalArgumentException e){
             System.out.println("The id for deleteList cannot be null");
             e.printStackTrace();
