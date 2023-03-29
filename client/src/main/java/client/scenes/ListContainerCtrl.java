@@ -44,9 +44,9 @@ public class ListContainerCtrl extends VBox {
     public void init(TilePane tilePane, BoardOverviewCtrl boardOverviewCtrl, BoardList boardList) {
         this.boardOverviewCtrl=boardOverviewCtrl;
         if(boardList==null){
-        this.list= new BoardList("Empty List",new ArrayList<Card>(),this.boardOverviewCtrl.getBoard());
-        this.list = serverUtils.postNewList(this.list, this.boardOverviewCtrl.getBoard());}
-        else{
+            this.list= new BoardList("Empty List",new ArrayList<Card>(),this.boardOverviewCtrl.getBoard());
+            this.list = serverUtils.postNewList(this.list, this.boardOverviewCtrl.getBoard());
+        } else{
             this.list=boardList;
         }
 
