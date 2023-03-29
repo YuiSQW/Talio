@@ -160,7 +160,7 @@ public class ListContainerCtrl extends VBox {
                     Dragboard db = event.getDragboard();
                     boolean success = false;
                     if (db.hasString()) {
-                       Card card = new Card(db.getString(), "description", ListContainerCtrl.this.list); 
+                       Card card = new Card(db.getString(), "description of the task", ListContainerCtrl.this.list); 
                        listView.getItems().add(cell.getIndex(), card);
                        success = true;
                     }
