@@ -74,13 +74,16 @@ public class WebsocketServerUtils {
      */
     private class GetBoardStompFrameHandler implements StompFrameHandler {
 
+        
         @Override
         public Type getPayloadType(StompHeaders stompHeaders){
             return Board.class;
         }
 
+        //This method constantly gets the board
         @Override
         public void handleFrame(StompHeaders stompHeaders, Object board){
+            
             currentBoard = (Board) board;
         }
     }

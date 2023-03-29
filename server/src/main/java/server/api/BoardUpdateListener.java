@@ -24,11 +24,13 @@ public class BoardUpdateListener {
     private Queue<Board> updatedBoards;
 
     public BoardUpdateListener(){
+        
         this.updatedBoards = new ConcurrentLinkedQueue<>();
     }
 
     public synchronized void add(Board updatedBoard){
         this.updatedBoards.add(updatedBoard);
+        
     }
 
     public Board poll(){

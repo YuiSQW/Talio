@@ -105,7 +105,7 @@ public class CardController {
         return ResponseEntity.ok(updatedCard);
     }
 
-    @PutMapping("/change-name/{id}/{newName}")
+    @PutMapping("/{id}/{newName}")
     public ResponseEntity<Card> renameCard(@PathVariable("id") long id, @PathVariable("newName") String newName) {
         if(!repo.existsById(id)) {
             return ResponseEntity.badRequest().build();
