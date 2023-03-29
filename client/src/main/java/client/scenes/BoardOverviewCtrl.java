@@ -3,6 +3,7 @@ package client.scenes;
 import client.utils.ServerUtils;
 import client.utils.WebsocketServerUtils;
 import commons.Board;
+import commons.BoardList;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.fxml.FXML;
@@ -141,19 +142,28 @@ public class BoardOverviewCtrl {
     }
 
     /**
+     * Method which triggers the addition of an EMPTY List Container
      * Connected to the addList button
      */
     public void addNewList(){
-        this.addNewVbox();
+        this.addNewVbox(null);
+    }
+
+    /**
+     * Method which triggers the addition of a List Container with the provided BoardList inctance
+     * @param boardList - the BoardList instance for the container
+     */
+    public void addList(BoardList boardList){
+        this.addNewVbox(boardList);
     }
 
     /**
      * Method which creates a new ListContainer object
      * which contains a child BoardList instance of the Board
      */
-    public void addNewVbox() {
+    public void addNewVbox(BoardList boardList) {
         ListContainerCtrl listContainerCtrl= new ListContainerCtrl(this.mainCtrl,this.serverUtils);
-        listContainerCtrl.init(tilePane,this);
+        listContainerCtrl.init(tilePane,this,boardList);
         tilePane.getChildren().add((tilePane.getChildren().size() - 1), listContainerCtrl);
     }
 

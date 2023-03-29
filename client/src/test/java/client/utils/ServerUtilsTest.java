@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -122,6 +123,20 @@ class ServerUtilsTest {
         assertNotNull(receivedList);
         assertEquals("", receivedList.getName());
         assertEquals(new ArrayList<Card>(), receivedList.getCardList());
+    }
+    @Test
+    void getListsTest() throws Exception{
+        Board board = new Board("", new ArrayList<BoardList>());
+        board.id= 1;
+        board.addList(new BoardList("empty", new ArrayList<Card>()));
+        stubFor(get("/api/boardlists/get-all/1").willReturn(
+           aResponse().withHeader("Content-Type","application/json").withBody(new ObjectMapper().writeValueAsString(board.getLists()))
+        ));
+        ServerUtils server = new ServerUtils();
+        List<BoardList> receivedLists = server.getLists(board);
+        assertNotNull(receivedLists);
+        assertEquals(receivedLists.get(0).getName(),"empty");
+
     }
     
     @Test
