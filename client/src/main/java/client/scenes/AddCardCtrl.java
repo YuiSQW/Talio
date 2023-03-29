@@ -4,14 +4,18 @@ import client.utils.ServerUtils;
 import commons.Card;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.TilePane;
 import javafx.stage.Stage;
 import javax.inject.Inject;
 import java.util.Objects;
 
 public class AddCardCtrl {
+
+    private Card currentCard;
 
     private MainCtrl mainCtrl;
     private ServerUtils serverUtils;
@@ -20,13 +24,15 @@ public class AddCardCtrl {
     @FXML
     private TextField title;
     @FXML
-    private TextArea description,tasks;
+    private TextArea description;
     @FXML
     private Pane toolBar;
     @FXML
-    private Button saveButton, closeButton, minimizeButton;
+    private Button saveButton, closeButton, minimizeButton, newTaskButton;
     @FXML
-    private Button clearTitleButton, clearDescriptionButton, clearTasksButton;
+    private Button clearTitleButton, clearDescriptionButton;
+    @FXML
+    private TilePane tilePane;
     private double x,y;
 
     @Inject
@@ -40,7 +46,7 @@ public class AddCardCtrl {
         this.listContainerCtrl=listContainerCtrl;
         this.title.setText("Title");
         this.description.setText("Description of the task");
-        this.tasks.setText("Subtasks");
+        //this.tasks.setText("Subtasks");
         toolBar.setOnMousePressed( mouseEvent -> {
             this.x= mouseEvent.getSceneX();
             this.y= mouseEvent.getSceneY();
@@ -62,6 +68,7 @@ public class AddCardCtrl {
         var p = title.getText();
         var q = description.getText();
         Card card= new Card(p,q,this.listContainerCtrl.getList());
+        this.currentCard=card;
         this.listContainerCtrl.saveNewCard(card);
         this.closeCard();
     }
@@ -75,7 +82,7 @@ public class AddCardCtrl {
     public void clearFields() {
         title.clear();
         description.clear();
-        tasks.clear();
+        ///tasks.clear();
     }
     public void clearTitle() {
         title.clear();
@@ -83,9 +90,9 @@ public class AddCardCtrl {
     public void clearDescription(){
         description.clear();
     }
-    public void clearTasks(){
-        tasks.clear();
-    }
+    ///public void clearTasks(){
+    ///    tasks.clear();
+    ///}
 
     public void cancel() {
         clearFields();
@@ -99,5 +106,14 @@ public class AddCardCtrl {
         this.stage.setIconified(true);
     }
 
+    public Card getCard(){
+        return this.currentCard;
+    }
+
+    public void addTask(){
+        TaskContainerCtrl taskContainerCtrl=new TaskContainerCtrl(this.mainCtrl,this.serverUtils);
+        taskContainerCtrl.init(tilePane,this);
+        tilePane.getChildren().add(tilePane.getChildren().size()-1,taskContainerCtrl);
+    }
 
 }

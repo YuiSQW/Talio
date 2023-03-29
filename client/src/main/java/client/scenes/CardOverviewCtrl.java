@@ -26,7 +26,7 @@ public class CardOverviewCtrl {
     @FXML
     private TextField title;
     @FXML
-    private TextArea description,tasks;
+    private TextArea description;
     private double x,y;
     @Inject
     public CardOverviewCtrl(MainCtrl mainCtrl, ServerUtils serverUtils){
@@ -80,7 +80,7 @@ public class CardOverviewCtrl {
     public void clearFields() {
         this.title.clear();
         this.description.clear();
-        this.tasks.clear();
+        //this.tasks.clear();
     }
     public void clearTitle() {
         this.title.clear();
@@ -91,9 +91,9 @@ public class CardOverviewCtrl {
     public void clearDescription() {
         this.description.clear();
     }
-    public void clearTasks(){
-        this.tasks.clear();
-    }
+    //public void clearTasks(){
+       //this.tasks.clear();
+   // }
     public void closeCard(){
         cancel();
         this.stage.close();

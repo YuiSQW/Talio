@@ -24,6 +24,7 @@ import commons.BoardList;
 import commons.Card;
 
 
+import commons.Task;
 import org.glassfish.jersey.client.ClientConfig;
 
 import jakarta.ws.rs.client.ClientBuilder;
@@ -101,7 +102,7 @@ public class ServerUtils {
             .target(SERVER).path("api/boardlists/" + listToDelete.id)
             .request(APPLICATION_JSON)
             .accept(APPLICATION_JSON)
-            .delete();
+                .delete();
     }
     
     public Board getBoard(long boardId){
@@ -138,6 +139,15 @@ public class ServerUtils {
                 .accept(APPLICATION_JSON)
                 .get(new GenericType<>() {
                 });
+    }
+    public Task postNewTask(Task newTask, Card parentCard){
+        Task task = ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/tasks/new-task/" + parentCard.id)
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .post(Entity.entity(newTask, APPLICATION_JSON), Task.class);
+        task.setParentCard(parentCard);
+        return task;
     }
 
 }
