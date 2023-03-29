@@ -4,6 +4,8 @@ package server.api;
 
 import commons.Board;
 
+import commons.BoardList;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,10 +22,11 @@ public class BoardController {
      */
     private final BoardRepository repo;
 
+    @Autowired
+    private BoardUpdateListener boardUpdateListener;
 
     public BoardController(BoardRepository repo){
         this.repo = repo;
-
     }
 
     /**
@@ -39,9 +42,6 @@ public class BoardController {
         return ResponseEntity.ok(repo.findById(id).get());
     }
 
-
-
-
     /**
      * Creates a new Board and sets its name, the new board is added to the database
      * @return a ResponseEntity containing the newly created Board or a badrequest error if the board is invalid
@@ -51,8 +51,53 @@ public class BoardController {
     public ResponseEntity<Board> getNewBoard(@RequestBody Board board){
         if(board.getLists() == null || board.getName() == null)return ResponseEntity.badRequest().build();
         Board saved = repo.save(board);
+        boardUpdateListener.add(saved);
         return ResponseEntity.ok(saved);
     }
 
+    @PutMapping("/{id}/{newName}")
+    public ResponseEntity<Board> changeName(@PathVariable("id") long id, @PathVariable("newName") String newName){
+        if(!repo.existsById(id))return ResponseEntity.badRequest().build();
+        Board board = repo.findById(id).get();
+        board.setName(newName);
+        Board updatedBoard = repo.save(board);
+        boardUpdateListener.add(updatedBoard);
+        return ResponseEntity.ok(updatedBoard);
+    }
+
+    /**
+     * Method that moves a list from one position (listToMove) to a different one (newPos).
+     * The method first removes the list and then add it to the correct position, so if we have board with 3 lists(list0, list1, list2), to put list0 at the back
+     * we would do a call with listToMove=0 ad newPos=2.
+     * @return a ResponseEntity that contains the modified board or a badrequests error if the method fails.
+     */
+    @PutMapping("/move-list/{id}/{listToMove}/{newPos}")
+    public ResponseEntity<Board> reorderList(@PathVariable("id") long id, @PathVariable("listToMove") long listToMove,@PathVariable("newPos") long newPos){
+        if(!repo.existsById(id) || listToMove<0 || newPos<0) {
+            return ResponseEntity.badRequest().build();
+
+        }
+        Board board=repo.findById(id).get();
+        var lists=board.getLists();
+        if(listToMove>=lists.size() || newPos>=lists.size()) {
+            return ResponseEntity.badRequest().build();
+        }
+        BoardList movedList=lists.get((int) listToMove);
+        lists.remove(movedList);
+        lists.add((int) newPos,movedList);
+        board.setLists(lists);
+        Board updatedBoard = repo.save(board);
+        boardUpdateListener.add(updatedBoard);
+        return ResponseEntity.ok(updatedBoard);
+    }
+
+    /**
+     * This method is called when a GET request is made to check the connection via the connect() method in ServerUtils.
+     * @return a string "Connection available"
+     */
+    @GetMapping("/connection-available")
+    public String connectionAvailable() {
+        return "Connection available";
+    }
 
 }

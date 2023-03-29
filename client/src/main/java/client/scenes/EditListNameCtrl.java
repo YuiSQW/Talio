@@ -56,11 +56,13 @@ public class EditListNameCtrl {
         this.listContainerCtrl.updateListName(this.listName.getText());
         close();
     }
-    public void close(){this.stage.close();}
+    public void close(){
+        this.stage.close();}
     public void clearName() {
         listName.clear();
     }
-    public void minimize(){this.stage.setIconified(true);}
+    public void minimize(){
+        this.stage.setIconified(true);}
 
 
 }

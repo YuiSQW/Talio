@@ -3,6 +3,7 @@ package server.api;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import commons.Board;
 import commons.BoardList;
+import commons.Card;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,18 +14,22 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import server.database.BoardListRepository;
 import server.database.BoardRepository;
+import server.database.CardRepository;
+import server.database.TaskRepository;
 
 import java.util.ArrayList;
 import java.util.Optional;
 
+import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(BoardListController.class)
-@MockBeans({@MockBean(BoardListRepository.class), @MockBean(BoardRepository.class)})
+@MockBeans({@MockBean(BoardListRepository.class), @MockBean(BoardRepository.class), @MockBean(BoardUpdateListener.class), @MockBean(CardRepository.class), @MockBean(TaskRepository.class)})
 class BoardListControllerTest {
 
     @Autowired
@@ -35,6 +40,15 @@ class BoardListControllerTest {
 
     @Autowired
     private BoardRepository parentRepo;
+
+    @Autowired
+    private CardRepository cardRepo;
+
+    @Autowired
+    private TaskRepository taskRepo;
+
+    @Autowired
+    private BoardUpdateListener boardUpdateListener;
 
     @Test
     void getByIdTestCorrect() throws Exception {
@@ -84,9 +98,139 @@ class BoardListControllerTest {
 
     @Test
     void deleteListTest() {
-        assertDoesNotThrow(() ->{
-            BoardListController c = new BoardListController(repo, parentRepo);
+        assertThrows(Exception.class, (() ->{
+            BoardListController c = new BoardListController(repo, parentRepo, cardRepo, taskRepo);
             c.deleteList(0);
-        });
+        }));
+    }
+
+    @Test
+    void reorderCardsTestCorrect() throws Exception {
+        Board board = new Board("test1", new ArrayList<>());
+        BoardList boardList=new BoardList("test",new ArrayList<>(),board);
+        Card card1=new Card("card1","testcard",boardList);
+        Card card2=new Card("card2","testcard",boardList);
+        boardList.addCard(card1);
+        boardList.addCard(card2);
+        Mockito.when(this.repo.existsById(Mockito.anyLong())).thenReturn(true);
+        Mockito.when(this.repo.findById(Mockito.anyLong())).thenReturn(Optional.of(boardList));
+        Mockito.when(this.repo.save(Mockito.any(BoardList.class))).thenReturn(boardList);
+
+        this.mockMvc.perform(put("/api/boardlists/move-card/1/0/1"))
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(jsonPath("$.cardList[0].title",is("card2")))
+                .andExpect(jsonPath("$.cardList[1].title",is("card1")));
+    }
+
+    @Test
+    void reorderCardsTestErrorNoSuchBoardList() throws Exception {
+        Board board = new Board("test1", new ArrayList<>());
+        BoardList boardList=new BoardList("test",new ArrayList<>(),board);
+        Card card1=new Card("card1","testcard",boardList);
+        Card card2=new Card("card2","testcard",boardList);
+        boardList.addCard(card1);
+        boardList.addCard(card2);
+        Mockito.when(this.repo.existsById(Mockito.anyLong())).thenReturn(false);
+        Mockito.when(this.repo.findById(Mockito.anyLong())).thenReturn(Optional.of(boardList));
+        Mockito.when(this.repo.save(Mockito.any(BoardList.class))).thenReturn(boardList);
+
+        this.mockMvc.perform(put("/api/boardlists/move-card/1/0/1"))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void reorderCardsTestErrorCardIndexTooBig() throws Exception {
+        Board board = new Board("test1", new ArrayList<>());
+        BoardList boardList=new BoardList("test",new ArrayList<>(),board);
+        Card card1=new Card("card1","testcard",boardList);
+        Card card2=new Card("card2","testcard",boardList);
+        boardList.addCard(card1);
+        boardList.addCard(card2);
+        Mockito.when(this.repo.existsById(Mockito.anyLong())).thenReturn(true);
+        Mockito.when(this.repo.findById(Mockito.anyLong())).thenReturn(Optional.of(boardList));
+        Mockito.when(this.repo.save(Mockito.any(BoardList.class))).thenReturn(boardList);
+
+        this.mockMvc.perform(put("/api/boardlists/move-card/1/2/1"))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void reorderCardsTestErrorInvalidNewPosition() throws Exception {
+        Board board = new Board("test1", new ArrayList<>());
+        BoardList boardList=new BoardList("test",new ArrayList<>(),board);
+        Card card1=new Card("card1","testcard",boardList);
+        Card card2=new Card("card2","testcard",boardList);
+        boardList.addCard(card1);
+        boardList.addCard(card2);
+        Mockito.when(this.repo.existsById(Mockito.anyLong())).thenReturn(true);
+        Mockito.when(this.repo.findById(Mockito.anyLong())).thenReturn(Optional.of(boardList));
+        Mockito.when(this.repo.save(Mockito.any(BoardList.class))).thenReturn(boardList);
+
+        this.mockMvc.perform(put("/api/boardlists/move-card/1/0/2"))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void exchangeCardTestCorrect() throws Exception {
+        Board board1=new Board("test1", new ArrayList<>());
+        Board board2=new Board("test1", new ArrayList<>());
+        BoardList boardList1=new BoardList("test",new ArrayList<>(),board1);
+        BoardList boardList2=new BoardList("test",new ArrayList<>(),board2);
+        Card card=new Card("card1","testcard",boardList1);
+        boardList1.addCard(card);
+        Mockito.when(this.repo.existsById(Mockito.anyLong())).thenReturn(true);
+        Mockito.when(this.repo.findById((long)1)).thenReturn(Optional.of(boardList1));
+        Mockito.when(this.repo.findById((long)2)).thenReturn(Optional.of(boardList2));
+        Mockito.when(this.repo.save(Mockito.any(BoardList.class))).thenReturn(boardList2);
+        this.mockMvc.perform(put("/api/boardlists/exchange-card/1/2/0/0"))
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(jsonPath("$.cardList[0].title",is("card1")));
+    }
+
+    @Test
+    void exchangeCardTestErrorNoSuchBoardList() throws Exception {
+        Board board1=new Board("test1", new ArrayList<>());
+        Board board2=new Board("test1", new ArrayList<>());
+        BoardList boardList1=new BoardList("test",new ArrayList<>(),board1);
+        BoardList boardList2=new BoardList("test",new ArrayList<>(),board2);
+        Card card=new Card("card1","testcard",boardList1);
+        boardList1.addCard(card);
+        Mockito.when(this.repo.existsById(Mockito.anyLong())).thenReturn(false);
+        Mockito.when(this.repo.findById((long)1)).thenReturn(Optional.of(boardList1));
+        Mockito.when(this.repo.findById((long)2)).thenReturn(Optional.of(boardList2));
+        Mockito.when(this.repo.save(Mockito.any(BoardList.class))).thenReturn(boardList2);
+        this.mockMvc.perform(put("/api/boardlists/exchange-card/1/2/0/0"))
+                .andExpect(status().isBadRequest());
+    }
+    @Test
+    void exchangeCardTestErrorCardIndexTooBig() throws Exception {
+        Board board1=new Board("test1", new ArrayList<>());
+        Board board2=new Board("test1", new ArrayList<>());
+        BoardList boardList1=new BoardList("test",new ArrayList<>(),board1);
+        BoardList boardList2=new BoardList("test",new ArrayList<>(),board2);
+        Card card=new Card("card1","testcard",boardList1);
+        boardList1.addCard(card);
+        Mockito.when(this.repo.existsById(Mockito.anyLong())).thenReturn(true);
+        Mockito.when(this.repo.findById((long)1)).thenReturn(Optional.of(boardList1));
+        Mockito.when(this.repo.findById((long)2)).thenReturn(Optional.of(boardList2));
+        Mockito.when(this.repo.save(Mockito.any(BoardList.class))).thenReturn(boardList2);
+        this.mockMvc.perform(put("/api/boardlists/exchange-card/1/2/2/0"))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void exchangeCardTestErrorInvalidNewPosition() throws Exception {
+        Board board1=new Board("test1", new ArrayList<>());
+        Board board2=new Board("test1", new ArrayList<>());
+        BoardList boardList1=new BoardList("test",new ArrayList<>(),board1);
+        BoardList boardList2=new BoardList("test",new ArrayList<>(),board2);
+        Card card=new Card("card1","testcard",boardList1);
+        boardList1.addCard(card);
+        Mockito.when(this.repo.existsById(Mockito.anyLong())).thenReturn(true);
+        Mockito.when(this.repo.findById((long)1)).thenReturn(Optional.of(boardList1));
+        Mockito.when(this.repo.findById((long)2)).thenReturn(Optional.of(boardList2));
+        Mockito.when(this.repo.save(Mockito.any(BoardList.class))).thenReturn(boardList2);
+        this.mockMvc.perform(put("/api/boardlists/exchange-card/1/2/0/1"))
+                .andExpect(status().isBadRequest());
     }
 }

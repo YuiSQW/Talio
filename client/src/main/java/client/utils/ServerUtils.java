@@ -16,11 +16,6 @@
 package client.utils;
 
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URL;
 import java.util.List;
 
 
@@ -29,42 +24,20 @@ import commons.BoardList;
 import commons.Card;
 
 
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import org.glassfish.jersey.client.ClientConfig;
 
-import commons.Quote;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.GenericType;
 
+/**
+ * The connection between the GUI and the server
+ */
 public class ServerUtils {
 
-    private static final String SERVER = "http://localhost:8080/";
-
-    public void getQuotesTheHardWay() throws IOException {
-        var url = new URL("http://localhost:8080/api/quotes");
-        var is = url.openConnection().getInputStream();
-        var br = new BufferedReader(new InputStreamReader(is));
-        String line;
-        while ((line = br.readLine()) != null) {
-            System.out.println(line);
-        }
-    }
-
-    public List<Quote> getQuotes() {
-        return ClientBuilder.newClient(new ClientConfig()) //
-                .target(SERVER).path("api/quotes") //
-                .request(APPLICATION_JSON) //
-                .accept(APPLICATION_JSON) //
-                .get(new GenericType<List<Quote>>() {});
-    }
-
-    public Quote addQuote(Quote quote) {
-        return ClientBuilder.newClient(new ClientConfig()) //
-                .target(SERVER).path("api/quotes") //
-                .request(APPLICATION_JSON) //
-                .accept(APPLICATION_JSON) //
-                .post(Entity.entity(quote, APPLICATION_JSON), Quote.class);
-    }
+    private static String SERVER = "http://localhost:8080/";
 
     public Card getCard(long cardId){
         return ClientBuilder.newClient(new ClientConfig())
@@ -83,7 +56,19 @@ public class ServerUtils {
         card.setParentList(parentBoardList);
         return card;
     }
-
+    
+    /**
+     * Deletes a card from the server
+     * @param cardToDelete the card to be deleted
+     */
+    public void deleteCard(Card cardToDelete){
+        ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/cards/delete/" + cardToDelete.id)
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .delete();
+    }
+    
     public BoardList getList(long listId){
         return ClientBuilder.newClient(new ClientConfig())
             .target(SERVER).path("api/boardlists/" + listId)
@@ -120,6 +105,7 @@ public class ServerUtils {
             .accept(APPLICATION_JSON)
             .delete();
     }
+    
     public Board getBoard(long boardId){
         return ClientBuilder.newClient(new ClientConfig())
             .target(SERVER).path("api/boards/" + boardId)
@@ -136,15 +122,59 @@ public class ServerUtils {
             .accept(APPLICATION_JSON)
             .post(Entity.entity(newBoard, APPLICATION_JSON), Board.class);
     }
-
-
-
-    public List<BoardList> getLists(){
+    
+    public Board renameBoard(Board changedBoard){
         return ClientBuilder.newClient(new ClientConfig())
-                .target(SERVER).path("/api/boardlists")
+                .target(SERVER).path("api/boards/" + changedBoard.id + "/" + changedBoard.getName())
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
-                .get(new GenericType<List<BoardList>>() {});
+                .put(Entity.entity(changedBoard, APPLICATION_JSON), Board.class);
     }
 
+
+    /**
+     * Returns all the child BoardList objects of a Board instance
+     * @param board - the parent Board instance
+     * @return - the list of all BoardList objects
+     */
+    public List<BoardList> getLists(Board board){
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("/api/boardlists/get-all/"+board.id)
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .get(new GenericType<List<BoardList>>(){});
+    }
+
+    /**
+     * This method lets a user connect to the server with a server address.
+     * The user can access the localhost.
+     * The server address the user has to enter is localhost:8080
+     * @param serverAddress The server address of the server to connect to
+     * @throws Exception exception thrown when connection can't be established
+     */
+    public void connect(String serverAddress) throws Exception{
+        SERVER = "http://" + serverAddress + "/";
+        try{
+            ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/boards/connection-available")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .get(new GenericType<String>() {});
+        } catch (Exception exception){
+            connectionFailure();
+            throw new Exception("Could not connect to server: " + exception);
+
+        }
+    }
+
+    /**
+     * This method is called when the user tries to connect, but connection fails.
+     * We use an alert box with a message as a popup.
+     * The user can then click OK and try again.
+     */
+    public void connectionFailure(){
+        Alert alert = new Alert(Alert.AlertType.ERROR, "Could not connect to server", ButtonType.OK);
+        alert.setHeaderText("Something went wrong");
+        alert.showAndWait();
+    }
 }

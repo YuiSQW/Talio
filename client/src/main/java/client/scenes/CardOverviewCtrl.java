@@ -68,6 +68,7 @@ public class CardOverviewCtrl {
         this.closeCard();
     }
     public void removeCard(){
+        
         this.listContainerCtrl.removeCard(this.card);
         this.card.setParentList(null);
         closeCard();
@@ -97,5 +98,6 @@ public class CardOverviewCtrl {
         cancel();
         this.stage.close();
     }
-    public void minimize(){this.stage.setIconified(true);}
+    public void minimize(){
+        this.stage.setIconified(true);}
 }

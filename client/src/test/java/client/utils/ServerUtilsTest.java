@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -43,6 +44,7 @@ class ServerUtilsTest {
         assertNotNull(board);
         assertEquals("testname", board.getName());
     }
+    
 
     @Test
     void postNewCardTest() throws Exception{
@@ -60,6 +62,24 @@ class ServerUtilsTest {
         assertEquals("title", card.getTitle());
         assertEquals("desc", card.getDescription());
     }
+    
+    /**
+     * Tests the behavior of the deleteCard method in the ServerUtils class when
+     * called with a valid card to delete.
+     * @throws Exception is there is an error with the test
+     */
+    @Test
+    void deleteCardTest() throws Exception {
+        Board board = new Board("", new ArrayList<>());
+        Card cardToDelete = new Card("testname", "bla", new BoardList("", new ArrayList<>(), board));
+        cardToDelete.id = 1;
+        stubFor(delete("api/cards/delete/1").willReturn(
+                aResponse().withHeader("Content-Type", "application/json").withBody(new ObjectMapper().writeValueAsString(cardToDelete))
+        ));
+        ServerUtils server = new ServerUtils();
+        assertDoesNotThrow(() -> server.deleteCard(cardToDelete));
+        
+    }
     @Test
     void postNewBoardTest() throws Exception{
         Board boardToPost = new Board("testname", new ArrayList<>());
@@ -72,6 +92,24 @@ class ServerUtilsTest {
         assertNotNull(createdBoard);
         assertEquals("testname", createdBoard.getName());
         assertEquals(new ArrayList<BoardList>(),createdBoard.getLists() );
+    }
+    
+    /**
+     * Test to verify if the renaming of a board works
+     * Sends a put request to the server with the specified id + new name of the board
+     * Checks if the response of the server is the board with the expected new name
+     * @throws Exception if test fails
+     */
+    @Test
+    void renameBoard() throws Exception{
+        Board board = new Board("newname", new ArrayList<>());
+        board.id = 1;
+        stubFor(put("/api/boards/1/newname").willReturn(
+                aResponse().withHeader("Content-Type", "application/json").withBody(new ObjectMapper().writeValueAsString(board))));
+        ServerUtils server = new ServerUtils();
+        Board changedBoard = server.renameBoard(board);
+        assertNotNull(changedBoard);
+        assertEquals("newname", changedBoard.getName());
     }
 
     @Test
@@ -86,8 +124,21 @@ class ServerUtilsTest {
         assertEquals("", receivedList.getName());
         assertEquals(new ArrayList<Card>(), receivedList.getCardList());
     }
+    @Test
+    void getListsTest() throws Exception{
+        Board board = new Board("", new ArrayList<BoardList>());
+        board.id= 1;
+        board.addList(new BoardList("empty", new ArrayList<Card>()));
+        stubFor(get("/api/boardlists/get-all/1").willReturn(
+           aResponse().withHeader("Content-Type","application/json").withBody(new ObjectMapper().writeValueAsString(board.getLists()))
+        ));
+        ServerUtils server = new ServerUtils();
+        List<BoardList> receivedLists = server.getLists(board);
+        assertNotNull(receivedLists);
+        assertEquals(receivedLists.get(0).getName(),"empty");
 
-
+    }
+    
     @Test
     void postListTest() throws Exception{
         Board board = new Board("", new ArrayList<>());
@@ -115,7 +166,9 @@ class ServerUtilsTest {
         assertEquals("newname", changedList.getName());
         assertEquals(new ArrayList<Card>(), changedList.getCardList());
     }
+    
 
+    
     @Test
     void deleteListTest() throws Exception{
         Board board = new Board("", new ArrayList<>());

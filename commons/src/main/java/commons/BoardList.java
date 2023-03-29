@@ -18,7 +18,7 @@ public class BoardList implements Serializable {
     public long id;
 
 
-    @OneToMany(mappedBy = "parentList")
+    @OneToMany(mappedBy = "parentList", fetch = FetchType.EAGER)
     private List<Card> cardList;
 
     @JsonIgnore //this field needs to be ignored if converted to json, since it would otherwise be stuck in infinite loop
@@ -27,7 +27,7 @@ public class BoardList implements Serializable {
     private String name;
 
 
-    BoardList(){
+    public BoardList(){
         //default constructor that is necessary for Jackson to work, don't use !!
     }
 
@@ -62,12 +62,17 @@ public class BoardList implements Serializable {
         this.cardList.add(cardToAdd);
     }
 
-    public long getId() { return this.id;}
+    public long getId() {
+        return this.id;}
 
-    public void setId(long id) {this.id = id;} //made this for testing, as the db isn't up and running yet.
+    public void setId(long id) {
+        this.id = id;} //made this for testing, as the db isn't up and running yet.
 
     public void setParentBoard(Board parentBoard) {
         this.parentBoard = parentBoard;
+    }
+    public Board getParentBoard(){
+        return this.parentBoard;
     }
 
     public void deleteCard(long id){

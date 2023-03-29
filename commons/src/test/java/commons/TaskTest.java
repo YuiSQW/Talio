@@ -6,6 +6,9 @@ import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+/**
+ * Tests for the task class
+ */
 public class TaskTest {
     @Test
     void getNameTest(){
@@ -21,7 +24,7 @@ public class TaskTest {
         assertEquals(testTask.getName(),"Name2");
     }
     @Test
-    void IdTest(){
+    void idTest(){
         Task testTask=new Task(null,"Name");
         testTask.setId(12);
         assertEquals(testTask.getId(),12);
@@ -35,5 +38,15 @@ public class TaskTest {
         Task task=new Task(c,"Name");
         Task task2=new Task(c,"Name");
         assertEquals(task,task2);
+    }
+    @Test
+    void parentCardTest(){
+        Board t = new Board("", new ArrayList<>());
+        BoardList r  = new BoardList("", new ArrayList<>(), t);
+        Card c1 = new Card("cardTitle", "card description", r);
+        Card c2 = new Card("cardTitle", "card description", r);
+        Task task=new Task(c1,"Name");
+        task.setParentCard(c2);
+        assertEquals(c2,task.getParentCard());
     }
 }
