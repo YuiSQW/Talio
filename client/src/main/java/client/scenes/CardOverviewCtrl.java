@@ -76,7 +76,7 @@ public class CardOverviewCtrl {
             this.card.setDescription(this.description.getText());
         }
 
-        card.getTaskList().clear();/**should probably also delete them from db*//
+        card.getTaskList().clear();/**should probably also delete them from db*/
         var children=tilePane.getChildren();//get each member of the tilePane
         for(Node node:children){// when the window is closed (and the card is saved) the tasks are added to the db
             if(node.getClass()== TaskContainerCtrl.class) {
