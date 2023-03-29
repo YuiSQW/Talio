@@ -171,7 +171,7 @@ class CardControllerTest {
         Mockito.when(this.repo.existsById(Mockito.anyLong())).thenReturn(true);
         Mockito.when(this.repo.findById(Mockito.anyLong())).thenReturn(Optional.of(card));
         Mockito.when(this.repo.save(Mockito.any(Card.class))).thenReturn(card);
-        this.mockMvc.perform(put("/api/cards/change-name/1/newtitle"))
+        this.mockMvc.perform(put("/api/cards/1/newtitle"))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(jsonPath("$.title",is("newtitle")));
     }
@@ -184,7 +184,7 @@ class CardControllerTest {
         Mockito.when(this.repo.existsById(Mockito.anyLong())).thenReturn(false);
         Mockito.when(this.repo.findById(Mockito.anyLong())).thenReturn(Optional.of(card));
         Mockito.when(this.repo.save(Mockito.any(Card.class))).thenReturn(card);
-        this.mockMvc.perform(put("/api/cards/change-name/1/newtitle"))
+        this.mockMvc.perform(put("/api/cards/1/newtitle"))
                 .andExpect(status().isBadRequest());
     }
 
