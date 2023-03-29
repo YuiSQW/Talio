@@ -111,6 +111,19 @@ class ServerUtilsTest {
         assertNotNull(changedBoard);
         assertEquals("newname", changedBoard.getName());
     }
+    
+    @Test
+    void renameCard() throws Exception{
+        Board board = new Board("", new ArrayList<>());
+        Card card = new Card("newname", "bla", new BoardList("", new ArrayList<>(), board));
+        card.id = 1;
+        stubFor(put("/api/cards/1/newname").willReturn(
+                aResponse().withHeader("Content-Type", "application/json").withBody(new ObjectMapper().writeValueAsString(card))));
+        ServerUtils server = new ServerUtils();
+        Card changedCard = server.renameCard(card);
+        assertNotNull(changedCard);
+        assertEquals("newname", changedCard.getTitle());
+    }
 
     @Test
     void getListTest() throws Exception{
