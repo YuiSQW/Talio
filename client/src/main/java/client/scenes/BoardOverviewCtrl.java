@@ -7,7 +7,6 @@ import commons.BoardList;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.collections.ObservableList;
-import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -17,8 +16,8 @@ import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+
 import javax.inject.Inject;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -83,7 +82,7 @@ public class BoardOverviewCtrl {
     
         
         //This board is the one without id
-        //Board board = new Board(this.boardTitle.getText(), new ArrayList<>());
+ //       Board board = new Board(this.boardTitle.getText(), new ArrayList<>());
         
         //Assign the board to the one postNewBoard creates (the one with generated id)
         //this.board = serverUtils.postNewBoard(board);
@@ -126,13 +125,11 @@ public class BoardOverviewCtrl {
         
         boardTitle.setOnMousePressed(event -> {
             userChangesField.set(true);
-            System.out.println("true");
             //TODO send the changed flag to the server
         });
     
         boardTitle.setOnKeyTyped(event -> {
             userChangesField.set(true);
-            System.out.println("true");
             //TODO send the changed flag to the server
         });
     
@@ -201,51 +198,28 @@ public class BoardOverviewCtrl {
         System.out.println("Database size" + lists.size());
         System.out.println(lists.get(0).getId());
         
-//        Task<List<BoardList>> task = new Task<>() {
-//            @Override
-//            protected List<BoardList> call() throws Exception {
-//                Board updatedBoard = websocketServerUtils.getCurrentBoard();
-                    //TOOD use serverutils.getlists to retrieve the current lists
-//                return updatedBoard.getLists();
-//            }
-//        };
-    
-        ObservableList<Node> children = tilePane.getChildren();
-        int numChildren = children.size();
+       
+        //Use an ObservableList to directly display changes onto the TilePane
+        ObservableList<Node> tilePaneChildren = tilePane.getChildren();
+        int numChildren = tilePaneChildren.size();
+        //Check if the size of bigger than one
         if (numChildren > 1) {
             //Delete all the children except the last one, so except the AddBtn
-            children.subList(0, numChildren - 1).clear();
+            tilePaneChildren.subList(0, numChildren - 1).clear();
         }
     
+        
         for (BoardList list : lists) {
             System.out.println(list.getName());
             initVbox();
         }
-        
-//        task.setOnSucceeded(event -> {
-//            List<BoardList> lists = task.getValue();
-//            System.out.println("Database lists are "+ lists.size());
-//            System.out.println(tilePane.getChildren().size()-1);
-//
-//            ObservableList<Node> children = tilePane.getChildren();
-//            int numChildren = children.size();
-//            if (numChildren > 1) {
-//                children.subList(0, numChildren - 1).clear();
-//            }
-//
-//            for (BoardList list : lists) {
-//                System.out.println(list.getName());
-//                initVbox();
-//            }
-//
-//
-//        });
         
         renameBoardBtn.disableProperty().bind((boardTitle.textProperty().isEqualTo(serverUtils.getBoard(this.board.id).getName()))
                 .or(boardTitle.textProperty().isEmpty()));
     
         //If the user is not editing the textField, then you can set the boardTitle textField to the new value
         //Otherwise the clients get constantly interrupted
+        
         if (!isUserEditing) {
             boardTitle.setText(this.board.getName());
             //TODO sent the isUserEditing flag to the server

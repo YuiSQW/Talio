@@ -30,6 +30,8 @@ public class ListContainerCtrl extends VBox {
     private ListView<Card> listView;
     private MainCtrl mainCtrl;
     private final ServerUtils serverUtils;
+    // Flag that keeps track of the changes to the List
+    private static boolean hasChangedFlag;
     @Inject
     public ListContainerCtrl(MainCtrl mainCtrl, ServerUtils serverUtils){
         this.mainCtrl=mainCtrl;
@@ -42,6 +44,7 @@ public class ListContainerCtrl extends VBox {
      * @param boardOverviewCtrl the Controller of the parent Board
      */
     public void init(TilePane tilePane, BoardOverviewCtrl boardOverviewCtrl, boolean makeNewList) {
+        hasChangedFlag = true;
         this.boardOverviewCtrl=boardOverviewCtrl;
         // Creates the new BoardList object and sets it parent Board
         this.list= new BoardList("Empty List",new ArrayList<Card>(),this.boardOverviewCtrl.getBoard());
@@ -152,6 +155,10 @@ public class ListContainerCtrl extends VBox {
      */
     public BoardList getList(){
         return this.list;
+    }
+    
+    public static boolean getHasChangedFlag() {
+        return hasChangedFlag;
     }
 
     /**
