@@ -3,6 +3,7 @@ package client.scenes;
 import client.utils.ServerUtils;
 import commons.Board;
 import commons.BoardList;
+import commons.Card;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
@@ -117,4 +118,5 @@ public class BoardOverviewCtrl {
      * It delegates the function of maximizing the window of the app
      */
     public void MAX_MIN(){ this.mainCtrl.MAX_MIN_Stage();}
+
 }
