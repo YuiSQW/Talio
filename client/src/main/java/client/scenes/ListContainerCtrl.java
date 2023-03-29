@@ -5,12 +5,16 @@ import commons.BoardList;
 import commons.Card;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.TilePane;
 import javafx.geometry.Insets;
+import javafx.scene.input.*;
+
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -101,6 +105,9 @@ public class ListContainerCtrl extends VBox {
                     this.mainCtrl.showCardOverview(this, item);
                 }
             });
+
+            draganddrop(cell);
+            
             return cell;
         });
 
@@ -136,7 +143,97 @@ public class ListContainerCtrl extends VBox {
             
         });
         editButton.setOnAction(event -> this.mainCtrl.editListName(this));
+        
+        
 
+    }
+
+    /**
+     * Method for the drag and drop function
+     * @param cell The listcell that are contained inside the lists
+     */
+    public void draganddrop(ListCell<Card> cell){
+        cell.setOnDragDetected(new EventHandler<MouseEvent>() {
+            public void handle(MouseEvent event) {
+                /* drag was detected, start a drag-and-drop gesture*/
+                /* allow any transfer mode */
+                Dragboard db = cell.startDragAndDrop(TransferMode.ANY);
+                
+                /* Put a string on a dragboard */
+                ClipboardContent content = new ClipboardContent();
+                content.putString(cell.getItem().getTitle());
+                db.setContent(content);
+                
+                event.consume();
+            }
+        });
+
+        cell.setOnDragOver(new EventHandler<DragEvent>() {
+            public void handle(DragEvent event) {
+                /* data is dragged over the target */
+                /* accept it only if it is not dragged from the same node 
+                 * and if it has a string data */
+                if (event.getGestureSource() != cell &&
+                        event.getDragboard().hasString()) {
+                    /* allow for both copying and moving, whatever user chooses */
+                    event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+                }
+                
+                event.consume();
+            }
+        });
+
+        cell.setOnDragEntered(new EventHandler<DragEvent>() {
+            public void handle(DragEvent event) {
+            /* the drag-and-drop gesture entered the target */
+            /* show to the user that it is an actual gesture target */
+                 if (event.getGestureSource() != cell &&
+                         event.getDragboard().hasString()) {
+                    cell.setTextFill(Color.BLUE);
+                 }
+                        
+                 event.consume();
+            }
+        });
+
+        cell.setOnDragExited(new EventHandler<DragEvent>() {
+            public void handle(DragEvent event) {
+                /* mouse moved away, remove the graphical cues */
+                cell.setTextFill(Color.BLACK);
+        
+                event.consume();
+            }
+        });
+
+        cell.setOnDragDropped(new EventHandler<DragEvent>() {
+            public void handle(DragEvent event) {
+                /* data dropped */
+                /* if there is a string data on dragboard, read it and use it */
+                Dragboard db = event.getDragboard();
+                boolean success = false;
+                if (db.hasString()) {
+                   Card card = new Card(db.getString(), "description of the task", ListContainerCtrl.this.list); 
+                   listView.getItems().add(cell.getIndex(), card);
+                   success = true;
+                }
+                /* let the source know whether the string was successfully 
+                 * transferred and used */
+                event.setDropCompleted(success);
+                
+                event.consume();
+             }
+        });
+
+        cell.setOnDragDone(new EventHandler<DragEvent>() {
+            public void handle(DragEvent event) {
+                /* the drag and drop gesture ended */
+                /* if the data was successfully moved, clear it */
+                if (event.getTransferMode() == TransferMode.MOVE) {
+                    removeCard(cell.getItem());
+                }
+                event.consume();
+            }
+        }); 
     }
 
     /**
@@ -203,8 +300,6 @@ public class ListContainerCtrl extends VBox {
     
     }
 
-
-    //TODO drag & drop functions
-
 }
+
 
