@@ -60,8 +60,10 @@ public class MainCtrl {
 
         this.cardOverviewCtrl=card.getKey();
         this.cardOverview=new Scene(card.getValue());
+
         this.addCardCtrl=addCard.getKey();
         this.addCardOverview=new Scene(addCard.getValue());
+
         primaryStage.initStyle(StageStyle.TRANSPARENT);
         showWelcomeOverview();
         primaryStage.show();

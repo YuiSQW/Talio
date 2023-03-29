@@ -33,7 +33,7 @@ class WebsocketServerUtilsTest {
 
     @Test
     void getCurrentBoard() {
-        assertThrows(RuntimeException.class, () -> socket.getCurrentBoard());
+        assertThrows(RuntimeException.class, () -> socket.getCurrentBoardVersion());
     }
 
 }

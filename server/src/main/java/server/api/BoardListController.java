@@ -2,6 +2,7 @@ package server.api;
 
 
 
+import commons.Board;
 import commons.BoardList;
 
 import commons.Card;
@@ -12,6 +13,8 @@ import server.database.BoardListRepository;
 import server.database.BoardRepository;
 import server.database.CardRepository;
 import server.database.TaskRepository;
+
+import java.util.List;
 
 
 @RestController
@@ -54,6 +57,22 @@ public class BoardListController {
             return ResponseEntity.badRequest().build();
         }
         return ResponseEntity.ok(repo.findById(id).get());
+
+    }
+
+    /**
+     * Method which gets the list of BoardList instances owned by a board
+     * @param id - the id of the board whose BoardList child items should be retrieved
+     * @return - the list of all child lists of the board
+     */
+    @GetMapping("/{boardId}")
+    ResponseEntity<List<BoardList>> getAll(@PathVariable("boardId") long id){
+        if(id < 0 || !parentRepo.existsById(id)){
+            return ResponseEntity.badRequest().build();
+        }
+        Board parentBoard= this.parentRepo.getById(id);
+        List<BoardList> availableLists= parentBoard.getLists();
+        return ResponseEntity.ok(availableLists);
 
     }
 

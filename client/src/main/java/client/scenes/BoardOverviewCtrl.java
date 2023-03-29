@@ -3,6 +3,7 @@ package client.scenes;
 import client.utils.ServerUtils;
 import client.utils.WebsocketServerUtils;
 import commons.Board;
+import commons.BoardList;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.fxml.FXML;
@@ -15,6 +16,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import javax.inject.Inject;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class BoardOverviewCtrl {
@@ -142,18 +144,29 @@ public class BoardOverviewCtrl {
 
     /**
      * Connected to the addList button
+     * Adds a new EMPTY BoardList instance to the Board
      */
     public void addNewList(){
-        this.addNewVbox();
+        this.addNewVbox(null);
+    }
+
+    /**
+     * Method required for the rendering of BoardList instances fetched from the database
+     * @param boardList the BoardList instance to be rendered
+     */
+    public void addList(BoardList boardList){
+        this.addNewVbox(boardList);
     }
 
     /**
      * Method which creates a new ListContainer object
-     * which contains a child BoardList instance of the Board
+     * based on a child BoardList instance (which can be null or not) of the Board
+     * @param boardList the reference to the BoardList object
+     * that is used to set up the List Container
      */
-    public void addNewVbox() {
+    public void addNewVbox(BoardList boardList) {
         ListContainerCtrl listContainerCtrl= new ListContainerCtrl(this.mainCtrl,this.serverUtils);
-        listContainerCtrl.init(tilePane,this);
+        listContainerCtrl.init(tilePane,this,boardList);
         tilePane.getChildren().add((tilePane.getChildren().size() - 1), listContainerCtrl);
     }
 
@@ -174,10 +187,13 @@ public class BoardOverviewCtrl {
      * @return the boolean if a client is editing the field
      */
     public boolean refresh(boolean isUserEditing){
-        //TODO implements the logic related to retrieving the lists and displaying them
-        this.board = websocketServerUtils.getCurrentBoard();
-        this.board = serverUtils.getBoard(this.board.id);
-        
+        this.board = websocketServerUtils.getCurrentBoardVersion();
+//        this.board = serverUtils.getBoard(this.board.id);
+        //The child lists of the board are retrieved from the server and rendered to the overview
+        List<BoardList> childLists= this.serverUtils.getLists(this.board);
+        for(BoardList boardList: childLists){
+            this.addList(boardList);
+        }
         //Disables the button when field is either empty, or the same as the value in the database
         renameBoardBtn.disableProperty().bind((boardTitle.textProperty().isEqualTo(serverUtils.getBoard(this.board.id).getName()))
                 .or(boardTitle.textProperty().isEmpty()));

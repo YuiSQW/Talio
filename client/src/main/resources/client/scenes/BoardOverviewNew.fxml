@@ -12,7 +12,7 @@
 
 <AnchorPane xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.BoardOverviewCtrl">
    <children>
-      <AnchorPane fx:id="toolBar" layoutX="203.0" layoutY="-23.0" prefHeight="30.0" prefWidth="671.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <AnchorPane fx:id="toolBar" layoutX="203.0" layoutY="-23.0" prefHeight="30.0" prefWidth="671.0" style="-fx-background-color: #2F4F4F;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <Button fx:id="closeButton" mnemonicParsing="false" onAction="#close" prefHeight="25.0" prefWidth="22.0" style="-fx-background-radius: 1em;" text="x" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="3.0">
                <effect>

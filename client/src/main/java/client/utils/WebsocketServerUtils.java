@@ -23,7 +23,7 @@ public class WebsocketServerUtils {
     private String server = "ws://localhost:8080";
 
     // the board is constantly updated by the websocket, so this is where the most recent version of the board is stored
-    private Board currentBoard = null;
+    private Board currentBoardVersion = null;
 
     private WebSocketStompClient client;
     private StompSession session;
@@ -46,8 +46,12 @@ public class WebsocketServerUtils {
      * @param boardId - id of the board to connect to
      */
     public void subscribeToBoard(long boardId)throws RuntimeException{
-        if(this.session == null)throw new RuntimeException("The connection session is null: make sure initSocket is called");
-        if(this.subscription != null)this.subscription.unsubscribe();
+        if(this.session == null){
+            throw new RuntimeException("The connection session is null: make sure initSocket is called");
+        }
+        if(this.subscription != null){
+            this.subscription.unsubscribe();
+        }
         this.subscription = this.session.subscribe("/boards/boardfeed/" + boardId, new GetBoardStompFrameHandler());
     }
 
@@ -56,9 +60,11 @@ public class WebsocketServerUtils {
      * @return - the most recent value of the board
      * @throws RuntimeException - if currentBoard is null a runtimeException is thrown
      */
-    public Board getCurrentBoard() throws RuntimeException{
-        if(this.currentBoard == null)throw new RuntimeException("The current board is null: make sure you are connected to the server");
-        return this.currentBoard;
+    public Board getCurrentBoardVersion() throws RuntimeException{
+        if(this.currentBoardVersion == null){
+            throw new RuntimeException("The current board is null: make sure you are connected to the server");
+        }
+        return this.currentBoardVersion;
     }
 
     /**
@@ -81,7 +87,7 @@ public class WebsocketServerUtils {
 
         @Override
         public void handleFrame(StompHeaders stompHeaders, Object board){
-            currentBoard = (Board) board;
+            currentBoardVersion = (Board) board;
         }
     }
 }

@@ -41,13 +41,16 @@ public class ListContainerCtrl extends VBox {
      * @param tilePane the parent which the vbox is part of
      * @param boardOverviewCtrl the Controller of the parent Board
      */
-    public void init(TilePane tilePane, BoardOverviewCtrl boardOverviewCtrl) {
+    public void init(TilePane tilePane, BoardOverviewCtrl boardOverviewCtrl, BoardList boardList) {
         this.boardOverviewCtrl=boardOverviewCtrl;
-        // Creates the new BoardList object and sets it parent Board
+        if(boardList==null){
         this.list= new BoardList("Empty List",new ArrayList<Card>(),this.boardOverviewCtrl.getBoard());
-        this.list = serverUtils.postNewList(this.list, this.boardOverviewCtrl.getBoard());
+        this.list = serverUtils.postNewList(this.list, this.boardOverviewCtrl.getBoard());}
+        else{
+            this.list=boardList;
+        }
 
-        Label listName = new Label("Empty List");
+        Label listName = new Label(this.list.getName());
         listName.setPrefHeight(47.0);
         listName.setPrefWidth(100.0);
         listName.setStyle("-fx-text-alignment:center;");
@@ -194,9 +197,6 @@ public class ListContainerCtrl extends VBox {
         this.cards.remove(card);
         //Delete the card from the server
         serverUtils.deleteCard(card);
-    
-    
-    
     }
 
 

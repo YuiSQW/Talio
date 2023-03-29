@@ -133,12 +133,12 @@ public class ServerUtils {
     
    
     //TODO write server endpoint + write test
-    public List<BoardList> getLists(){
+    public List<BoardList> getLists(Board board){
         return ClientBuilder.newClient(new ClientConfig())
-                .target(SERVER).path("/api/boardlists")
+                .target(SERVER).path("/api/boardlists/"+board.id)
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
-                .get(new GenericType<>() {
+                .get(new GenericType<List<BoardList>>() {
                 });
     }
 
