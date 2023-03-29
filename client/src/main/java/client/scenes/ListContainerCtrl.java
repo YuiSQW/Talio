@@ -165,6 +165,7 @@ public class ListContainerCtrl extends VBox {
         Card newCard = serverUtils.postNewCard(card, this.list);
         for(Task task:tasks){
             Task newTask=serverUtils.postNewTask(task,newCard);
+            newCard.addTask(newTask);
         }
         
         //Add the Card with ID to the lists
