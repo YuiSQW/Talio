@@ -98,7 +98,7 @@ public class ServerUtils {
                 .accept(APPLICATION_JSON)
                 .delete();
     }
-    
+	
     public BoardList getList(long listId){
         return ClientBuilder.newClient(new ClientConfig())
             .target(SERVER).path("api/boardlists/" + listId)
@@ -172,4 +172,5 @@ public class ServerUtils {
                 });
     }
 
+    
 }

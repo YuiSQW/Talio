@@ -81,6 +81,7 @@ public class BoardListController {
         try {
             boardUpdateListener.add(repo.getById(id).getParentBoard());
             repo.deleteById(id);
+            
         }catch(IllegalArgumentException e){
             System.out.println("The id for deleteList cannot be null");
             e.printStackTrace();

@@ -41,11 +41,17 @@ public class ListContainerCtrl extends VBox {
      * @param tilePane the parent which the vbox is part of
      * @param boardOverviewCtrl the Controller of the parent Board
      */
-    public void init(TilePane tilePane, BoardOverviewCtrl boardOverviewCtrl) {
+    public void init(TilePane tilePane, BoardOverviewCtrl boardOverviewCtrl, boolean makeNewList) {
         this.boardOverviewCtrl=boardOverviewCtrl;
         // Creates the new BoardList object and sets it parent Board
         this.list= new BoardList("Empty List",new ArrayList<Card>(),this.boardOverviewCtrl.getBoard());
-        this.list = serverUtils.postNewList(this.list, this.boardOverviewCtrl.getBoard());
+        
+        
+        //When the addList button is pressed
+        if(makeNewList) {
+            this.list = serverUtils.postNewList(this.list, this.boardOverviewCtrl.getBoard());
+        }
+        
 
         Label listName = new Label("Empty List");
         listName.setPrefHeight(47.0);
@@ -124,8 +130,13 @@ public class ListContainerCtrl extends VBox {
 
         //Every vbox has the ability to delete itself
         removeBtn.setOnAction(event -> {
-            tilePane.getChildren().remove(ListContainerCtrl.this);
+            //TODO doesn't work
+    
+            System.out.println(this.list.getId());
             serverUtils.deleteList(this.list);
+            
+            
+            tilePane.getChildren().remove(ListContainerCtrl.this);
         });
         addCardButton.setOnAction(event -> {
             this.mainCtrl.addCardOverview(this);

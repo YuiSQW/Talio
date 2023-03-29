@@ -3,9 +3,13 @@ package client.scenes;
 import client.utils.ServerUtils;
 import client.utils.WebsocketServerUtils;
 import commons.Board;
+import commons.BoardList;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
@@ -15,6 +19,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import javax.inject.Inject;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class BoardOverviewCtrl {
@@ -53,10 +58,20 @@ public class BoardOverviewCtrl {
         /*
          * Note: this is the board, with its id I use, to test syncing
          */
-        //this.board = serverUtils.getBoard(330);
+        this.board = serverUtils.getBoard(140);
         
         //You can delete this line in principle, but then the client sees "Title shortly" instead of the database title
         this.boardTitle.setText(this.board.getName());
+    
+        ObservableList<Node> children = tilePane.getChildren();
+        int numChildren = children.size();
+        if (numChildren > 1) {
+            children.subList(0, numChildren - 1).clear();
+        }
+    
+        for (BoardList list : this.board.getLists()) {
+            initVbox();
+        }
     
         /*
          * ATTENTION: Steps to make sure that the syncing works on your local host (make sure 2 clients connect to the same board)
@@ -68,10 +83,10 @@ public class BoardOverviewCtrl {
     
         
         //This board is the one without id
-        Board board = new Board(this.boardTitle.getText(), new ArrayList<>());
+        //Board board = new Board(this.boardTitle.getText(), new ArrayList<>());
         
         //Assign the board to the one postNewBoard creates (the one with generated id)
-        this.board = serverUtils.postNewBoard(board);
+        //this.board = serverUtils.postNewBoard(board);
         
     
         toolBar.setOnMousePressed( mouseEvent -> {
@@ -98,7 +113,7 @@ public class BoardOverviewCtrl {
         
         Timeline timeline = new Timeline(
                 //Call the refresh method every second
-                new KeyFrame(Duration.seconds(1), event -> {
+                new KeyFrame(Duration.seconds(5), event -> {
                     
                     boolean hasChanged = refresh(userChangesField.get());
                     //Set the userChangesField to the value from the refresh() func
@@ -146,14 +161,19 @@ public class BoardOverviewCtrl {
     public void addNewList(){
         this.addNewVbox();
     }
-
+    
+    public void initVbox() {
+        ListContainerCtrl listContainerCtrl= new ListContainerCtrl(this.mainCtrl,this.serverUtils);
+        listContainerCtrl.init(tilePane,this, false);
+        tilePane.getChildren().add((tilePane.getChildren().size() - 1), listContainerCtrl);
+    }
     /**
      * Method which creates a new ListContainer object
      * which contains a child BoardList instance of the Board
      */
     public void addNewVbox() {
         ListContainerCtrl listContainerCtrl= new ListContainerCtrl(this.mainCtrl,this.serverUtils);
-        listContainerCtrl.init(tilePane,this);
+        listContainerCtrl.init(tilePane,this, true);
         tilePane.getChildren().add((tilePane.getChildren().size() - 1), listContainerCtrl);
     }
 
@@ -177,11 +197,52 @@ public class BoardOverviewCtrl {
         //TODO implements the logic related to retrieving the lists and displaying them
         this.board = websocketServerUtils.getCurrentBoard();
         this.board = serverUtils.getBoard(this.board.id);
+        List<BoardList> lists = this.board.getLists();
+        System.out.println("Database size" + lists.size());
+        System.out.println(lists.get(0).getId());
         
-        //Disables the button when field is either empty, or the same as the value in the database
+//        Task<List<BoardList>> task = new Task<>() {
+//            @Override
+//            protected List<BoardList> call() throws Exception {
+//                Board updatedBoard = websocketServerUtils.getCurrentBoard();
+                    //TOOD use serverutils.getlists to retrieve the current lists
+//                return updatedBoard.getLists();
+//            }
+//        };
+    
+        ObservableList<Node> children = tilePane.getChildren();
+        int numChildren = children.size();
+        if (numChildren > 1) {
+            //Delete all the children except the last one, so except the AddBtn
+            children.subList(0, numChildren - 1).clear();
+        }
+    
+        for (BoardList list : lists) {
+            System.out.println(list.getName());
+            initVbox();
+        }
+        
+//        task.setOnSucceeded(event -> {
+//            List<BoardList> lists = task.getValue();
+//            System.out.println("Database lists are "+ lists.size());
+//            System.out.println(tilePane.getChildren().size()-1);
+//
+//            ObservableList<Node> children = tilePane.getChildren();
+//            int numChildren = children.size();
+//            if (numChildren > 1) {
+//                children.subList(0, numChildren - 1).clear();
+//            }
+//
+//            for (BoardList list : lists) {
+//                System.out.println(list.getName());
+//                initVbox();
+//            }
+//
+//
+//        });
+        
         renameBoardBtn.disableProperty().bind((boardTitle.textProperty().isEqualTo(serverUtils.getBoard(this.board.id).getName()))
                 .or(boardTitle.textProperty().isEmpty()));
-        
     
         //If the user is not editing the textField, then you can set the boardTitle textField to the new value
         //Otherwise the clients get constantly interrupted
@@ -191,7 +252,7 @@ public class BoardOverviewCtrl {
             
         }
         
-        //Return false again after the label has been set
+        //new Thread(task).start();
         return false;
     }
     
