@@ -66,7 +66,7 @@ public class WebsocketServerUtils {
      * @param server - ip-address of the server
      */
     public void setServer(String server){
-        this.server = server;
+        this.server = "ws://" + server;
     }
 
     /**

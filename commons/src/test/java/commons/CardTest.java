@@ -52,4 +52,32 @@ class CardTest {
         otherCard.setTitle("new title");
         assertFalse(testCard.equals(otherCard));
     }
+    @Test
+    void setParentListTest(){
+        Board t = new Board("", new ArrayList<>());
+        BoardList r  = new BoardList("", new ArrayList<>(), t);
+        BoardList list  = new BoardList("", new ArrayList<>(), t);
+        Card testCard = new Card("cardTitle", "card description", r);
+        testCard.setParentList(list);
+        assertEquals(list,testCard.getParentList());
+    }
+    @Test
+    void setTaskListTest(){
+        Board t = new Board("", new ArrayList<>());
+        BoardList r  = new BoardList("", new ArrayList<>(), t);
+        Card testCard = new Card("cardTitle", "card description", r);
+        var lists=new ArrayList<Task>();
+        lists.add(new Task(testCard,"a"));
+        testCard.setTaskList(lists);
+        assertEquals(lists,testCard.getTaskList());
+    }
+    @Test
+    void addTaskTest(){
+        Board t = new Board("", new ArrayList<>());
+        BoardList r  = new BoardList("", new ArrayList<>(), t);
+        Card testCard = new Card("cardTitle", "card description", r);
+        var task=new Task(testCard,"a");
+        testCard.addTask(task);
+        assertEquals(testCard.getTaskList().get(0),task);
+    }
 }

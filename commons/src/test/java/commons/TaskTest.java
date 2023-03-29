@@ -39,4 +39,14 @@ public class TaskTest {
         Task task2=new Task(c,"Name");
         assertEquals(task,task2);
     }
+    @Test
+    void parentCardTest(){
+        Board t = new Board("", new ArrayList<>());
+        BoardList r  = new BoardList("", new ArrayList<>(), t);
+        Card c1 = new Card("cardTitle", "card description", r);
+        Card c2 = new Card("cardTitle", "card description", r);
+        Task task=new Task(c1,"Name");
+        task.setParentCard(c2);
+        assertEquals(c2,task.getParentCard());
+    }
 }

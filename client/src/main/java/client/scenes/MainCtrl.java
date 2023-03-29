@@ -27,13 +27,6 @@ import javafx.util.Pair;
 public class MainCtrl {
 
     private Stage primaryStage;
-
-    private QuoteOverviewCtrl overviewCtrl;
-    private Scene overview;
-
-    private AddQuoteCtrl addCtrl;
-    private Scene add;
-
     private BoardOverviewCtrl boardOverviewCtrl;
     private Scene boardOverview;
 
@@ -45,22 +38,16 @@ public class MainCtrl {
     private AddCardCtrl addCardCtrl;
     private Scene addCardOverview;
 
-    private WelcomeCtrl welcomeCtrl;
-    private Scene welcome;
+    private ClientConnectCtrl clientConnectCtrl;
+    private Scene clientConnect;
 
     public void initialize(Stage primaryStage,
-                           Pair<QuoteOverviewCtrl, Parent> overview,
-                           Pair<AddQuoteCtrl, Parent> add,
                            Pair<BoardOverviewCtrl, Parent> board,
                            Pair<EditListNameCtrl, Parent> editList,
                            Pair<CardOverviewCtrl, Parent> card,
                            Pair<AddCardCtrl, Parent> addCard,
-                           Pair<WelcomeCtrl, Parent> welcome) throws Exception {
+                           Pair<ClientConnectCtrl, Parent> clientConnect) throws Exception {
         this.primaryStage = primaryStage;
-        this.overviewCtrl = overview.getKey();
-        this.overview = new Scene(overview.getValue());
-        this.addCtrl = add.getKey();
-        this.add = new Scene(add.getValue());
 
         this.boardOverviewCtrl=board.getKey();
         this.boardOverview= new Scene(board.getValue());
@@ -68,16 +55,15 @@ public class MainCtrl {
         this.editListNameCtrl=editList.getKey();
         this.editListNameOverview=new Scene(editList.getValue());
 
-        this.welcomeCtrl = welcome.getKey();
-        this.welcome = new Scene(welcome.getValue());
+        this.clientConnectCtrl = clientConnect.getKey();
+        this.clientConnect = new Scene(clientConnect.getValue());
 
         this.cardOverviewCtrl=card.getKey();
         this.cardOverview=new Scene(card.getValue());
         this.addCardCtrl=addCard.getKey();
         this.addCardOverview=new Scene(addCard.getValue());
         primaryStage.initStyle(StageStyle.TRANSPARENT);
-        //showWelcomeOverview();
-        showBoardOverview();
+        showWelcomeOverview();
         primaryStage.show();
     }
     public void showBoardOverview() throws Exception {
@@ -90,7 +76,7 @@ public class MainCtrl {
     public void showWelcomeOverview() {
         primaryStage.setTitle("Welcome");
         boardOverview.setFill(Color.TRANSPARENT);
-        primaryStage.setScene(welcome);
+        primaryStage.setScene(clientConnect);
 
     }
     public void editListName(ListContainerCtrl listContainerCtrl){
@@ -138,19 +124,6 @@ public class MainCtrl {
         this.primaryStage.setMaximized(!this.primaryStage.isMaximized());
     }
 
-    //   OBSOLETE METHOD FOR QUOTE APPLICATION
-    public void showOverview() {
-        primaryStage.setTitle("Quotes: Overview");
-        primaryStage.setScene(overview);
-        overviewCtrl.refresh();
-    }
-
-    //    OBSOLETE METHOD FOR THE QUOTE APPLICATION
-    public void showAdd() {
-        primaryStage.setTitle("Quotes: Adding Quote");
-        primaryStage.setScene(add);
-        add.setOnKeyPressed(e -> addCtrl.keyPressed(e));
-    }
 
 
 

@@ -58,4 +58,11 @@ class BoardListTest {
         assertEquals(id,id2+1);
     }
 
+    @Test
+    void setParentBoard(){
+        Board board=new Board("name",new ArrayList<>());
+        BoardList boardList=new BoardList("name", new ArrayList<>());
+        boardList.setParentBoard(board);
+        assertEquals(board, boardList.getParentBoard());
+    }
 }

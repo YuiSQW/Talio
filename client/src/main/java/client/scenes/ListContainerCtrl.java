@@ -30,8 +30,6 @@ public class ListContainerCtrl extends VBox {
     private ListView<Card> listView;
     private MainCtrl mainCtrl;
     private final ServerUtils serverUtils;
-    // Flag that keeps track of the changes to the List
-    private static boolean hasChangedFlag;
     @Inject
     public ListContainerCtrl(MainCtrl mainCtrl, ServerUtils serverUtils){
         this.mainCtrl=mainCtrl;
@@ -43,20 +41,18 @@ public class ListContainerCtrl extends VBox {
      * @param tilePane the parent which the vbox is part of
      * @param boardOverviewCtrl the Controller of the parent Board
      */
-    public void init(TilePane tilePane, BoardOverviewCtrl boardOverviewCtrl, boolean makeNewList) {
-        hasChangedFlag = true;
+    public void init(TilePane tilePane, BoardOverviewCtrl boardOverviewCtrl, BoardList boardList) {
+
         this.boardOverviewCtrl=boardOverviewCtrl;
         // Creates the new BoardList object and sets it parent Board
-        this.list= new BoardList("Empty List",new ArrayList<Card>(),this.boardOverviewCtrl.getBoard());
-        
-        
-        //When the addList button is pressed
-        if(makeNewList) {
+        if(boardList==null){
+            this.list= new BoardList("Empty List",new ArrayList<Card>(),this.boardOverviewCtrl.getBoard());
             this.list = serverUtils.postNewList(this.list, this.boardOverviewCtrl.getBoard());
+        } else{
+            this.list=boardList;
         }
-        
 
-        Label listName = new Label("Empty List");
+        Label listName = new Label(this.list.getName());
         listName.setPrefHeight(47.0);
         listName.setPrefWidth(100.0);
         listName.setStyle("-fx-text-alignment:center;");
@@ -133,13 +129,8 @@ public class ListContainerCtrl extends VBox {
 
         //Every vbox has the ability to delete itself
         removeBtn.setOnAction(event -> {
-            //TODO doesn't work
-    
-            System.out.println(this.list.getId());
-            serverUtils.deleteList(this.list);
-            
-            
             tilePane.getChildren().remove(ListContainerCtrl.this);
+            serverUtils.deleteList(this.list);
         });
         addCardButton.setOnAction(event -> {
             this.mainCtrl.addCardOverview(this);
@@ -155,10 +146,6 @@ public class ListContainerCtrl extends VBox {
      */
     public BoardList getList(){
         return this.list;
-    }
-    
-    public static boolean getHasChangedFlag() {
-        return hasChangedFlag;
     }
 
     /**

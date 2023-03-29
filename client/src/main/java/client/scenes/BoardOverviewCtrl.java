@@ -16,7 +16,6 @@ import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-
 import javax.inject.Inject;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -57,20 +56,10 @@ public class BoardOverviewCtrl {
         /*
          * Note: this is the board, with its id I use, to test syncing
          */
-        this.board = serverUtils.getBoard(140);
+        //this.board = serverUtils.getBoard(330);
         
         //You can delete this line in principle, but then the client sees "Title shortly" instead of the database title
-        this.boardTitle.setText(this.board.getName());
-    
-        ObservableList<Node> children = tilePane.getChildren();
-        int numChildren = children.size();
-        if (numChildren > 1) {
-            children.subList(0, numChildren - 1).clear();
-        }
-    
-        for (BoardList list : this.board.getLists()) {
-            initVbox();
-        }
+        //this.boardTitle.setText(this.board.getName());
     
         /*
          * ATTENTION: Steps to make sure that the syncing works on your local host (make sure 2 clients connect to the same board)
@@ -82,10 +71,10 @@ public class BoardOverviewCtrl {
     
         
         //This board is the one without id
- //       Board board = new Board(this.boardTitle.getText(), new ArrayList<>());
+        Board board = new Board(this.boardTitle.getText(), new ArrayList<>());
         
         //Assign the board to the one postNewBoard creates (the one with generated id)
-        //this.board = serverUtils.postNewBoard(board);
+        this.board = serverUtils.postNewBoard(board);
         
     
         toolBar.setOnMousePressed( mouseEvent -> {
@@ -112,7 +101,7 @@ public class BoardOverviewCtrl {
         
         Timeline timeline = new Timeline(
                 //Call the refresh method every second
-                new KeyFrame(Duration.seconds(5), event -> {
+                new KeyFrame(Duration.seconds(1), event -> {
                     
                     boolean hasChanged = refresh(userChangesField.get());
                     //Set the userChangesField to the value from the refresh() func
@@ -125,11 +114,13 @@ public class BoardOverviewCtrl {
         
         boardTitle.setOnMousePressed(event -> {
             userChangesField.set(true);
+            System.out.println("true");
             //TODO send the changed flag to the server
         });
     
         boardTitle.setOnKeyTyped(event -> {
             userChangesField.set(true);
+            System.out.println("true");
             //TODO send the changed flag to the server
         });
     
@@ -153,24 +144,28 @@ public class BoardOverviewCtrl {
     }
 
     /**
+     * Method which triggers the addition of an EMPTY List Container
      * Connected to the addList button
      */
     public void addNewList(){
-        this.addNewVbox();
+        this.addNewVbox(null);
     }
-    
-    public void initVbox() {
-        ListContainerCtrl listContainerCtrl= new ListContainerCtrl(this.mainCtrl,this.serverUtils);
-        listContainerCtrl.init(tilePane,this, false);
-        tilePane.getChildren().add((tilePane.getChildren().size() - 1), listContainerCtrl);
+
+    /**
+     * Method which triggers the addition of a List Container with the provided BoardList inctance
+     * @param boardList - the BoardList instance for the container
+     */
+    public void addList(BoardList boardList){
+        this.addNewVbox(boardList);
     }
+
     /**
      * Method which creates a new ListContainer object
      * which contains a child BoardList instance of the Board
      */
-    public void addNewVbox() {
+    public void addNewVbox(BoardList boardList) {
         ListContainerCtrl listContainerCtrl= new ListContainerCtrl(this.mainCtrl,this.serverUtils);
-        listContainerCtrl.init(tilePane,this, true);
+        listContainerCtrl.init(tilePane,this,boardList);
         tilePane.getChildren().add((tilePane.getChildren().size() - 1), listContainerCtrl);
     }
 
@@ -216,17 +211,17 @@ public class BoardOverviewCtrl {
         
         renameBoardBtn.disableProperty().bind((boardTitle.textProperty().isEqualTo(serverUtils.getBoard(this.board.id).getName()))
                 .or(boardTitle.textProperty().isEmpty()));
+        
     
         //If the user is not editing the textField, then you can set the boardTitle textField to the new value
         //Otherwise the clients get constantly interrupted
-        
         if (!isUserEditing) {
             boardTitle.setText(this.board.getName());
             //TODO sent the isUserEditing flag to the server
             
         }
         
-        //new Thread(task).start();
+        //Return false again after the label has been set
         return false;
     }
     
