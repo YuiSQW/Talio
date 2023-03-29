@@ -7,6 +7,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.TilePane;
 import javafx.stage.Stage;
 
 import javax.inject.Inject;
@@ -100,4 +101,5 @@ public class CardOverviewCtrl {
     }
     public void minimize(){
         this.stage.setIconified(true);}
+
 }

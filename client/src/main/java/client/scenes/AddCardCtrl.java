@@ -2,7 +2,9 @@ package client.scenes;
 
 import client.utils.ServerUtils;
 import commons.Card;
+import commons.Task;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
@@ -11,6 +13,8 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.TilePane;
 import javafx.stage.Stage;
 import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Objects;
 
 public class AddCardCtrl {
@@ -68,8 +72,19 @@ public class AddCardCtrl {
         var p = title.getText();
         var q = description.getText();
         Card card= new Card(p,q,this.listContainerCtrl.getList());
+
+
+        var children=tilePane.getChildren();//get each member of the tilePane
+        var tasks=new ArrayList<Task>();
+        for(Node node:children){// when the window is closed (and the card is saved) the tasks are added to the db
+            if(node.getClass()== TaskContainerCtrl.class) {
+                TaskContainerCtrl container = (TaskContainerCtrl) node;
+                Task taskToAdd = new Task(currentCard, container.getText());
+                tasks.add(taskToAdd);//we add them to a list that is sent to the method that also adds the card to db
+            }
+        }
         this.currentCard=card;
-        this.listContainerCtrl.saveNewCard(card);
+        this.listContainerCtrl.saveNewCard(card,tasks);
         this.closeCard();
     }
     //Still has no usage & needs to get replaced when data can get stored in database
@@ -82,7 +97,7 @@ public class AddCardCtrl {
     public void clearFields() {
         title.clear();
         description.clear();
-        ///tasks.clear();
+        clearTasks();
     }
     public void clearTitle() {
         title.clear();
@@ -90,9 +105,15 @@ public class AddCardCtrl {
     public void clearDescription(){
         description.clear();
     }
-    ///public void clearTasks(){
-    ///    tasks.clear();
-    ///}
+    public void clearTasks(){
+        ///loop thru taskContainers and delete the
+        Iterator<Node> itr=tilePane.getChildren().iterator();
+        while(itr.hasNext()){
+            Node node= itr.next();
+            if(node.getClass()==TaskContainerCtrl.class)
+                itr.remove();
+        }
+    }
 
     public void cancel() {
         clearFields();

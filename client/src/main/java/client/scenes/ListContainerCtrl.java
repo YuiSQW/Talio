@@ -3,6 +3,7 @@ package client.scenes;
 import client.utils.ServerUtils;
 import commons.BoardList;
 import commons.Card;
+import commons.Task;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
@@ -14,6 +15,7 @@ import javafx.geometry.Insets;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The List container class which can be used to generate custom Vbox
@@ -157,10 +159,13 @@ public class ListContainerCtrl extends VBox {
      * Also responsible for displaying the new Card in the ListView of the VBox
      * @param card the new Card object
      */
-    public void saveNewCard(Card card) {
+    public void saveNewCard(Card card, List<Task> tasks) {
         //Adds the card with id and not the old one
         //Create a new card, so that the old one (without id) doesn't get used anymore
         Card newCard = serverUtils.postNewCard(card, this.list);
+        for(Task task:tasks){
+            Task newTask=serverUtils.postNewTask(task,newCard);
+        }
         
         //Add the Card with ID to the lists
         this.cards.add(newCard);

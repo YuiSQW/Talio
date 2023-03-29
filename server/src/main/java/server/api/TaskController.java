@@ -34,6 +34,7 @@ public class TaskController {
     @PostMapping("/new-task/{taskId}")
     public ResponseEntity<Task> getNewTask(@PathVariable("taskId") long taskId, @RequestBody Task newTask){
         if(newTask == null || newTask.getName() == null || !parentRepo.existsById(taskId)){
+            System.out.println("aici");
             return ResponseEntity.badRequest().build();
         }
 

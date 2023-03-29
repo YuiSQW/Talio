@@ -150,4 +150,12 @@ public class ServerUtils {
         return task;
     }
 
+    public Task getTask(long listId){
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/tasks/" + listId)
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .get(new GenericType<Task>(){});
+    }
+
 }
