@@ -166,4 +166,27 @@ class ServerUtilsTest {
         assertDoesNotThrow(() -> server.deleteList(list));
 
     }
+
+    @Test
+    void connectSuccessTest() throws Exception {
+        ServerUtils server = new ServerUtils();
+        String serverAddress = "localhost:8080";
+        stubFor(get("/api/boards/connection-available").willReturn(
+            aResponse().withHeader("Content-Type", "application/json").withBody(new ObjectMapper().writeValueAsString(serverAddress))
+        ));
+        assertDoesNotThrow(() -> server.connect(serverAddress));
+    }
+
+    @Test
+    void connectFailTest() throws Exception {
+        ServerUtils server = new ServerUtils();
+        String serverAddress = "wrongAddress";
+        stubFor(get("/api/boards/connection-available").willReturn(
+            aResponse().withHeader("Content-Type", "application/json").withBody(new ObjectMapper().writeValueAsString(serverAddress))
+        ));
+        Throwable throwable =assertThrows(ExceptionInInitializerError.class, () -> {
+            server.connect(serverAddress);
+        });
+        assertEquals(ExceptionInInitializerError.class, throwable.getClass());
+    }
 }

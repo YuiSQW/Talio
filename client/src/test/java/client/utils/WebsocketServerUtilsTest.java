@@ -36,4 +36,13 @@ class WebsocketServerUtilsTest {
         assertThrows(RuntimeException.class, () -> socket.getCurrentBoard());
     }
 
+    @Test
+    void setServer() {
+        String serverAddress = "serverAddress";
+        socket.setServer(serverAddress);
+        String newServer = socket.getServer();
+        String expected = "ws://serverAddress";
+        assertEquals(expected, newServer);
+    }
+
 }
