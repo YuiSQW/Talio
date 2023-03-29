@@ -17,6 +17,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import javax.inject.Inject;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -56,7 +57,7 @@ public class BoardOverviewCtrl {
         /*
          * Note: this is the board, with its id I use, to test syncing
          */
-        //this.board = serverUtils.getBoard(330);
+        //this.board = serverUtils.getBoard(140);
         
         //You can delete this line in principle, but then the client sees "Title shortly" instead of the database title
         //this.boardTitle.setText(this.board.getName());
@@ -114,13 +115,11 @@ public class BoardOverviewCtrl {
         
         boardTitle.setOnMousePressed(event -> {
             userChangesField.set(true);
-            System.out.println("true");
             //TODO send the changed flag to the server
         });
     
         boardTitle.setOnKeyTyped(event -> {
             userChangesField.set(true);
-            System.out.println("true");
             //TODO send the changed flag to the server
         });
     
@@ -152,7 +151,7 @@ public class BoardOverviewCtrl {
     }
 
     /**
-     * Method which triggers the addition of a List Container with the provided BoardList inctance
+     * Method which triggers the addition of a List Container with the provided BoardList instance
      * @param boardList - the BoardList instance for the container
      */
     public void addList(BoardList boardList){
@@ -188,11 +187,9 @@ public class BoardOverviewCtrl {
     public boolean refresh(boolean isUserEditing){
         //TODO implements the logic related to retrieving the lists and displaying them
         this.board = websocketServerUtils.getCurrentBoard();
-        this.board = serverUtils.getBoard(this.board.id);
-        List<BoardList> lists = this.board.getLists();
-        System.out.println("Database size" + lists.size());
-        System.out.println(lists.get(0).getId());
-        
+        //this.board = serverUtils.getBoard(this.board.id);
+        List<BoardList> lists = serverUtils.getLists(this.board);
+  
        
         //Use an ObservableList to directly display changes onto the TilePane
         ObservableList<Node> tilePaneChildren = tilePane.getChildren();
@@ -205,8 +202,9 @@ public class BoardOverviewCtrl {
     
         
         for (BoardList list : lists) {
-            System.out.println(list.getName());
-            initVbox();
+            addList(list);
+            
+            System.out.println(list.getParentBoard());
         }
         
         renameBoardBtn.disableProperty().bind((boardTitle.textProperty().isEqualTo(serverUtils.getBoard(this.board.id).getName()))

@@ -116,8 +116,10 @@ public class BoardListController {
                 }
                 cardRepo.delete(listCards.get(i));
             }
+            var parentBoard= boardList.getParentBoard();
+            parentBoard.deleteList(id);
             repo.deleteById(id);
-            boardUpdateListener.add(repo.getById(id).getParentBoard());
+            boardUpdateListener.add(parentBoard);
         }catch(IllegalArgumentException e){
             System.out.println("The id for deleteList cannot be null");
             e.printStackTrace();
