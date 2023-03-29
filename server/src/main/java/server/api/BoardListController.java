@@ -10,7 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import server.database.BoardListRepository;
 import server.database.BoardRepository;
-
+import server.database.CardRepository;
+import server.database.TaskRepository;
 
 
 @RestController
@@ -31,9 +32,15 @@ public class BoardListController {
      */
     private final BoardRepository parentRepo;
 
-    public BoardListController(BoardListRepository repo, BoardRepository parentRepo){
+    private final CardRepository cardRepo;
+
+    private final TaskRepository taskRepo;
+
+    public BoardListController(BoardListRepository repo, BoardRepository parentRepo,CardRepository cardRepo, TaskRepository taskRepo){
         this.repo = repo;
         this.parentRepo = parentRepo;
+        this.cardRepo = cardRepo;
+        this.taskRepo = taskRepo;
     }
 
     /**
@@ -76,11 +83,23 @@ public class BoardListController {
         return ResponseEntity.ok(updatedList);
     }
 
+    /**
+     * This method deletes a list, as well as all of the cards and tasks associated with it.
+     */
     @DeleteMapping("/{id}")
-    public void deleteList(@PathVariable("id") long id) {
+    public void deleteList(@PathVariable("id") long id){
         try {
-            boardUpdateListener.add(repo.getById(id).getParentBoard());
+            var boardList = repo.getById(id);
+            var listCards = boardList.getCardList();
+            for (int i = 0; i < listCards.size(); i++) {
+                var listTasks = listCards.get(i).getTaskList();
+                for (int j = 0; j < listTasks.size(); j++) {
+                    taskRepo.delete(listTasks.get(j));
+                }
+                cardRepo.delete(listCards.get(i));
+            }
             repo.deleteById(id);
+            boardUpdateListener.add(repo.getById(id).getParentBoard());
         }catch(IllegalArgumentException e){
             System.out.println("The id for deleteList cannot be null");
             e.printStackTrace();
