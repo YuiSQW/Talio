@@ -57,6 +57,6 @@
          </content>
       </ScrollPane>
       <Button fx:id="renameBoardBtn" layoutX="211.0" layoutY="43.0" mnemonicParsing="false" onAction="#renameBoardTitle" text="Rename" />
-
+      <Button fx:id="disconnectButton" layoutX="600.0" layoutY="64.0" mnemonicParsing="false" onAction="#disconnect" text="Disconnect" />
    </children>
 </AnchorPane>
