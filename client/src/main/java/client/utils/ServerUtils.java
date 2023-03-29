@@ -130,16 +130,19 @@ public class ServerUtils {
                 .accept(APPLICATION_JSON)
                 .put(Entity.entity(changedBoard, APPLICATION_JSON), Board.class);
     }
-    
-   
-    //TODO write server endpoint + write test
-    public List<BoardList> getLists(){
+
+
+    /**
+     * Returns all the child BoardList objects of a Board instance
+     * @param board - the parent Board instance
+     * @return - the list of all BoardList objects
+     */
+    public List<BoardList> getLists(Board board){
         return ClientBuilder.newClient(new ClientConfig())
-                .target(SERVER).path("/api/boardlists")
+                .target(SERVER).path("/api/boardlists/get-all/"+board.id)
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
-                .get(new GenericType<>() {
-                });
+                .get(new GenericType<List<BoardList>>(){});
     }
 
     /**
