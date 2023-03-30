@@ -14,7 +14,6 @@ import javafx.scene.layout.TilePane;
 import javafx.stage.Stage;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
 import java.util.Iterator;
 
 public class CardOverviewCtrl {
