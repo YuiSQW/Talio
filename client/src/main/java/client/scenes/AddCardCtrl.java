@@ -4,11 +4,13 @@ import client.utils.ServerUtils;
 import commons.Card;
 import commons.Task;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.TilePane;
 import javafx.stage.Stage;
@@ -50,6 +52,9 @@ public class AddCardCtrl {
         this.listContainerCtrl=listContainerCtrl;
         this.title.setText("Title");
         this.description.setText("Description of the task");
+        HBox hBoxOfNewTaskButton=new HBox(newTaskButton);
+        hBoxOfNewTaskButton.setMinWidth(442.0);
+        tilePane.getChildren().add(hBoxOfNewTaskButton);
         //this.tasks.setText("Subtasks");
         toolBar.setOnMousePressed( mouseEvent -> {
             this.x= mouseEvent.getSceneX();

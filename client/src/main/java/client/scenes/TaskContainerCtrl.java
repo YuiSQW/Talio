@@ -49,7 +49,6 @@ public class TaskContainerCtrl extends VBox{
         taskHbox.setMaxHeight(25.0);
         taskHbox.setPrefHeight(25.0);
         taskHbox.setPrefWidth(442.0);
-        ///tilePane.setMargin(this, new Insets(10,0,0,0));
         removeButton.setOnAction(event ->{
             tilePane.getChildren().remove(TaskContainerCtrl.this);
         });

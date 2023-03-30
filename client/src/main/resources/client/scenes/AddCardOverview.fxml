@@ -19,9 +19,6 @@
         <TextArea fx:id="description" layoutX="52.0" layoutY="100.0" onMouseClicked="#clearDescription" prefHeight="70.0" prefWidth="442.0" text="Description&#10;&#10;" />
         <HBox layoutX="52.0" layoutY="309.0" prefHeight="50.0" prefWidth="442.0" spacing="5.0">
             <children>
-                <TextField alignment="CENTER" prefHeight="26.0" prefWidth="64.0" style="-fx-background-radius: 1em;" text="Tag" />
-                <TextField alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="26.0" prefWidth="64.0" style="-fx-background-radius: 1em;" text="Tag" />
-                <TextField alignment="CENTER" layoutX="74.0" layoutY="10.0" prefHeight="23.0" prefWidth="30.0" style="-fx-background-radius: 1em;" text="+" />
                 <Button fx:id="saveButton" mnemonicParsing="false" onAction="#saveCard" style="-fx-background-radius: 1em;" text="Save" textAlignment="CENTER" />
             </children>
         </HBox>

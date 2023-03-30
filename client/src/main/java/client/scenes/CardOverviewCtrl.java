@@ -8,6 +8,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.TilePane;
 import javafx.stage.Stage;
@@ -34,6 +35,8 @@ public class CardOverviewCtrl {
     private TextArea description;
     @FXML
     private TilePane tilePane;
+    @FXML
+    private Button newTaskButton;
     private double x,y;
     @Inject
     public CardOverviewCtrl(MainCtrl mainCtrl, ServerUtils serverUtils){
@@ -52,6 +55,10 @@ public class CardOverviewCtrl {
         this.cardIndex=this.listContainerCtrl.getList().getCardList().indexOf(this.card);
         this.title.setText(this.card.getTitle());
         this.description.setText(this.card.getDescription());
+
+        HBox hBoxOfNewTaskButton=new HBox(newTaskButton);
+        hBoxOfNewTaskButton.setMinWidth(405.0);
+        tilePane.getChildren().add(hBoxOfNewTaskButton);
 
         for(Task task:card.getTaskList()){/// doesnt work yet
             addTask(task);
