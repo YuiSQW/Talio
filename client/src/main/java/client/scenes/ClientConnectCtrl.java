@@ -29,7 +29,7 @@ public class ClientConnectCtrl {
     public AnchorPane toolBar;
 
     @FXML
-    public Button minimizeButton;
+    public Button closeButton, maximizeButton, minimizeButton;
     @FXML
     private TextField serverAddressField;
 
@@ -101,6 +101,7 @@ public class ClientConnectCtrl {
      * Function that is connected to the closeButton of the controller
      * It delegates the function of closing the app to the Main Controller
      */
+    @FXML
     public void close(){
         this.mainCtrl.closeApp();}
 
@@ -109,6 +110,15 @@ public class ClientConnectCtrl {
      * It delegates the function of minimizing the window of the app
      * to the Main Controller
      */
+    @FXML
     public void minimize(){
         this.mainCtrl.minimizeStage();}
+
+    /**
+     * Method that is connected to the maximizeButton of the controller
+     * It delegates the function of maximizing the window of the app
+     */
+    public void maxMin(){
+        this.mainCtrl.maxMinStage();}
+
 }
