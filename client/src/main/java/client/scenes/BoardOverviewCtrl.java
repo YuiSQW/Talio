@@ -98,7 +98,7 @@ public class BoardOverviewCtrl {
         
         Timeline timeline = new Timeline(
                 //Call the refresh method every second
-                new KeyFrame(Duration.seconds(3), event -> {
+                new KeyFrame(Duration.seconds(1), event -> {
                     
                     boolean hasChanged = refresh(userChangesField.get());
                     //Set the userChangesField to the value from the refresh() func
