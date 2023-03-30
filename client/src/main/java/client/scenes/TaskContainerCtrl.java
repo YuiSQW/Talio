@@ -62,8 +62,7 @@ public class TaskContainerCtrl extends VBox{
         if(task==null) {
             this.task = new Task(cardOverviewCtrl.getCard(), "peaici");
             text= new TextField("empty");
-        }
-        else{
+        }else{
             this.task=task;
             text = new TextField(task.getName());
         }
