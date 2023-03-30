@@ -31,8 +31,8 @@ public class TaskContainerCtrl extends VBox{
     public void init(TilePane tilePane, AddCardCtrl addCardCtrl){
         tilePane.setAlignment(Pos.TOP_RIGHT);
         this.addCardCtrl=addCardCtrl;
-        this.task=new Task(addCardCtrl.getCard(),"Empty");
-        //this.task=this.serverUtils.postNewTask(this.task,this.addCardCtrl.getCard());
+        ///this.task=new Task(addCardCtrl.getCard(),"Empty"); ///i think this is useless since the tasks get added created when the save button is pressed
+        //that is because the card doesnt exist before then
         text= new TextField("empty");
         text.setMinHeight(25.0);
         text.setPrefHeight(25.0);
