@@ -28,7 +28,7 @@ public class MyModule implements Module {
          * Temporary for Single-board implementation
          */
         binder.bind(BoardOverviewCtrl.class).in(Scopes.SINGLETON);
-        binder.bind(WelcomeCtrl.class).in(Scopes.SINGLETON);
+        binder.bind(ClientConnectCtrl.class).in(Scopes.SINGLETON);
 
     }
 }

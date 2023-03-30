@@ -19,7 +19,7 @@ public class Board {
     @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "parentBoard", fetch = FetchType.EAGER)
     private List<BoardList> lists;
     private String name;
-
+    
     public Board(){
         // default constructor that is necessary for Jackson to work properly don't use this!!
     }
@@ -45,12 +45,16 @@ public class Board {
         this.name = name;
     }
 
+    
+    //TODO Use this, but need to compare cardlists also
     @Override
     public boolean equals(Object other){
         return other instanceof Board &&
                 ((Board) other).lists.equals(this.lists) &&
                 ((Board) other).name.equals(this.name);
+       
     }
+    
     public void addList(BoardList boardList){
         lists.add(boardList);
         boardList.setParentBoard(this);

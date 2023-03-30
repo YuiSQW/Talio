@@ -42,9 +42,6 @@ public class BoardController {
         return ResponseEntity.ok(repo.findById(id).get());
     }
 
-
-
-
     /**
      * Creates a new Board and sets its name, the new board is added to the database
      * @return a ResponseEntity containing the newly created Board or a badrequest error if the board is invalid
@@ -94,5 +91,13 @@ public class BoardController {
         return ResponseEntity.ok(updatedBoard);
     }
 
+    /**
+     * This method is called when a GET request is made to check the connection via the connect() method in ServerUtils.
+     * @return a string "Connection available"
+     */
+    @GetMapping("/connection-available")
+    public String connectionAvailable() {
+        return "Connection available";
+    }
 
 }

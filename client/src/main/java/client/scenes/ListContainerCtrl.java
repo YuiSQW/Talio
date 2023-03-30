@@ -6,12 +6,16 @@ import commons.Card;
 import commons.Task;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.TilePane;
 import javafx.geometry.Insets;
+import javafx.scene.input.*;
+
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -32,6 +36,8 @@ public class ListContainerCtrl extends VBox {
     private ListView<Card> listView;
     private MainCtrl mainCtrl;
     private final ServerUtils serverUtils;
+    
+    private static boolean hasChangedFlag;
     @Inject
     public ListContainerCtrl(MainCtrl mainCtrl, ServerUtils serverUtils){
         this.mainCtrl=mainCtrl;
@@ -43,13 +49,21 @@ public class ListContainerCtrl extends VBox {
      * @param tilePane the parent which the vbox is part of
      * @param boardOverviewCtrl the Controller of the parent Board
      */
-    public void init(TilePane tilePane, BoardOverviewCtrl boardOverviewCtrl) {
+    public void init(TilePane tilePane, BoardOverviewCtrl boardOverviewCtrl, BoardList boardList) {
+
         this.boardOverviewCtrl=boardOverviewCtrl;
         // Creates the new BoardList object and sets it parent Board
-        this.list= new BoardList("Empty List",new ArrayList<Card>(),this.boardOverviewCtrl.getBoard());
-        this.list = serverUtils.postNewList(this.list, this.boardOverviewCtrl.getBoard());
+        if(boardList==null){
+            this.list= new BoardList("Empty List",new ArrayList<Card>(),this.boardOverviewCtrl.getBoard());
+            this.list = serverUtils.postNewList(this.list, this.boardOverviewCtrl.getBoard());
+            this.cards=FXCollections.observableArrayList();
+        } else{
+            this.list=boardList;
+            this.cards = FXCollections.observableArrayList();
+            this.cards.addAll(this.list.getCardList());
+        }
 
-        Label listName = new Label("Empty List");
+        Label listName = new Label(this.list.getName());
         listName.setPrefHeight(47.0);
         listName.setPrefWidth(100.0);
         listName.setStyle("-fx-text-alignment:center;");
@@ -76,8 +90,8 @@ public class ListContainerCtrl extends VBox {
         this.listView=listView;
         listView.setPrefHeight(306.0);
         listView.setPrefWidth(215.0);
-        this.cards = FXCollections.observableArrayList();
         listView.setItems(cards);
+        
         // Set up the Custom CellFactory of the ListView which describes how are
         // the cells of the list view generated (value and encapsulated Card object)
         // and how are the cells going to interact with the user
@@ -99,6 +113,9 @@ public class ListContainerCtrl extends VBox {
                     this.mainCtrl.showCardOverview(this, item);
                 }
             });
+
+            draganddrop(cell);
+            
             return cell;
         });
 
@@ -134,7 +151,97 @@ public class ListContainerCtrl extends VBox {
             
         });
         editButton.setOnAction(event -> this.mainCtrl.editListName(this));
+        
+        
 
+    }
+
+    /**
+     * Method for the drag and drop function
+     * @param cell The listcell that are contained inside the lists
+     */
+    public void draganddrop(ListCell<Card> cell){
+        cell.setOnDragDetected(new EventHandler<MouseEvent>() {
+            public void handle(MouseEvent event) {
+                /* drag was detected, start a drag-and-drop gesture*/
+                /* allow any transfer mode */
+                Dragboard db = cell.startDragAndDrop(TransferMode.ANY);
+                
+                /* Put a string on a dragboard */
+                ClipboardContent content = new ClipboardContent();
+                content.putString(cell.getItem().getTitle());
+                db.setContent(content);
+                
+                event.consume();
+            }
+        });
+
+        cell.setOnDragOver(new EventHandler<DragEvent>() {
+            public void handle(DragEvent event) {
+                /* data is dragged over the target */
+                /* accept it only if it is not dragged from the same node 
+                 * and if it has a string data */
+                if (event.getGestureSource() != cell &&
+                        event.getDragboard().hasString()) {
+                    /* allow for both copying and moving, whatever user chooses */
+                    event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+                }
+                
+                event.consume();
+            }
+        });
+
+        cell.setOnDragEntered(new EventHandler<DragEvent>() {
+            public void handle(DragEvent event) {
+            /* the drag-and-drop gesture entered the target */
+            /* show to the user that it is an actual gesture target */
+                 if (event.getGestureSource() != cell &&
+                         event.getDragboard().hasString()) {
+                    cell.setTextFill(Color.BLUE);
+                 }
+                        
+                 event.consume();
+            }
+        });
+
+        cell.setOnDragExited(new EventHandler<DragEvent>() {
+            public void handle(DragEvent event) {
+                /* mouse moved away, remove the graphical cues */
+                cell.setTextFill(Color.BLACK);
+        
+                event.consume();
+            }
+        });
+
+        cell.setOnDragDropped(new EventHandler<DragEvent>() {
+            public void handle(DragEvent event) {
+                /* data dropped */
+                /* if there is a string data on dragboard, read it and use it */
+                Dragboard db = event.getDragboard();
+                boolean success = false;
+                if (db.hasString()) {
+                   Card card = new Card(db.getString(), "description of the task", ListContainerCtrl.this.list); 
+                   listView.getItems().add(cell.getIndex(), card);
+                   success = true;
+                }
+                /* let the source know whether the string was successfully 
+                 * transferred and used */
+                event.setDropCompleted(success);
+                
+                event.consume();
+             }
+        });
+
+        cell.setOnDragDone(new EventHandler<DragEvent>() {
+            public void handle(DragEvent event) {
+                /* the drag and drop gesture ended */
+                /* if the data was successfully moved, clear it */
+                if (event.getTransferMode() == TransferMode.MOVE) {
+                    removeCard(cell.getItem());
+                }
+                event.consume();
+            }
+        }); 
     }
 
     /**
@@ -167,11 +274,9 @@ public class ListContainerCtrl extends VBox {
             Task newTask=serverUtils.postNewTask(task,newCard);
             newCard.addTask(newTask);
         }
-        
         //Add the Card with ID to the lists
         this.cards.add(newCard);
         this.list.getCardList().add(newCard);
-
         
     }
 
@@ -205,8 +310,6 @@ public class ListContainerCtrl extends VBox {
     
     }
 
-
-    //TODO drag & drop functions
-
 }
+
 

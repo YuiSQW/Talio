@@ -38,15 +38,15 @@ public class MainCtrl {
     private AddCardCtrl addCardCtrl;
     private Scene addCardOverview;
 
-    private WelcomeCtrl welcomeCtrl;
-    private Scene welcome;
+    private ClientConnectCtrl clientConnectCtrl;
+    private Scene clientConnect;
 
     public void initialize(Stage primaryStage,
                            Pair<BoardOverviewCtrl, Parent> board,
                            Pair<EditListNameCtrl, Parent> editList,
                            Pair<CardOverviewCtrl, Parent> card,
                            Pair<AddCardCtrl, Parent> addCard,
-                           Pair<WelcomeCtrl, Parent> welcome) throws Exception {
+                           Pair<ClientConnectCtrl, Parent> clientConnect) throws Exception {
         this.primaryStage = primaryStage;
 
         this.boardOverviewCtrl=board.getKey();
@@ -55,16 +55,15 @@ public class MainCtrl {
         this.editListNameCtrl=editList.getKey();
         this.editListNameOverview=new Scene(editList.getValue());
 
-        this.welcomeCtrl = welcome.getKey();
-        this.welcome = new Scene(welcome.getValue());
+        this.clientConnectCtrl = clientConnect.getKey();
+        this.clientConnect = new Scene(clientConnect.getValue());
 
         this.cardOverviewCtrl=card.getKey();
         this.cardOverview=new Scene(card.getValue());
         this.addCardCtrl=addCard.getKey();
         this.addCardOverview=new Scene(addCard.getValue());
         primaryStage.initStyle(StageStyle.TRANSPARENT);
-        //showWelcomeOverview();
-        showBoardOverview();
+        showWelcomeOverview();
         primaryStage.show();
     }
     public void showBoardOverview() throws Exception {
@@ -77,7 +76,7 @@ public class MainCtrl {
     public void showWelcomeOverview() {
         primaryStage.setTitle("Welcome");
         boardOverview.setFill(Color.TRANSPARENT);
-        primaryStage.setScene(welcome);
+        primaryStage.setScene(clientConnect);
 
     }
     public void editListName(ListContainerCtrl listContainerCtrl){
@@ -124,7 +123,6 @@ public class MainCtrl {
     public void maxMinStage(){
         this.primaryStage.setMaximized(!this.primaryStage.isMaximized());
     }
-
 
 
 

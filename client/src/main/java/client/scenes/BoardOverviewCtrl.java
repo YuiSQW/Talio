@@ -3,9 +3,12 @@ package client.scenes;
 import client.utils.ServerUtils;
 import client.utils.WebsocketServerUtils;
 import commons.Board;
+import commons.BoardList;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
@@ -15,6 +18,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import javax.inject.Inject;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class BoardOverviewCtrl {
@@ -26,7 +30,7 @@ public class BoardOverviewCtrl {
     private double x,y;
     
     @FXML
-    private Button closeButton,minimizeButton,maximizeButton,addList, renameBoardBtn;
+    private Button closeButton,minimizeButton,maximizeButton,addList, renameBoardBtn, disconnectButton;
     @FXML
     private Pane toolBar;
     @FXML
@@ -53,7 +57,7 @@ public class BoardOverviewCtrl {
         /*
          * Note: this is the board, with its id I use, to test syncing
          */
-        //this.board = serverUtils.getBoard(330);
+        //this.board = serverUtils.getBoard(140);
         
         //You can delete this line in principle, but then the client sees "Title shortly" instead of the database title
         //this.boardTitle.setText(this.board.getName());
@@ -111,13 +115,11 @@ public class BoardOverviewCtrl {
         
         boardTitle.setOnMousePressed(event -> {
             userChangesField.set(true);
-            System.out.println("true");
             //TODO send the changed flag to the server
         });
     
         boardTitle.setOnKeyTyped(event -> {
             userChangesField.set(true);
-            System.out.println("true");
             //TODO send the changed flag to the server
         });
     
@@ -141,19 +143,28 @@ public class BoardOverviewCtrl {
     }
 
     /**
+     * Method which triggers the addition of an EMPTY List Container
      * Connected to the addList button
      */
     public void addNewList(){
-        this.addNewVbox();
+        this.addNewVbox(null);
+    }
+
+    /**
+     * Method which triggers the addition of a List Container with the provided BoardList instance
+     * @param boardList - the BoardList instance for the container
+     */
+    public void addList(BoardList boardList){
+        this.addNewVbox(boardList);
     }
 
     /**
      * Method which creates a new ListContainer object
      * which contains a child BoardList instance of the Board
      */
-    public void addNewVbox() {
+    public void addNewVbox(BoardList boardList) {
         ListContainerCtrl listContainerCtrl= new ListContainerCtrl(this.mainCtrl,this.serverUtils);
-        listContainerCtrl.init(tilePane,this);
+        listContainerCtrl.init(tilePane,this,boardList);
         tilePane.getChildren().add((tilePane.getChildren().size() - 1), listContainerCtrl);
     }
 
@@ -176,9 +187,26 @@ public class BoardOverviewCtrl {
     public boolean refresh(boolean isUserEditing){
         //TODO implements the logic related to retrieving the lists and displaying them
         this.board = websocketServerUtils.getCurrentBoard();
-        this.board = serverUtils.getBoard(this.board.id);
+        //this.board = serverUtils.getBoard(this.board.id);
+        List<BoardList> lists = serverUtils.getLists(this.board);
+  
+       
+        //Use an ObservableList to directly display changes onto the TilePane
+        ObservableList<Node> tilePaneChildren = tilePane.getChildren();
+        int numChildren = tilePaneChildren.size();
+        //Check if the size of bigger than one
+        if (numChildren > 1) {
+            //Delete all the children except the last one, so except the AddBtn
+            tilePaneChildren.subList(0, numChildren - 1).clear();
+        }
+    
         
-        //Disables the button when field is either empty, or the same as the value in the database
+        for (BoardList list : lists) {
+            addList(list);
+            
+            System.out.println(list.getParentBoard());
+        }
+        
         renameBoardBtn.disableProperty().bind((boardTitle.textProperty().isEqualTo(serverUtils.getBoard(this.board.id).getName()))
                 .or(boardTitle.textProperty().isEmpty()));
         
@@ -218,4 +246,14 @@ public class BoardOverviewCtrl {
      */
     public void maxMin(){
         this.mainCtrl.maxMinStage();}
+
+    /**
+     * This method is called when the disconnect button is clicked so a user can switch servers.
+     * The WelcomeOverview is shown so the user can enter a different server address.
+     */
+    @FXML
+    public void disconnect() {
+        mainCtrl.showWelcomeOverview();
+    }
+
 }

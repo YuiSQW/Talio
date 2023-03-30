@@ -66,7 +66,15 @@ public class WebsocketServerUtils {
      * @param server - ip-address of the server
      */
     public void setServer(String server){
-        this.server = server;
+        this.server = "ws://" + server;
+    }
+
+    /**
+     * getter for server, this is used for testing
+     *@return string server
+     */
+    public String getServer(){
+        return this.server;
     }
 
     /**
@@ -74,13 +82,16 @@ public class WebsocketServerUtils {
      */
     private class GetBoardStompFrameHandler implements StompFrameHandler {
 
+        
         @Override
         public Type getPayloadType(StompHeaders stompHeaders){
             return Board.class;
         }
 
+        //This method constantly gets the board
         @Override
         public void handleFrame(StompHeaders stompHeaders, Object board){
+            
             currentBoard = (Board) board;
         }
     }
