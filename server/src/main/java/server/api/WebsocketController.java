@@ -1,15 +1,25 @@
 package server.api;
 
 import commons.Board;
+import commons.BoardList;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.Message;
+import org.springframework.messaging.converter.GenericMessageConverter;
+import org.springframework.messaging.converter.MappingJackson2MessageConverter;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.annotation.SubscribeMapping;
+import org.springframework.messaging.support.GenericMessage;
+import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import server.database.BoardRepository;
 
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
+import static org.springframework.messaging.support.MessageBuilder.withPayload;
 
 
 @Controller
@@ -46,7 +56,8 @@ public class WebsocketController {
         //System.out.println("Scheduled Check called");
         while(boardUpdateListener.hasNext()) {
             Board boardToSend = boardUpdateListener.poll();
-            System.out.println("Board sent");
+            boardToSend = repo.findById(boardToSend.id).get();
+            System.out.println(boardToSend);
             messagingTemplate.convertAndSend("/boards/boardfeed/" + boardToSend.id, boardToSend);
         }
     }

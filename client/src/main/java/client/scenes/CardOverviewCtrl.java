@@ -2,6 +2,7 @@ package client.scenes;
 
 import client.utils.ServerUtils;
 import commons.Card;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
@@ -60,15 +61,17 @@ public class CardOverviewCtrl {
     public void saveChanges(){
         if(!this.title.getText().equals(this.card.getTitle())){
             this.card.setTitle(this.title.getText());
+            Platform.runLater(() -> serverUtils.renameCard(this.card));
         }
         if(!this.description.getText().equals(this.card.getDescription())){
+            Platform.runLater(() -> serverUtils.updateCardDescription(this.card));
             this.card.setDescription(this.description.getText());
         }
         this.listContainerCtrl.updateCard(this.card,this.cardIndex);
         this.closeCard();
     }
     public void removeCard(){
-        
+        System.out.println("Remove card called");
         this.listContainerCtrl.removeCard(this.card);
         this.card.setParentList(null);
         closeCard();
@@ -96,6 +99,7 @@ public class CardOverviewCtrl {
     }
     public void closeCard(){
         cancel();
+        ListContainerCtrl.setCardDialogOpen(false);
         this.stage.close();
     }
     public void minimize(){

@@ -2,6 +2,7 @@ package client.scenes;
 
 import client.utils.ServerUtils;
 import commons.Card;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
@@ -59,10 +60,11 @@ public class AddCardCtrl {
      * If both text fields are empty, no Card object is created and the stage is closed
      */
     public void saveCard(){
-        var p = title.getText();
-        var q = description.getText();
-        Card card= new Card(p,q,this.listContainerCtrl.getList());
-        this.listContainerCtrl.saveNewCard(card);
+        String cardTitle = title.getText();
+        String cardDescription = description.getText();
+        Card card= new Card(cardTitle,cardDescription,this.listContainerCtrl.getList());
+        Platform.runLater(() ->this.serverUtils.postNewCard(card, this.listContainerCtrl.getList()));
+        //this.listContainerCtrl.saveNewCard(card);
         this.closeCard();
     }
     //Still has no usage & needs to get replaced when data can get stored in database
@@ -93,6 +95,7 @@ public class AddCardCtrl {
 
     public void closeCard(){
         cancel();
+        ListContainerCtrl.setCardDialogOpen(false);
         this.stage.close();
     }
     public void minimize(){

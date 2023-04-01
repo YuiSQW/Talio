@@ -2,12 +2,15 @@ package server.api;
 
 
 
+import commons.Board;
+import commons.BoardList;
 import commons.Card;
 import commons.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import server.database.BoardListRepository;
+import server.database.BoardRepository;
 import server.database.CardRepository;
 
 @RestController
@@ -24,12 +27,14 @@ public class CardController {
      */
     private final BoardListRepository parentRepo;
 
+    private final BoardRepository boardRepo;
     @Autowired
     private BoardUpdateListener boardUpdateListener;
 
-    public CardController(CardRepository repo, BoardListRepository parentRepo){
+    public CardController(CardRepository repo, BoardListRepository parentRepo, BoardRepository boardRepo){
         this.repo = repo;
         this.parentRepo = parentRepo;
+        this.boardRepo = boardRepo;
     }
 
 
@@ -55,12 +60,26 @@ public class CardController {
 
     @PostMapping("/new-card/{boardListId}")
     public ResponseEntity<Card> getNewCard(@RequestBody Card newCard, @PathVariable("boardListId") long boardListId){
-        if(newCard == null || newCard.getTitle() == null || newCard.getDescription() == null || !parentRepo.existsById(boardListId))
+        if(!parentRepo.existsById(boardListId)){
             return ResponseEntity.badRequest().build();
-        newCard.setParentList(parentRepo.findById(boardListId).get());
-        Card saved = repo.save(newCard);
-        boardUpdateListener.add(saved.getParentList().getParentBoard());
-        return ResponseEntity.ok(saved);
+        }
+        BoardList parentList = parentRepo.getById(boardListId);
+        Board parentBoard = boardRepo.getById(parentList.getParentBoard().id);
+        newCard.setParentList(parentList);
+        parentList.addCard(newCard);
+        int index = 0;
+        for(int i = 0; i < parentBoard.getLists().size(); i++){
+            if(parentBoard.getLists().get(i).id == parentList.id){
+                parentBoard.getLists().set(i, parentList);
+                index = i;
+                break;
+            }
+        }
+        Board updatedBoard = boardRepo.saveAndFlush(parentBoard);
+        //Card saved = repo.save(newCard);
+        boardUpdateListener.add(updatedBoard);
+        Card addedCard = updatedBoard.getLists().get(index).getCardList().get(updatedBoard.getLists().get(index).getCardList().size() - 1);
+        return ResponseEntity.ok(addedCard);
     }
     
     
@@ -73,9 +92,11 @@ public class CardController {
     @DeleteMapping("delete/{id}")
     public void deleteCard(@PathVariable("id") long id) {
         try {
+            Card cardToDelete = repo.getById(id);
+            boardUpdateListener.add(cardToDelete.getParentList().getParentBoard());
             repo.deleteById(id);
         }catch(IllegalArgumentException e){
-            System.out.println("The id for deleteCard cannot be null");
+            System.out.println("The id for deleteCard is invalid");
             e.printStackTrace();
         }
     }
