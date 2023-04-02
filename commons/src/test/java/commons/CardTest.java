@@ -3,6 +3,7 @@ package commons;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -79,5 +80,19 @@ class CardTest {
         var task=new Task(testCard,"a");
         testCard.addTask(task);
         assertEquals(testCard.getTaskList().get(0),task);
+    }
+
+    @Test
+    void toStringTest(){
+        String title = "cardName";
+        String description = "cardDescription";
+        String listName = "parentListName";
+        List<Card> cardList = new ArrayList<>();
+        BoardList parentList = new BoardList(listName, cardList);
+        Card card = new Card(title, description, parentList);
+        parentList.addCard(card);
+        String expected = "Title: cardName; Description: cardDescription; ParentList: parentListName";
+        String result = card.toString();
+        assertEquals(expected, result);
     }
 }

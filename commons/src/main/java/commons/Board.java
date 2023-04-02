@@ -68,4 +68,18 @@ public class Board {
             }
         }
     }
+
+    @Override
+    public String toString() {
+        String result = "Name: " + name + "; BoardLists: ";
+        int length = lists.size();
+        for (int i = 0; i < length; i++) {
+            BoardList list = lists.get(i);
+            result += list.getName();
+            if (i < length - 1) {
+                result += ", ";
+            }
+        }
+        return result;
+    }
 }

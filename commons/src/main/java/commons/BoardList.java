@@ -1,7 +1,6 @@
 package commons;
 
 import javax.persistence.*;
-import org.apache.commons.lang3.builder.ToStringBuilder;
 import java.io.Serializable;
 import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -90,7 +89,17 @@ public class BoardList implements Serializable {
 
     @Override
     public String toString() {
-        return ToStringBuilder.reflectionToString(this);
+        String result =  "Name: " + name + "; CardList: ";
+        int length = cardList.size();
+        for (int i = 0; i < length; i++) {
+            Card card = cardList.get(i);
+            result += card.getTitle();
+            if (i < length - 1) {
+                result += ", ";
+            }
+        }
+        result += "; ParentBoard: " + parentBoard.getName();
+        return result;
     }
 
 }
