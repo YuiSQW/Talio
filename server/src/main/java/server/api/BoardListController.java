@@ -6,7 +6,7 @@ import commons.Board;
 import commons.BoardList;
 
 import commons.Card;
-import commons.Task;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -112,7 +112,7 @@ public class BoardListController {
      */
     @DeleteMapping("/{id}")
     public void deleteList(@PathVariable("id") long id){
-        System.out.println("Deletion called");
+        //System.out.println("Deletion called");
         if(!repo.existsById(id)){
             System.out.println("Invalid id for deleting list");
             return;
@@ -158,12 +158,12 @@ public class BoardListController {
      */
     @PutMapping("/exchange-card/{fromListId}/{toListId}/{cardToMove}/{newPos}")
     public ResponseEntity<BoardList> exchangeCard(@PathVariable("fromListId")long fromListId,@PathVariable("toListId")long toListId,@PathVariable("cardToMove")long cardToMoveId, @PathVariable("newPos")long newPos){
-        System.out.println();
+        /*System.out.println();
         System.out.println("FromListId: " + fromListId);
         System.out.println("ToListId: " + toListId);
         System.out.println("CardToMoveId: " + cardToMoveId);
         System.out.println("New Position: " + newPos);
-        System.out.println();
+        System.out.println();*/
         if(!repo.existsById(fromListId) || !repo.existsById(toListId) || cardToMoveId<0 || newPos<0){
             return ResponseEntity.badRequest().build();
         }
