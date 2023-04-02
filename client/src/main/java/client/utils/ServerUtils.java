@@ -214,4 +214,12 @@ public class ServerUtils {
             .accept(APPLICATION_JSON)
             .put(Entity.entity("", APPLICATION_JSON));
     }
+
+    public Board getBoardOrCreateNew(){
+        return ClientBuilder.newClient(new ClientConfig())
+            .target(SERVER).path("/api/boards/get-stored-board-or-create-new")
+            .request(APPLICATION_JSON)
+            .accept(APPLICATION_JSON)
+            .get(new GenericType<Board>(){});
+    }
 }

@@ -58,7 +58,7 @@ public class BoardOverviewCtrl {
         /*
          * Note: this is the board, with its id I use, to test syncing
          */
-        this.board = serverUtils.getBoard(1);
+        this.board = serverUtils.getBoardOrCreateNew();
         
         //You can delete this line in principle, but then the client sees "Title shortly" instead of the database title
         this.boardTitle.setText(this.board.getName());
@@ -97,13 +97,13 @@ public class BoardOverviewCtrl {
         //Using AtomicBoolean, because it is more tread safe and to prevent data inconsistency when dealing with multiple threads
         AtomicBoolean userChangesField = new AtomicBoolean(false);
         
-        // Set up a Timeline to update the GUI every second, this is better as the timer,
+        // Set up a Timeline to update the GUI every 500 ms, this is better as the timer,
         // because this is mostly used for JavaFX applications, firstly I implemented it with AnimatedTimer,
         // but that took so much CPU resources
         
         Timeline timeline = new Timeline(
-                //Call the refresh method every second
-                new KeyFrame(Duration.seconds(1), event -> {
+                //Call the refresh method twice every second
+                new KeyFrame(Duration.millis(500), event -> {
                     
                     boolean hasChanged = refresh(userChangesField.get());
                     //Set the userChangesField to the value from the refresh() func
@@ -206,7 +206,10 @@ public class BoardOverviewCtrl {
     
         
         for (BoardList list : lists) {
-            list.getCardList().add(null);
+            if(list.getCardList().size() == 0) {
+                // to make sure that at least 1 cell gets allocated to enable dropping on empty list
+                list.getCardList().add(null);
+            }
             addList(list);
             
             //System.out.println(list.getParentBoard());

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import server.database.BoardRepository;
 
+import java.util.ArrayList;
 
 
 @RestController
@@ -98,6 +99,18 @@ public class BoardController {
     @GetMapping("/connection-available")
     public String connectionAvailable() {
         return "Connection available";
+    }
+
+    @GetMapping("/get-stored-board-or-create-new")
+    public ResponseEntity<Board> getStoredBoardOrCreateNew(){
+        if(repo.count() == 0){
+            //make new board
+            Board newBoard = new Board("Board Title", new ArrayList<>());
+            return ResponseEntity.ok(repo.saveAndFlush(newBoard));
+        }else{
+            //return the board with the minimal id in the database
+            return ResponseEntity.ok(repo.findById(repo.getMinId()).get());
+        }
     }
 
 }
