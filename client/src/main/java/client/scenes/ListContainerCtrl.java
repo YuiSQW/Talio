@@ -18,11 +18,8 @@ import javafx.scene.input.*;
 
 
 import javax.inject.Inject;
-import javax.sound.sampled.Clip;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+
 
 /**
  * The List container class which can be used to generate custom Vbox

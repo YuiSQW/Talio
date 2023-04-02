@@ -27,13 +27,13 @@ import commons.Card;
 import commons.Task;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
-import org.checkerframework.checker.units.qual.C;
+
 import org.glassfish.jersey.client.ClientConfig;
 
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.GenericType;
-import org.glassfish.jersey.client.internal.routing.ClientResponseMediaTypeDeterminer;
+
 
 /**
  * The connection between the GUI and the server
