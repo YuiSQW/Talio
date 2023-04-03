@@ -23,6 +23,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 import org.springframework.boot.test.mock.mockito.MockBeans;
 import org.springframework.test.web.servlet.MockMvc;
+import server.database.BoardListRepository;
+import server.database.BoardRepository;
 import server.database.CardRepository;
 import server.database.TaskRepository;
 
@@ -35,7 +37,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 @WebMvcTest(TaskController.class)
-@MockBeans({@MockBean(TaskRepository.class), @MockBean(CardRepository.class), @MockBean(BoardUpdateListener.class)})
+@MockBeans({@MockBean(TaskRepository.class), @MockBean(CardRepository.class),@MockBean(BoardListRepository.class),@MockBean(BoardRepository.class), @MockBean(BoardUpdateListener.class)})
 public class TaskControllerTest {
 
     @Autowired
