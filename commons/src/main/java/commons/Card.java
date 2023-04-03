@@ -7,11 +7,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-public class Card {
+public class Card implements Serializable {
     /**
      * Cards contain a title and a description
      */
@@ -20,7 +21,8 @@ public class Card {
     @GeneratedValue(strategy = GenerationType.AUTO)
     public long id;
 
-    @OneToMany(mappedBy = "parentCard", fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "parentCard",fetch = FetchType.EAGER, orphanRemoval = true)
+    @OrderColumn
     private List<Task> taskList;
 
     @JsonIgnore //this field needs to be ignored if converted to json, since it would otherwise be stuck in infinite loop
@@ -82,6 +84,11 @@ public class Card {
 
     @Override
     public String toString() {
-        return "Title: " + title + "; Description: " + description + "; ParentList: " + parentList.getName();
+        return "Card{" +
+            "id=" + id +
+            ", taskList=" + taskList +
+            ", title='" + title + '\'' +
+            ", description='" + description + '\'' +
+            '}';
     }
 }

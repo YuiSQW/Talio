@@ -13,6 +13,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 
 import javax.inject.Inject;
+import java.net.UnknownHostException;
 
 /**
  * The controller for the ClientConnect.FXML
@@ -60,7 +61,7 @@ public class ClientConnectCtrl {
     public void connectToServer() throws Exception {
         String serverAddress = serverAddressField.getText();
 
-        if(serverAddress.equals("localhost:8080")) {
+        /*if(serverAddress.equals("localhost:8080")) {
             try{
                 serverUtils.connect(serverAddress);
                 websocketServerUtils.setServer(serverAddress);
@@ -70,6 +71,17 @@ public class ClientConnectCtrl {
             }
         } else{
             invalidServerAddressAlert();
+        }*/
+        try{
+            serverUtils.connect(serverAddress);
+            websocketServerUtils.setServer(serverAddress);
+            mainCtrl.showBoardOverview();
+        }catch (Exception e){
+            if(e instanceof UnknownHostException){
+                invalidServerAddressAlert();
+            }else{
+                e.printStackTrace();
+            }
         }
     }
 

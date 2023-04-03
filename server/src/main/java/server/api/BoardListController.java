@@ -6,6 +6,7 @@ import commons.Board;
 import commons.BoardList;
 
 import commons.Card;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -85,10 +86,15 @@ public class BoardListController {
         if(boardId < 0 || !parentRepo.existsById(boardId)){
             return ResponseEntity.badRequest().build();
         }
-        newList.setParentBoard(parentRepo.getById(boardId));
-        BoardList addedList = repo.save(newList);
-        boardUpdateListener.add(addedList.getParentBoard());
-        return ResponseEntity.ok(addedList);
+        Board parentBoard = parentRepo.getById(boardId);
+        newList.setParentBoard(parentBoard);
+        //BoardList addedList = repo.saveAndFlush(newList);
+        parentBoard.addList(newList);
+        //parentBoard.addList(addedList);
+        //Board updatedBoard = parentRepo.saveAndFlush(parentBoard);
+        Board updatedBoard = parentRepo.saveAndFlush(parentBoard);
+        boardUpdateListener.add(updatedBoard);
+        return ResponseEntity.ok(newList);
     }
 
     @PutMapping("/{id}/{newName}")
@@ -106,24 +112,17 @@ public class BoardListController {
      */
     @DeleteMapping("/{id}")
     public void deleteList(@PathVariable("id") long id){
-        try {
-            var boardList = repo.getById(id);
-            var listCards = boardList.getCardList();
-            for (int i = 0; i < listCards.size(); i++) {
-                var listTasks = listCards.get(i).getTaskList();
-                for (int j = 0; j < listTasks.size(); j++) {
-                    taskRepo.delete(listTasks.get(j));
-                }
-                cardRepo.delete(listCards.get(i));
-            }
-            var parentBoard= boardList.getParentBoard();
-            parentBoard.deleteList(id);
-            repo.deleteById(id);
-            boardUpdateListener.add(parentBoard);
-        }catch(IllegalArgumentException e){
-            System.out.println("The id for deleteList cannot be null");
-            e.printStackTrace();
+        //System.out.println("Deletion called");
+        if(!repo.existsById(id)){
+            System.out.println("Invalid id for deleting list");
+            return;
         }
+        BoardList listToDelete = repo.getById(id);
+        Board affectedBoard = parentRepo.getById(listToDelete.getParentBoard().id);
+        affectedBoard.deleteList(listToDelete.id);
+        repo.deleteById(id);
+        Board updatedBoard = parentRepo.saveAndFlush(affectedBoard);
+        boardUpdateListener.add(updatedBoard);
     }
 
     /**
@@ -158,26 +157,30 @@ public class BoardListController {
      * @return  a ResponseEntity that contains the boardlist that received the new card or a badrequests error if the method fails.
      */
     @PutMapping("/exchange-card/{fromListId}/{toListId}/{cardToMove}/{newPos}")
-    public ResponseEntity<BoardList> exchangeCard(@PathVariable("fromListId")long fromListId,@PathVariable("toListId")long toListId,@PathVariable("cardToMove")long cardToMove, @PathVariable("newPos")long newPos){
-        if(!repo.existsById(fromListId) || !repo.existsById(toListId) || cardToMove<0 || newPos<0){
+    public ResponseEntity<BoardList> exchangeCard(@PathVariable("fromListId")long fromListId,@PathVariable("toListId")long toListId,@PathVariable("cardToMove")long cardToMoveId, @PathVariable("newPos")long newPos){
+        if(!repo.existsById(fromListId) || !repo.existsById(toListId) || cardToMoveId<0 || newPos<0){
             return ResponseEntity.badRequest().build();
         }
-        BoardList oldList=repo.findById(fromListId).get();
-        BoardList newList=repo.findById(toListId).get();
-        var listsOld=oldList.getCardList();
-        var listsNew=newList.getCardList();
-        if(cardToMove>=listsOld.size() || newPos>listsNew.size()){//newPos can be equal to the size of the list, as that adds the element at the end of the list
+        BoardList oldList = repo.findById(fromListId).get();
+        BoardList newList = repo.findById(toListId).get();
+        List<Card> listsNew = newList.getCardList();
+        if(newPos>listsNew.size()){//newPos can be equal to the size of the list, as that adds the element at the end of the list
             return ResponseEntity.badRequest().build();
         }
-        Card movedCard=listsOld.get((int) cardToMove);
-        listsOld.remove(movedCard);
-        listsNew.add((int) newPos,movedCard);
-        oldList.setCardList(listsOld);
+        Card movedCard = cardRepo.findById(cardToMoveId).get();
+        movedCard.setParentList(newList);
+        if(fromListId == toListId){
+            listsNew.remove(movedCard);
+            listsNew.add((int)newPos, movedCard);
+        }else{
+            oldList.deleteCard(movedCard.id);
+            listsNew.add((int)newPos, movedCard);
+        }
+
         newList.setCardList(listsNew);
-        BoardList updatedOldList=repo.save(oldList);
-        BoardList updatedNewList=repo.save(newList);
-        boardUpdateListener.add(updatedOldList.getParentBoard());
-        boardUpdateListener.add(updatedNewList.getParentBoard());
+        repo.saveAndFlush(oldList);
+        BoardList updatedNewList=repo.saveAndFlush(newList);
+        boardUpdateListener.add(parentRepo.getById(updatedNewList.getParentBoard().id));
         return ResponseEntity.ok(updatedNewList);
     }
 

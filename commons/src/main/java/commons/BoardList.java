@@ -17,7 +17,8 @@ public class BoardList implements Serializable {
     public long id;
 
 
-    @OneToMany(mappedBy = "parentList", fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "parentList", fetch = FetchType.EAGER, orphanRemoval = true)
+    @OrderColumn
     private List<Card> cardList;
 
     @JsonIgnore //this field needs to be ignored if converted to json, since it would otherwise be stuck in infinite loop
@@ -78,6 +79,12 @@ public class BoardList implements Serializable {
         //TODO
         //the id field of Card needs to be added in the future for database purposes
         //to be implemented here: deleting a card from cardList based on its id
+        for(int i = 0; i < cardList.size(); i++){
+            if(cardList.get(i).id == id){
+                cardList.remove(i);
+                break;
+            }
+        }
     }
     @Override
     public boolean equals(Object other){
@@ -87,19 +94,15 @@ public class BoardList implements Serializable {
                ((BoardList) other).parentBoard.equals(this.parentBoard);
     }
 
+
     @Override
     public String toString() {
-        String result =  "Name: " + name + "; CardList: ";
-        int length = cardList.size();
-        for (int i = 0; i < length; i++) {
-            Card card = cardList.get(i);
-            result += card.getTitle();
-            if (i < length - 1) {
-                result += ", ";
-            }
-        }
-        result += "; ParentBoard: " + parentBoard.getName();
-        return result;
-    }
 
+        return "BoardList{" +
+            "id=" + id +
+            ", cardList=" + cardList +
+            ", name='" + name + '\'' +
+            '}';
+
+    }
 }

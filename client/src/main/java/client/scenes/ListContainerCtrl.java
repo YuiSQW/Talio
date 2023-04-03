@@ -3,6 +3,7 @@ package client.scenes;
 import client.utils.ServerUtils;
 import commons.BoardList;
 import commons.Card;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
@@ -18,6 +19,7 @@ import javafx.scene.input.*;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
+
 
 /**
  * The List container class which can be used to generate custom Vbox
@@ -36,6 +38,12 @@ public class ListContainerCtrl extends VBox {
     private final ServerUtils serverUtils;
     
     private static boolean hasChangedFlag;
+
+    //only allows one card dialog to be open at one time, since having multiple card
+    //dialogs open will make the dialog unresponsive
+    private static boolean cardDialogOpen;
+
+    private static final DataFormat CARD_FORMAT = new DataFormat("text/title");
     @Inject
     public ListContainerCtrl(MainCtrl mainCtrl, ServerUtils serverUtils){
         this.mainCtrl=mainCtrl;
@@ -106,9 +114,11 @@ public class ListContainerCtrl extends VBox {
                 }
             };
             cell.setOnMouseClicked(event -> {
-                if(cell.getText()!=null) {
+                if(cell.getText()!=null && !cardDialogOpen) {
+                    cardDialogOpen = true;
                     Card item = cell.getItem();
                     this.mainCtrl.showCardOverview(this, item);
+                    //cardDialogOpen = false;
                 }
             });
 
@@ -141,11 +151,15 @@ public class ListContainerCtrl extends VBox {
 
         //Every vbox has the ability to delete itself
         removeBtn.setOnAction(event -> {
-            tilePane.getChildren().remove(ListContainerCtrl.this);
-            serverUtils.deleteList(this.list);
+            //tilePane.getChildren().remove(ListContainerCtrl.this);
+            Platform.runLater(() -> serverUtils.deleteList(this.list));
         });
         addCardButton.setOnAction(event -> {
-            this.mainCtrl.addCardOverview(this);
+            if(!cardDialogOpen) {
+                cardDialogOpen = true;
+                this.mainCtrl.addCardOverview(this);
+                //cardDialogOpen = false;
+            }
             
         });
         editButton.setOnAction(event -> this.mainCtrl.editListName(this));
@@ -163,10 +177,13 @@ public class ListContainerCtrl extends VBox {
             public void handle(MouseEvent event) {
                 /* drag was detected, start a drag-and-drop gesture*/
                 /* allow any transfer mode */
+
                 Dragboard db = cell.startDragAndDrop(TransferMode.ANY);
                 
                 /* Put a string on a dragboard */
                 ClipboardContent content = new ClipboardContent();
+                //content.putString(cell.getItem().id + " " + cell.getItem().getParentList().id);
+                content.put(CARD_FORMAT, cell.getItem());
                 content.putString(cell.getItem().getTitle());
                 db.setContent(content);
                 
@@ -179,6 +196,7 @@ public class ListContainerCtrl extends VBox {
                 /* data is dragged over the target */
                 /* accept it only if it is not dragged from the same node 
                  * and if it has a string data */
+
                 if (event.getGestureSource() != cell &&
                         event.getDragboard().hasString()) {
                     /* allow for both copying and moving, whatever user chooses */
@@ -193,6 +211,7 @@ public class ListContainerCtrl extends VBox {
             public void handle(DragEvent event) {
             /* the drag-and-drop gesture entered the target */
             /* show to the user that it is an actual gesture target */
+
                  if (event.getGestureSource() != cell &&
                          event.getDragboard().hasString()) {
                     cell.setTextFill(Color.BLUE);
@@ -205,6 +224,7 @@ public class ListContainerCtrl extends VBox {
         cell.setOnDragExited(new EventHandler<DragEvent>() {
             public void handle(DragEvent event) {
                 /* mouse moved away, remove the graphical cues */
+
                 cell.setTextFill(Color.BLACK);
         
                 event.consume();
@@ -215,11 +235,16 @@ public class ListContainerCtrl extends VBox {
             public void handle(DragEvent event) {
                 /* data dropped */
                 /* if there is a string data on dragboard, read it and use it */
+
                 Dragboard db = event.getDragboard();
                 boolean success = false;
-                if (db.hasString()) {
-                   Card card = new Card(db.getString(), "description of the task", ListContainerCtrl.this.list); 
-                   listView.getItems().add(cell.getIndex(), card);
+                if (db.hasContent(CARD_FORMAT)) {
+                    Card movedCard = (Card) db.getContent(CARD_FORMAT);
+                    long newPos = cell.getIndex();
+                   //Card card = new Card(title, description, ListContainerCtrl.this.list);
+                   //card.id = id;
+                   //listView.getItems().add(cell.getIndex(), card);
+                    Platform.runLater(() -> serverUtils.dropCardOnOtherList(movedCard, ListContainerCtrl.this.list.id, newPos));
                    success = true;
                 }
                 /* let the source know whether the string was successfully 
@@ -235,7 +260,7 @@ public class ListContainerCtrl extends VBox {
                 /* the drag and drop gesture ended */
                 /* if the data was successfully moved, clear it */
                 if (event.getTransferMode() == TransferMode.MOVE) {
-                    removeCard(cell.getItem());
+                    //removeCard(cell.getItem());
                 }
                 event.consume();
             }
@@ -267,10 +292,13 @@ public class ListContainerCtrl extends VBox {
     public void saveNewCard(Card card) {
         //Adds the card with id and not the old one
         //Create a new card, so that the old one (without id) doesn't get used anymore
-        Card newCard = serverUtils.postNewCard(card, this.list);
+        Platform.runLater(() -> {
+            Card newCard = serverUtils.postNewCard(card, this.list);
+            this.cards.add(newCard);
+            this.list.getCardList().add(newCard);
+        });
         //Add the Card with ID to the lists
-        this.cards.add(newCard);
-        this.list.getCardList().add(newCard);
+
         
     }
 
@@ -304,6 +332,9 @@ public class ListContainerCtrl extends VBox {
     
     }
 
+    public static void setCardDialogOpen(boolean valToSet){
+        cardDialogOpen = valToSet;
+    }
 }
 
 

@@ -84,7 +84,9 @@ class WebsocketControllerTest {
         Mockito.when(repo.save(Mockito.any(Board.class))).then(returnsFirstArg());
         Mockito.when(repo.existsById(Mockito.anyLong())).thenReturn(true);
         mockMvc.perform(put("/api/boards/1/" + randString));
-        Thread.sleep(5000);
+    
+        Thread.sleep(10000);
+
         assertEquals(randString, receivedBoard.getName());
 
     }

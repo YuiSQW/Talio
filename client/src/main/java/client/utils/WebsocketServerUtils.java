@@ -2,6 +2,9 @@ package client.utils;
 
 
 import commons.Board;
+import commons.BoardList;
+import commons.Card;
+import commons.Task;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
 import org.springframework.messaging.simp.stomp.*;
 import org.springframework.web.socket.client.standard.StandardWebSocketClient;
@@ -91,8 +94,16 @@ public class WebsocketServerUtils {
         //This method constantly gets the board
         @Override
         public void handleFrame(StompHeaders stompHeaders, Object board){
-            
             currentBoard = (Board) board;
+            for(BoardList i : currentBoard.getLists()){
+                i.setParentBoard(currentBoard);
+                for(Card j : i.getCardList()){
+                    j.setParentList(i);
+                    for(Task k: j.getTaskList()){
+                        k.setParentCard(j);
+                    }
+                }
+            }
         }
     }
 }

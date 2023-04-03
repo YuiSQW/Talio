@@ -75,7 +75,7 @@ class BoardTest {
         Board board = new Board(boardName, lists);
         board.addList(listOne);
         board.addList(listTwo);
-        String expected = "Name: boardName; BoardLists: listOneName, listTwoName";
+        String expected = "Board{id=0, lists=[BoardList{id=0, cardList=[], name='listOneName'}, BoardList{id=0, cardList=[], name='listTwoName'}], name='boardName'}";
         String result = board.toString();
         assertEquals(expected, result);
     }

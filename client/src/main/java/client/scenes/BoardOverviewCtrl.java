@@ -6,6 +6,7 @@ import commons.Board;
 import commons.BoardList;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -57,10 +58,10 @@ public class BoardOverviewCtrl {
         /*
          * Note: this is the board, with its id I use, to test syncing
          */
-        //this.board = serverUtils.getBoard(140);
+        this.board = serverUtils.getBoardOrCreateNew();
         
         //You can delete this line in principle, but then the client sees "Title shortly" instead of the database title
-        //this.boardTitle.setText(this.board.getName());
+        this.boardTitle.setText(this.board.getName());
     
         /*
          * ATTENTION: Steps to make sure that the syncing works on your local host (make sure 2 clients connect to the same board)
@@ -72,10 +73,10 @@ public class BoardOverviewCtrl {
     
         
         //This board is the one without id
-        Board board = new Board(this.boardTitle.getText(), new ArrayList<>());
+        //Board board = new Board(this.boardTitle.getText(), new ArrayList<>());
         
         //Assign the board to the one postNewBoard creates (the one with generated id)
-        this.board = serverUtils.postNewBoard(board);
+        //this.board = serverUtils.postNewBoard(board);
         
     
         toolBar.setOnMousePressed( mouseEvent -> {
@@ -96,13 +97,13 @@ public class BoardOverviewCtrl {
         //Using AtomicBoolean, because it is more tread safe and to prevent data inconsistency when dealing with multiple threads
         AtomicBoolean userChangesField = new AtomicBoolean(false);
         
-        // Set up a Timeline to update the GUI every second, this is better as the timer,
+        // Set up a Timeline to update the GUI every 500 ms, this is better as the timer,
         // because this is mostly used for JavaFX applications, firstly I implemented it with AnimatedTimer,
         // but that took so much CPU resources
         
         Timeline timeline = new Timeline(
-                //Call the refresh method every second
-                new KeyFrame(Duration.seconds(1), event -> {
+                //Call the refresh method twice every second
+                new KeyFrame(Duration.millis(500), event -> {
                     
                     boolean hasChanged = refresh(userChangesField.get());
                     //Set the userChangesField to the value from the refresh() func
@@ -147,7 +148,10 @@ public class BoardOverviewCtrl {
      * Connected to the addList button
      */
     public void addNewList(){
-        this.addNewVbox(null);
+        BoardList listToAdd = new BoardList("Empty list", new ArrayList<>(), this.board);
+        System.out.println("New list Button clicked");
+        Platform.runLater(() -> serverUtils.postNewList(listToAdd, this.board));
+        //this.addNewVbox(null);
     }
 
     /**
@@ -188,8 +192,8 @@ public class BoardOverviewCtrl {
         //TODO implements the logic related to retrieving the lists and displaying them
         this.board = websocketServerUtils.getCurrentBoard();
         //this.board = serverUtils.getBoard(this.board.id);
-        List<BoardList> lists = serverUtils.getLists(this.board);
-  
+        List<BoardList> lists = this.board.getLists();
+
        
         //Use an ObservableList to directly display changes onto the TilePane
         ObservableList<Node> tilePaneChildren = tilePane.getChildren();
@@ -202,20 +206,24 @@ public class BoardOverviewCtrl {
     
         
         for (BoardList list : lists) {
+            if(list.getCardList().size() == 0) {
+                // to make sure that at least 1 cell gets allocated to enable dropping on empty list
+                list.getCardList().add(null);
+            }
             addList(list);
             
-            System.out.println(list.getParentBoard());
+            //System.out.println(list.getParentBoard());
         }
         
-        renameBoardBtn.disableProperty().bind((boardTitle.textProperty().isEqualTo(serverUtils.getBoard(this.board.id).getName()))
-                .or(boardTitle.textProperty().isEmpty()));
+        renameBoardBtn.disableProperty().bind((boardTitle.textProperty().isEqualTo(this.board.getName())
+                .or(boardTitle.textProperty().isEmpty())));
         
     
         //If the user is not editing the textField, then you can set the boardTitle textField to the new value
         //Otherwise the clients get constantly interrupted
         if (!isUserEditing) {
             boardTitle.setText(this.board.getName());
-            //TODO sent the isUserEditing flag to the server
+
             
         }
         

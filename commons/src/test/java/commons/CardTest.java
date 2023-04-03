@@ -91,7 +91,7 @@ class CardTest {
         BoardList parentList = new BoardList(listName, cardList);
         Card card = new Card(title, description, parentList);
         parentList.addCard(card);
-        String expected = "Title: cardName; Description: cardDescription; ParentList: parentListName";
+        String expected = "Card{id=0, taskList=[], title='cardName', description='cardDescription'}";
         String result = card.toString();
         assertEquals(expected, result);
     }
