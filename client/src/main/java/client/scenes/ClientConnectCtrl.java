@@ -31,10 +31,10 @@ public class ClientConnectCtrl {
     @FXML
     public Button closeButton, maximizeButton, minimizeButton;
     @FXML
-    private TextField serverAddressField;
+    TextField serverAddressField;
 
     @FXML
-    private Button connectButton;
+    Button connectButton;
 
     /**
      * Constructor of the ClientConnectCtrl class
@@ -120,5 +120,18 @@ public class ClientConnectCtrl {
      */
     public void maxMin(){
         this.mainCtrl.maxMinStage();}
+
+    //Following methods are for testing purposes only
+    public ServerUtils getServerUtils(){
+        return serverUtils;
+    }
+
+    public MainCtrl getMainCtrl(){
+        return mainCtrl;
+    }
+
+    public WebsocketServerUtils getWebsocketServerUtils() {
+        return websocketServerUtils;
+    }
 
 }

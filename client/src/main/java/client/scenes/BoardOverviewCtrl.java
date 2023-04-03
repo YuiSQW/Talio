@@ -256,4 +256,16 @@ public class BoardOverviewCtrl {
         mainCtrl.showWelcomeOverview();
     }
 
+    //Next methods are getters used in testing
+    public ServerUtils getServerUtils() {
+        return serverUtils;
+    }
+
+    public MainCtrl getMainCtrl() {
+        return mainCtrl;
+    }
+
+    public WebsocketServerUtils getWebsocketServerUtils() {
+        return websocketServerUtils;
+    }
 }
