@@ -3,13 +3,16 @@ package commons;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.apache.commons.lang3.tuple.Pair;
 
 
 import javax.persistence.*;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 public class Card implements Serializable {
@@ -24,6 +27,9 @@ public class Card implements Serializable {
     @OneToMany(cascade = CascadeType.MERGE, mappedBy = "parentCard",fetch = FetchType.EAGER, orphanRemoval = true)
     @OrderColumn
     private List<Task> taskList;
+
+    @ManyToMany(mappedBy = "cards")
+    private Set<Tag> tagSet;
 
     @JsonIgnore //this field needs to be ignored if converted to json, since it would otherwise be stuck in infinite loop
     @ManyToOne
@@ -40,6 +46,7 @@ public class Card implements Serializable {
         this.description = description;
         this.parentList = parentList;
         this.taskList=new ArrayList<>();
+        this.tagSet= new HashSet<Tag>();
     }
     public String getDescription() {
         return this.description;
@@ -70,6 +77,8 @@ public class Card implements Serializable {
     public void addTask(Task task){
         this.taskList.add(task);
     }
+    public void addTag(Tag tag){this.tagSet.add(tag);}
+    public void removeTag(Tag tag){this.tagSet.remove(tag);}
 
     public BoardList getParentList(){
         return this.parentList;
@@ -89,6 +98,8 @@ public class Card implements Serializable {
             ", taskList=" + taskList +
             ", title='" + title + '\'' +
             ", description='" + description + '\'' +
+                this.tagSet.toString()+
             '}';
     }
+
 }

@@ -4,6 +4,7 @@ import client.utils.ServerUtils;
 import client.utils.WebsocketServerUtils;
 import commons.Board;
 import commons.BoardList;
+import commons.Tag;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
@@ -17,6 +18,8 @@ import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import javafx.util.Pair;
+
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +32,8 @@ public class BoardOverviewCtrl {
     private final WebsocketServerUtils websocketServerUtils;
     private Board board;
     private double x,y;
+
+    private List<Tag> availableTags;
     
     @FXML
     private Button closeButton,minimizeButton,maximizeButton,addList, renameBoardBtn, disconnectButton;
@@ -87,7 +92,8 @@ public class BoardOverviewCtrl {
             stage.setX(mouseEvent.getScreenX()-this.x);
             stage.setY(mouseEvent.getScreenY()-this.y);
         });
-    
+
+
         //Initializes the socket
         websocketServerUtils.initSocket();
         
