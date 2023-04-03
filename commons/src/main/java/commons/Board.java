@@ -79,10 +79,12 @@ public class Board implements Serializable {
 
     @Override
     public String toString() {
+
         return "Board{" +
             "id=" + id +
             ", lists=" + lists +
             ", name='" + name + '\'' +
             '}';
+
     }
 }

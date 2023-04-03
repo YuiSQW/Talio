@@ -97,10 +97,12 @@ public class BoardList implements Serializable {
 
     @Override
     public String toString() {
+
         return "BoardList{" +
             "id=" + id +
             ", cardList=" + cardList +
             ", name='" + name + '\'' +
             '}';
+
     }
 }

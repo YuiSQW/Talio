@@ -18,6 +18,7 @@ import server.database.CardRepository;
 import server.database.TaskRepository;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.hamcrest.Matchers.is;
@@ -219,5 +220,33 @@ class BoardListControllerTest {
         Mockito.when(cardRepo.findById(Mockito.anyLong())).thenReturn(Optional.of(new Card("card1", "", null)));
         this.mockMvc.perform(put("/api/boardlists/exchange-card/1/2/0/1"))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void getListsTest() throws Exception {
+        // Create a mock board with two lists
+        String name = "mockBoardName";
+        List<BoardList> mockLists = new ArrayList<>();
+        Board mockBoard = new Board(name, mockLists);
+        String listOneName = "List 1";
+        String listTwoName = "List 2";
+        List<Card> cardList = new ArrayList<>();
+        BoardList listOne = new BoardList(listOneName, cardList, mockBoard);
+        BoardList listTwo = new BoardList(listTwoName, cardList, mockBoard);
+        mockBoard.addList(listOne);
+        mockBoard.addList(listTwo);
+        Mockito.when(parentRepo.existsById(1L)).thenReturn(true);
+        Mockito.when(parentRepo.getById(1L)).thenReturn(mockBoard);
+
+        // Make an HTTP GET request to the endpoint with a valid board ID
+        this.mockMvc.perform(get("/api/boardlists/get-all/1"))
+            .andExpect(status().isOk())
+            //.andExpect(jsonPath("$", hasSize(2)))
+            .andExpect(jsonPath("$[0].name", is("List 1")))
+            .andExpect(jsonPath("$[1].name", is("List 2")));
+
+        // Make an HTTP GET request to the endpoint with an invalid board ID
+        this.mockMvc.perform(get("/api/boardlists/get-all/-1"))
+            .andExpect(status().isBadRequest());
     }
 }
