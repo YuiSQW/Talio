@@ -80,4 +80,8 @@ public class Card {
                ((Card)other).parentList.equals(this.parentList);
     }
 
+    @Override
+    public String toString() {
+        return "Title: " + title + "; Description: " + description + "; ParentList: " + parentList.getName();
+    }
 }
