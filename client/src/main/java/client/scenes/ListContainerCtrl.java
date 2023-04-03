@@ -3,11 +3,9 @@ package client.scenes;
 import client.utils.ServerUtils;
 import commons.BoardList;
 import commons.Card;
-<<<<<<< HEAD
 import commons.Task;
-=======
 import javafx.application.Platform;
->>>>>>> synchronisation
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
@@ -297,19 +295,16 @@ public class ListContainerCtrl extends VBox {
     public void saveNewCard(Card card, List<Task> tasks) {
         //Adds the card with id and not the old one
         //Create a new card, so that the old one (without id) doesn't get used anymore
-<<<<<<< HEAD
-        Card newCard = serverUtils.postNewCard(card, this.list);
-        for(Task task:tasks){
-            Task newTask=serverUtils.postNewTask(task,newCard);
-            newCard.addTask(newTask);
-        }
-=======
+
         Platform.runLater(() -> {
             Card newCard = serverUtils.postNewCard(card, this.list);
+            for(Task task:tasks){
+                Task newTask=serverUtils.postNewTask(task,newCard);
+                newCard.addTask(newTask);
+            }
             this.cards.add(newCard);
             this.list.getCardList().add(newCard);
         });
->>>>>>> synchronisation
         //Add the Card with ID to the lists
 
         

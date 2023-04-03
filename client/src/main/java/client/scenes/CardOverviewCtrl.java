@@ -2,11 +2,11 @@ package client.scenes;
 
 import client.utils.ServerUtils;
 import commons.Card;
-<<<<<<< HEAD
+
 import commons.Task;
-=======
+
 import javafx.application.Platform;
->>>>>>> synchronisation
+
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;

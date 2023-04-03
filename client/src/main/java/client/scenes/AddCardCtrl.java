@@ -76,30 +76,21 @@ public class AddCardCtrl {
      * If both text fields are empty, no Card object is created and the stage is closed
      */
     public void saveCard(){
-<<<<<<< HEAD
-        var p = title.getText();
-        var q = description.getText();
-        Card card= new Card(p,q,this.listContainerCtrl.getList());
-
-
-        var children=tilePane.getChildren();//get each member of the tilePane
-        var tasks=new ArrayList<Task>();
-        for(Node node:children){// when the window is closed (and the card is saved) the tasks are added to the db
-            if(node.getClass()== TaskContainerCtrl.class) {
-                TaskContainerCtrl container = (TaskContainerCtrl) node;
-                Task taskToAdd = new Task(currentCard, container.getText());
-                tasks.add(taskToAdd);//we add them to a list that is sent to the method that also adds the card to db
-            }
-        }
-        this.currentCard=card;
-        this.listContainerCtrl.saveNewCard(card,tasks);
-=======
         String cardTitle = title.getText();
         String cardDescription = description.getText();
         Card card= new Card(cardTitle,cardDescription,this.listContainerCtrl.getList());
         Platform.runLater(() ->this.serverUtils.postNewCard(card, this.listContainerCtrl.getList()));
-        //this.listContainerCtrl.saveNewCard(card);
->>>>>>> synchronisation
+        this.currentCard=card;
+        var children=tilePane.getChildren();//get each member of the tilePane
+        for(Node node:children){// when the window is closed (and the card is saved) the tasks are added to the db
+            if(node.getClass()== TaskContainerCtrl.class) {
+                TaskContainerCtrl container = (TaskContainerCtrl) node;
+                Task taskToAdd = new Task(currentCard, container.getText());
+                currentCard.addTask(taskToAdd);
+                Platform.runLater(() -> this.serverUtils.postNewTask(taskToAdd,currentCard));
+
+            }
+        }
         this.closeCard();
     }
     //Still has no usage & needs to get replaced when data can get stored in database
