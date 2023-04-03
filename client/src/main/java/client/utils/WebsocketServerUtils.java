@@ -73,6 +73,14 @@ public class WebsocketServerUtils {
     }
 
     /**
+     * getter for server, this is used for testing
+     *@return string server
+     */
+    public String getServer(){
+        return this.server;
+    }
+
+    /**
      * Handling class for whenever client receives a message from the server
      */
     private class GetBoardStompFrameHandler implements StompFrameHandler {

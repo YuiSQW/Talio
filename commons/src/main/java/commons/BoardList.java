@@ -79,6 +79,12 @@ public class BoardList implements Serializable {
         //TODO
         //the id field of Card needs to be added in the future for database purposes
         //to be implemented here: deleting a card from cardList based on its id
+        for(int i = 0; i < cardList.size(); i++){
+            if(cardList.get(i).id == id){
+                cardList.remove(i);
+                break;
+            }
+        }
     }
     @Override
     public boolean equals(Object other){

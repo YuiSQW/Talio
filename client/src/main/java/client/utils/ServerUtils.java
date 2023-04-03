@@ -60,13 +60,7 @@ public class ServerUtils {
         return card;
     }
 
-    public void renameCard(Card newCard){
-        ClientBuilder.newClient(new ClientConfig())
-            .target(SERVER).path("api/cards/" + newCard.id + "/" + newCard.getTitle())
-            .request(APPLICATION_JSON)
-            .accept(APPLICATION_JSON)
-            .put(Entity.entity(newCard, APPLICATION_JSON), Card.class);
-    }
+
 
     public void updateCardDescription(Card newCard){
         ClientBuilder.newClient(new ClientConfig())
@@ -158,7 +152,14 @@ public class ServerUtils {
                 .accept(APPLICATION_JSON)
                 .put(Entity.entity(changedBoard, APPLICATION_JSON), Board.class);
     }
-
+    
+    public Card renameCard(Card changedCard){
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/cards/" + changedCard.id + "/" + changedCard.getTitle())
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .put(Entity.entity(changedCard, APPLICATION_JSON), Card.class);
+    }
 
     /**
      * Returns all the child BoardList objects of a Board instance

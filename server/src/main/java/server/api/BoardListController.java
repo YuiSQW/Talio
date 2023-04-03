@@ -158,18 +158,11 @@ public class BoardListController {
      */
     @PutMapping("/exchange-card/{fromListId}/{toListId}/{cardToMove}/{newPos}")
     public ResponseEntity<BoardList> exchangeCard(@PathVariable("fromListId")long fromListId,@PathVariable("toListId")long toListId,@PathVariable("cardToMove")long cardToMoveId, @PathVariable("newPos")long newPos){
-        /*System.out.println();
-        System.out.println("FromListId: " + fromListId);
-        System.out.println("ToListId: " + toListId);
-        System.out.println("CardToMoveId: " + cardToMoveId);
-        System.out.println("New Position: " + newPos);
-        System.out.println();*/
         if(!repo.existsById(fromListId) || !repo.existsById(toListId) || cardToMoveId<0 || newPos<0){
             return ResponseEntity.badRequest().build();
         }
         BoardList oldList = repo.findById(fromListId).get();
         BoardList newList = repo.findById(toListId).get();
-        List<Card> listsOld = oldList.getCardList();
         List<Card> listsNew = newList.getCardList();
         if(newPos>listsNew.size()){//newPos can be equal to the size of the list, as that adds the element at the end of the list
             return ResponseEntity.badRequest().build();
@@ -180,17 +173,14 @@ public class BoardListController {
             listsNew.remove(movedCard);
             listsNew.add((int)newPos, movedCard);
         }else{
-            listsOld.remove(movedCard);
+            oldList.deleteCard(movedCard.id);
             listsNew.add((int)newPos, movedCard);
         }
-        //listsOld.remove(movedCard);
-        //listsNew.add((int) newPos,movedCard);
-        oldList.setCardList(listsOld);
+
         newList.setCardList(listsNew);
         repo.saveAndFlush(oldList);
         BoardList updatedNewList=repo.saveAndFlush(newList);
-        //boardUpdateListener.add(updatedOldList.getParentBoard());
-        boardUpdateListener.add(updatedNewList.getParentBoard());
+        boardUpdateListener.add(parentRepo.getById(updatedNewList.getParentBoard().id));
         return ResponseEntity.ok(updatedNewList);
     }
 

@@ -31,7 +31,7 @@ public class BoardOverviewCtrl {
     private double x,y;
     
     @FXML
-    private Button closeButton,minimizeButton,maximizeButton,addList, renameBoardBtn;
+    private Button closeButton,minimizeButton,maximizeButton,addList, renameBoardBtn, disconnectButton;
     @FXML
     private Pane toolBar;
     @FXML
@@ -254,4 +254,14 @@ public class BoardOverviewCtrl {
      */
     public void maxMin(){
         this.mainCtrl.maxMinStage();}
+
+    /**
+     * This method is called when the disconnect button is clicked so a user can switch servers.
+     * The WelcomeOverview is shown so the user can enter a different server address.
+     */
+    @FXML
+    public void disconnect() {
+        mainCtrl.showWelcomeOverview();
+    }
+
 }

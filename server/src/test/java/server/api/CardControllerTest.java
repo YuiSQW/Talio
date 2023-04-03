@@ -97,6 +97,8 @@ class CardControllerTest {
     @Test
     void deleteCardCorrect() throws Exception{
         when(repo.getById(anyLong())).thenReturn(new Card("", "", new BoardList("", null, new Board("", null))));
+        when(parentRepo.getById(anyLong())).thenReturn(new BoardList("", new ArrayList<>(), new Board("", new ArrayList<>())));
+        when(parentRepo.saveAndFlush(any(BoardList.class))).thenReturn(new BoardList("", new ArrayList<>(), new Board("", new ArrayList<>())));
         mockMvc.perform(delete("/api/cards/delete/1"));
 
     }

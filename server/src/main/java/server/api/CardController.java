@@ -93,8 +93,11 @@ public class CardController {
     public void deleteCard(@PathVariable("id") long id) {
         try {
             Card cardToDelete = repo.getById(id);
-            boardUpdateListener.add(cardToDelete.getParentList().getParentBoard());
+            BoardList parent = parentRepo.getById(cardToDelete.getParentList().id);
+            parent.deleteCard(cardToDelete.id);
             repo.deleteById(id);
+            BoardList affectedList = parentRepo.saveAndFlush(parent);
+            boardUpdateListener.add(boardRepo.getById(affectedList.getParentBoard().id));
         }catch(IllegalArgumentException e){
             System.out.println("The id for deleteCard is invalid");
             e.printStackTrace();

@@ -12,7 +12,7 @@
 
 <AnchorPane xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.BoardOverviewCtrl">
    <children>
-      <AnchorPane fx:id="toolBar" layoutX="203.0" layoutY="-23.0" prefHeight="30.0" prefWidth="671.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <AnchorPane fx:id="toolBar" layoutX="203.0" layoutY="-23.0" prefHeight="0.0" prefWidth="690.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <Button fx:id="closeButton" mnemonicParsing="false" onAction="#close" prefHeight="25.0" prefWidth="22.0" style="-fx-background-radius: 1em;" text="x" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="3.0">
                <effect>
@@ -27,6 +27,7 @@
                <effect>
                   <Glow />
                </effect></Button>
+            <Button fx:id="disconnectButton" layoutX="610.0" layoutY="38.0" mnemonicParsing="false" onAction="#disconnect" text="Disconnect" AnchorPane.rightAnchor="5.199999999999974" AnchorPane.topAnchor="38.0" />
          </children>
       </AnchorPane>
       <TextField fx:id="boardTitle" layoutX="29.0" layoutY="35.0" prefHeight="42.0" prefWidth="174.0" text="Title" AnchorPane.leftAnchor="29.0" AnchorPane.topAnchor="35.0">
@@ -57,6 +58,5 @@
          </content>
       </ScrollPane>
       <Button fx:id="renameBoardBtn" layoutX="211.0" layoutY="43.0" mnemonicParsing="false" onAction="#renameBoardTitle" text="Rename" />
-
    </children>
 </AnchorPane>

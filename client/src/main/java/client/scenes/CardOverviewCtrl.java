@@ -68,6 +68,9 @@ public class CardOverviewCtrl {
             this.card.setDescription(this.description.getText());
         }
         this.listContainerCtrl.updateCard(this.card,this.cardIndex);
+        serverUtils.renameCard(this.card);
+        
+       // ListContainerCtrl.setHasChangedFlag(false);
         this.closeCard();
     }
     public void removeCard(){
