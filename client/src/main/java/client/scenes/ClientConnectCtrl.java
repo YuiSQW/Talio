@@ -13,6 +13,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 
 import javax.inject.Inject;
+import java.net.UnknownHostException;
 
 /**
  * The controller for the ClientConnect.FXML
@@ -29,7 +30,7 @@ public class ClientConnectCtrl {
     public AnchorPane toolBar;
 
     @FXML
-    public Button minimizeButton;
+    public Button closeButton, maximizeButton, minimizeButton;
     @FXML
     private TextField serverAddressField;
 
@@ -60,7 +61,7 @@ public class ClientConnectCtrl {
     public void connectToServer() throws Exception {
         String serverAddress = serverAddressField.getText();
 
-        if(serverAddress.equals("localhost:8080")) {
+        /*if(serverAddress.equals("localhost:8080")) {
             try{
                 serverUtils.connect(serverAddress);
                 websocketServerUtils.setServer(serverAddress);
@@ -70,6 +71,17 @@ public class ClientConnectCtrl {
             }
         } else{
             invalidServerAddressAlert();
+        }*/
+        try{
+            serverUtils.connect(serverAddress);
+            websocketServerUtils.setServer(serverAddress);
+            mainCtrl.showBoardOverview();
+        }catch (Exception e){
+            if(e instanceof UnknownHostException){
+                invalidServerAddressAlert();
+            }else{
+                e.printStackTrace();
+            }
         }
     }
 
@@ -101,6 +113,7 @@ public class ClientConnectCtrl {
      * Function that is connected to the closeButton of the controller
      * It delegates the function of closing the app to the Main Controller
      */
+    @FXML
     public void close(){
         this.mainCtrl.closeApp();}
 
@@ -109,6 +122,15 @@ public class ClientConnectCtrl {
      * It delegates the function of minimizing the window of the app
      * to the Main Controller
      */
+    @FXML
     public void minimize(){
         this.mainCtrl.minimizeStage();}
+
+    /**
+     * Method that is connected to the maximizeButton of the controller
+     * It delegates the function of maximizing the window of the app
+     */
+    public void maxMin(){
+        this.mainCtrl.maxMinStage();}
+
 }

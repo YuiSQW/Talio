@@ -4,10 +4,11 @@ package commons;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
-public class Task {
+public class Task implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     public long id;
@@ -68,4 +69,11 @@ public class Task {
         return Objects.hash(name);
     }
 
+    @Override
+    public String toString() {
+        return "Task{" +
+            "id=" + id +
+            ", name='" + name + '\'' +
+            '}';
+    }
 }

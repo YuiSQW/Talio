@@ -27,11 +27,13 @@ import commons.Card;
 import commons.Task;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+
 import org.glassfish.jersey.client.ClientConfig;
 
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.GenericType;
+
 
 /**
  * The connection between the GUI and the server
@@ -57,7 +59,16 @@ public class ServerUtils {
         card.setParentList(parentBoardList);
         return card;
     }
-    
+
+
+
+    public void updateCardDescription(Card newCard){
+        ClientBuilder.newClient(new ClientConfig())
+            .target(SERVER).path("api/cards/change-description/" + newCard.id +"/" + newCard.getDescription())
+            .request(APPLICATION_JSON)
+            .accept(APPLICATION_JSON)
+            .put(Entity.entity(newCard, APPLICATION_JSON), Card.class);
+    }
     /**
      * Deletes a card from the server
      * @param cardToDelete the card to be deleted
@@ -108,11 +119,21 @@ public class ServerUtils {
     }
     
     public Board getBoard(long boardId){
-        return ClientBuilder.newClient(new ClientConfig())
+        Board board = ClientBuilder.newClient(new ClientConfig())
             .target(SERVER).path("api/boards/" + boardId)
             .request(APPLICATION_JSON)
             .accept(APPLICATION_JSON)
             .get(new GenericType<Board>(){});
+        for(BoardList i : board.getLists()){
+            i.setParentBoard(board);
+            for(Card j : i.getCardList()){
+                j.setParentList(i);
+                for(Task k : j.getTaskList()){
+                    k.setParentCard(j);
+                }
+            }
+        }
+        return board;
     }
 
 
@@ -131,7 +152,14 @@ public class ServerUtils {
                 .accept(APPLICATION_JSON)
                 .put(Entity.entity(changedBoard, APPLICATION_JSON), Board.class);
     }
-
+    
+    public Card renameCard(Card changedCard){
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/cards/" + changedCard.id + "/" + changedCard.getTitle())
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .put(Entity.entity(changedCard, APPLICATION_JSON), Card.class);
+    }
 
     /**
      * Returns all the child BoardList objects of a Board instance
@@ -194,5 +222,22 @@ public class ServerUtils {
         Alert alert = new Alert(Alert.AlertType.ERROR, "Could not connect to server", ButtonType.OK);
         alert.setHeaderText("Something went wrong");
         alert.showAndWait();
+    }
+
+
+    public void dropCardOnOtherList(Card movedCard, long newParentId, long newPos){
+        ClientBuilder.newClient(new ClientConfig())
+            .target(SERVER).path("/api/boardlists/exchange-card/" + movedCard.getParentList().id + "/" + newParentId + "/" + movedCard.id + "/" + newPos)
+            .request(APPLICATION_JSON)
+            .accept(APPLICATION_JSON)
+            .put(Entity.entity("", APPLICATION_JSON));
+    }
+
+    public Board getBoardOrCreateNew(){
+        return ClientBuilder.newClient(new ClientConfig())
+            .target(SERVER).path("/api/boards/get-stored-board-or-create-new")
+            .request(APPLICATION_JSON)
+            .accept(APPLICATION_JSON)
+            .get(new GenericType<Board>(){});
     }
 }

@@ -24,18 +24,15 @@ import org.springframework.test.web.servlet.MockMvc;
 import server.database.BoardRepository;
 
 
-
 import java.util.ArrayList;
 import java.util.Optional;
 
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 
 
 import static org.hamcrest.Matchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
 @WebMvcTest(BoardController.class)
@@ -157,7 +154,10 @@ class BoardControllerTest {
                 .andExpect(status().isBadRequest());
     }
 
-
+    @Test
+    void connectionAvailableTest() throws Exception {
+        this.mockMvc.perform(get("/api/boards/connection-available"))
+            .andExpect(status().isOk())
+            .andExpect(content().string("Connection available"));
+    }
 }
-
-

@@ -2,6 +2,7 @@ package commons;
 
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 
 
@@ -9,14 +10,15 @@ import java.util.List;
  * Class used for creating boards
  */
 @Entity
-public class Board {
+public class Board implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     public long id;
 
 
-    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "parentBoard", fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "parentBoard",fetch = FetchType.EAGER, orphanRemoval = true)
+    @OrderColumn
     private List<BoardList> lists;
     private String name;
     
@@ -61,11 +63,28 @@ public class Board {
     }
 
     public void deleteList(long id){
-        for(BoardList list:lists){
+        /*for(BoardList list:lists){
             if(list.getId() == id){
                 lists.remove(list);
                 break;
             }
+        }*/
+        for(int i = 0; i < lists.size(); i++){
+            if(lists.get(i).id == id){
+                lists.remove(i);
+                break;
+            }
         }
+    }
+
+    @Override
+    public String toString() {
+
+        return "Board{" +
+            "id=" + id +
+            ", lists=" + lists +
+            ", name='" + name + '\'' +
+            '}';
+
     }
 }

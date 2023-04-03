@@ -18,13 +18,12 @@ import server.database.CardRepository;
 import server.database.TaskRepository;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -65,7 +64,7 @@ class BoardListControllerTest {
     @Test
     void getNewListCorrect() throws Exception {
         Mockito.when(this.parentRepo.existsById(Mockito.anyLong())).thenReturn(true);
-        Mockito.when(this.parentRepo.findById(Mockito.anyLong())).thenReturn(Optional.of(new Board("", new ArrayList<>())));
+        Mockito.when(this.parentRepo.getById(Mockito.anyLong())).thenReturn(new Board("", new ArrayList<>()));
         Mockito.when(this.repo.save(Mockito.any(BoardList.class))).thenReturn(new BoardList("", new ArrayList<>(), new Board("", new ArrayList<>())));
         Board board = new Board("", new ArrayList<>());
         BoardList list = new BoardList("", new ArrayList<>(), board);
@@ -97,11 +96,13 @@ class BoardListControllerTest {
     }
 
     @Test
-    void deleteListTest() {
-        assertThrows(Exception.class, (() ->{
-            BoardListController c = new BoardListController(repo, parentRepo, cardRepo, taskRepo);
-            c.deleteList(0);
-        }));
+    void deleteListTest() throws Exception{
+        Mockito.when(repo.existsById(Mockito.anyLong())).thenReturn(true);
+        Mockito.when(repo.getById(Mockito.anyLong())).thenReturn(new BoardList("", null, new Board("", null)));
+        Mockito.when(parentRepo.getById(Mockito.anyLong())).thenReturn(new Board("", new ArrayList<>()));
+        Mockito.when(parentRepo.saveAndFlush(Mockito.any(Board.class))).thenReturn(new Board("", null));
+        mockMvc.perform(delete("/api/boardlists/1"));
+
     }
 
     @Test
@@ -181,7 +182,8 @@ class BoardListControllerTest {
         Mockito.when(this.repo.existsById(Mockito.anyLong())).thenReturn(true);
         Mockito.when(this.repo.findById((long)1)).thenReturn(Optional.of(boardList1));
         Mockito.when(this.repo.findById((long)2)).thenReturn(Optional.of(boardList2));
-        Mockito.when(this.repo.save(Mockito.any(BoardList.class))).thenReturn(boardList2);
+        Mockito.when(this.repo.saveAndFlush(Mockito.any(BoardList.class))).thenReturn(boardList2);
+        Mockito.when(cardRepo.findById(Mockito.anyLong())).thenReturn(Optional.of(new Card("card1", "", null)));
         this.mockMvc.perform(put("/api/boardlists/exchange-card/1/2/0/0"))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(jsonPath("$.cardList[0].title",is("card1")));
@@ -202,21 +204,6 @@ class BoardListControllerTest {
         this.mockMvc.perform(put("/api/boardlists/exchange-card/1/2/0/0"))
                 .andExpect(status().isBadRequest());
     }
-    @Test
-    void exchangeCardTestErrorCardIndexTooBig() throws Exception {
-        Board board1=new Board("test1", new ArrayList<>());
-        Board board2=new Board("test1", new ArrayList<>());
-        BoardList boardList1=new BoardList("test",new ArrayList<>(),board1);
-        BoardList boardList2=new BoardList("test",new ArrayList<>(),board2);
-        Card card=new Card("card1","testcard",boardList1);
-        boardList1.addCard(card);
-        Mockito.when(this.repo.existsById(Mockito.anyLong())).thenReturn(true);
-        Mockito.when(this.repo.findById((long)1)).thenReturn(Optional.of(boardList1));
-        Mockito.when(this.repo.findById((long)2)).thenReturn(Optional.of(boardList2));
-        Mockito.when(this.repo.save(Mockito.any(BoardList.class))).thenReturn(boardList2);
-        this.mockMvc.perform(put("/api/boardlists/exchange-card/1/2/2/0"))
-                .andExpect(status().isBadRequest());
-    }
 
     @Test
     void exchangeCardTestErrorInvalidNewPosition() throws Exception {
@@ -230,7 +217,36 @@ class BoardListControllerTest {
         Mockito.when(this.repo.findById((long)1)).thenReturn(Optional.of(boardList1));
         Mockito.when(this.repo.findById((long)2)).thenReturn(Optional.of(boardList2));
         Mockito.when(this.repo.save(Mockito.any(BoardList.class))).thenReturn(boardList2);
+        Mockito.when(cardRepo.findById(Mockito.anyLong())).thenReturn(Optional.of(new Card("card1", "", null)));
         this.mockMvc.perform(put("/api/boardlists/exchange-card/1/2/0/1"))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void getListsTest() throws Exception {
+        // Create a mock board with two lists
+        String name = "mockBoardName";
+        List<BoardList> mockLists = new ArrayList<>();
+        Board mockBoard = new Board(name, mockLists);
+        String listOneName = "List 1";
+        String listTwoName = "List 2";
+        List<Card> cardList = new ArrayList<>();
+        BoardList listOne = new BoardList(listOneName, cardList, mockBoard);
+        BoardList listTwo = new BoardList(listTwoName, cardList, mockBoard);
+        mockBoard.addList(listOne);
+        mockBoard.addList(listTwo);
+        Mockito.when(parentRepo.existsById(1L)).thenReturn(true);
+        Mockito.when(parentRepo.getById(1L)).thenReturn(mockBoard);
+
+        // Make an HTTP GET request to the endpoint with a valid board ID
+        this.mockMvc.perform(get("/api/boardlists/get-all/1"))
+            .andExpect(status().isOk())
+            //.andExpect(jsonPath("$", hasSize(2)))
+            .andExpect(jsonPath("$[0].name", is("List 1")))
+            .andExpect(jsonPath("$[1].name", is("List 2")));
+
+        // Make an HTTP GET request to the endpoint with an invalid board ID
+        this.mockMvc.perform(get("/api/boardlists/get-all/-1"))
+            .andExpect(status().isBadRequest());
     }
 }

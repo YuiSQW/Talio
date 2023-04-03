@@ -2,7 +2,11 @@ package client.scenes;
 
 import client.utils.ServerUtils;
 import commons.Card;
+<<<<<<< HEAD
 import commons.Task;
+=======
+import javafx.application.Platform;
+>>>>>>> synchronisation
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -77,8 +81,10 @@ public class CardOverviewCtrl {
     public void saveChanges(){
         if(!this.title.getText().equals(this.card.getTitle())){
             this.card.setTitle(this.title.getText());
+            Platform.runLater(() -> serverUtils.renameCard(this.card));
         }
         if(!this.description.getText().equals(this.card.getDescription())){
+            Platform.runLater(() -> serverUtils.updateCardDescription(this.card));
             this.card.setDescription(this.description.getText());
         }
 
@@ -93,10 +99,13 @@ public class CardOverviewCtrl {
             }
         }
         this.listContainerCtrl.updateCard(this.card,this.cardIndex);
+        serverUtils.renameCard(this.card);
+        
+       // ListContainerCtrl.setHasChangedFlag(false);
         this.closeCard();
     }
     public void removeCard(){
-        
+        System.out.println("Remove card called");
         this.listContainerCtrl.removeCard(this.card);
         this.card.setParentList(null);
         closeCard();
@@ -130,6 +139,7 @@ public class CardOverviewCtrl {
     }
     public void closeCard(){
         cancel();
+        ListContainerCtrl.setCardDialogOpen(false);
         this.stage.close();
     }
     public void minimize(){

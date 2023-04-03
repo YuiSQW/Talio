@@ -1,10 +1,13 @@
 package server.api;
 
 import commons.Board;
+
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.annotation.SubscribeMapping;
+
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import server.database.BoardRepository;
@@ -46,7 +49,8 @@ public class WebsocketController {
         //System.out.println("Scheduled Check called");
         while(boardUpdateListener.hasNext()) {
             Board boardToSend = boardUpdateListener.poll();
-            System.out.println("Board sent");
+            boardToSend = repo.findById(boardToSend.id).get();
+            System.out.println(boardToSend);
             messagingTemplate.convertAndSend("/boards/boardfeed/" + boardToSend.id, boardToSend);
         }
     }

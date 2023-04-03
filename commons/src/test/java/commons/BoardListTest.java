@@ -65,4 +65,44 @@ class BoardListTest {
         boardList.setParentBoard(board);
         assertEquals(board, boardList.getParentBoard());
     }
+
+    @Test
+    void addCard() {
+        String listName = "listName";
+        List<Card> cardList = new ArrayList<>();
+        String boardName = "boardName";
+        List<BoardList> boardLists = new ArrayList<>();
+        Board parentBoard = new Board(boardName, boardLists);
+        BoardList list = new BoardList(listName, cardList);
+        boardLists.add(list);
+        list.setParentBoard(parentBoard);
+        String cardName = "cardName";
+        String cardDescription = "cardDescription";
+        Card card = new Card(cardName, cardDescription, list);
+        card.setParentList(list);
+        list.addCard(card);
+        List<Card> test = new ArrayList<>();
+        test.add(card);
+        assertEquals(test, cardList);
+    }
+
+    @Test
+    void toStringTest(){
+        String name = "name";
+        List<Card> cards = new ArrayList<>();
+        String boardName = "boardName";
+        List<BoardList> boardLists = new ArrayList<>();
+        Board board = new Board(boardName, boardLists);
+        BoardList list = new BoardList(name, cards, board);
+        String cardOneName = "cardOneName";
+        String cardTwoName = "cardTwoName";
+        String description = "description";
+        Card cardOne = new Card(cardOneName, description, list);
+        Card cardTwo = new Card(cardTwoName, description, list);
+        list.addCard(cardOne);
+        list.addCard(cardTwo);
+        String expected = "BoardList{id=0, cardList=[Card{id=0, taskList=[], title='cardOneName', description='description'}, Card{id=0, taskList=[], title='cardTwoName', description='description'}], name='name'}";
+        String result = list.toString();
+        assertEquals(expected, result);
+    }
 }

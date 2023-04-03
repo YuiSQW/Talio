@@ -123,7 +123,4 @@ public class MainCtrl {
     public void maxMinStage(){
         this.primaryStage.setMaximized(!this.primaryStage.isMaximized());
     }
-
-
-
 }

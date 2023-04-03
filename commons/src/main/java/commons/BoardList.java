@@ -1,7 +1,6 @@
 package commons;
 
 import javax.persistence.*;
-import org.apache.commons.lang3.builder.ToStringBuilder;
 import java.io.Serializable;
 import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -18,7 +17,8 @@ public class BoardList implements Serializable {
     public long id;
 
 
-    @OneToMany(mappedBy = "parentList", fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "parentList", fetch = FetchType.EAGER, orphanRemoval = true)
+    @OrderColumn
     private List<Card> cardList;
 
     @JsonIgnore //this field needs to be ignored if converted to json, since it would otherwise be stuck in infinite loop
@@ -79,6 +79,12 @@ public class BoardList implements Serializable {
         //TODO
         //the id field of Card needs to be added in the future for database purposes
         //to be implemented here: deleting a card from cardList based on its id
+        for(int i = 0; i < cardList.size(); i++){
+            if(cardList.get(i).id == id){
+                cardList.remove(i);
+                break;
+            }
+        }
     }
     @Override
     public boolean equals(Object other){
@@ -88,9 +94,15 @@ public class BoardList implements Serializable {
                ((BoardList) other).parentBoard.equals(this.parentBoard);
     }
 
+
     @Override
     public String toString() {
-        return ToStringBuilder.reflectionToString(this);
-    }
 
+        return "BoardList{" +
+            "id=" + id +
+            ", cardList=" + cardList +
+            ", name='" + name + '\'' +
+            '}';
+
+    }
 }

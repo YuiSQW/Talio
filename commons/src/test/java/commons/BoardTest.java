@@ -62,4 +62,21 @@ class BoardTest {
         testBoard.deleteList(56);
         assertEquals(new ArrayList<BoardList>(),testBoard.getLists());
     }
+
+    @Test
+    void toStringTest(){
+        String boardName = "boardName";
+        List<BoardList> lists = new ArrayList<>();
+        String listOneName = "listOneName";
+        String listTwoName = "listTwoName";
+        List<Card> cards = new ArrayList<>();
+        BoardList listOne = new BoardList(listOneName, cards);
+        BoardList listTwo = new BoardList(listTwoName, cards);
+        Board board = new Board(boardName, lists);
+        board.addList(listOne);
+        board.addList(listTwo);
+        String expected = "Board{id=0, lists=[BoardList{id=0, cardList=[], name='listOneName'}, BoardList{id=0, cardList=[], name='listTwoName'}], name='boardName'}";
+        String result = board.toString();
+        assertEquals(expected, result);
+    }
 }
