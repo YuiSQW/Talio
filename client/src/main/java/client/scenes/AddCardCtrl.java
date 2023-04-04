@@ -79,18 +79,24 @@ public class AddCardCtrl {
         String cardTitle = title.getText();
         String cardDescription = description.getText();
         Card card= new Card(cardTitle,cardDescription,this.listContainerCtrl.getList());
-        Platform.runLater(() ->this.serverUtils.postNewCard(card, this.listContainerCtrl.getList()));
         this.currentCard=card;
+
         var children=tilePane.getChildren();//get each member of the tilePane
+        var tasks=new ArrayList<Task>();
         for(Node node:children){// when the window is closed (and the card is saved) the tasks are added to the db
             if(node.getClass()== TaskContainerCtrl.class) {
                 TaskContainerCtrl container = (TaskContainerCtrl) node;
                 Task taskToAdd = new Task(currentCard, container.getText());
-                currentCard.addTask(taskToAdd);
-                Platform.runLater(() -> this.serverUtils.postNewTask(taskToAdd,currentCard));
-
+                //currentCard.addTask(taskToAdd);
+                tasks.add(taskToAdd);
             }
         }
+        Platform.runLater(() ->{
+            currentCard=this.serverUtils.postNewCard(card, this.listContainerCtrl.getList());
+            for(Task task:tasks){
+                this.serverUtils.postNewTask(task,currentCard);
+            }
+        });
         this.closeCard();
     }
     //Still has no usage & needs to get replaced when data can get stored in database

@@ -117,6 +117,13 @@ public class ServerUtils {
             .accept(APPLICATION_JSON)
                 .delete();
     }
+    public void deleteTask(Task taskToDelete){
+        ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/tasks/delete/" + taskToDelete.id)
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .delete();
+    }
     
     public Board getBoard(long boardId){
         Board board = ClientBuilder.newClient(new ClientConfig())

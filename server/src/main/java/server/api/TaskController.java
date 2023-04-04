@@ -89,4 +89,18 @@ public class TaskController {
         boardUpdateListener.add(updatedTask.getParentCard().getParentList().getParentBoard());
         return ResponseEntity.ok(updatedTask);
     }
+    @DeleteMapping("delete/{id}")
+    public void deleteTask(@PathVariable("id") long id) {
+        try {
+            Task taskToDelete=repo.getById(id);
+            Card parentCard=parentRepo.getById(taskToDelete.getParentCard().id);
+            parentCard.deleteTask(taskToDelete.id);
+            repo.deleteById(id);
+            Card changedCard=parentRepo.saveAndFlush(parentCard);
+            boardUpdateListener.add(boardRepo.getById(changedCard.getParentList().getParentBoard().id));
+        }catch(IllegalArgumentException e){
+            System.out.println("The id for deleteTask is invalid");
+            e.printStackTrace();
+        }
+    }
 }

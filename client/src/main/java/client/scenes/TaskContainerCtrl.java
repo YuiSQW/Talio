@@ -11,7 +11,6 @@ import javafx.scene.layout.TilePane;
 import javax.inject.Inject;
 
 public class TaskContainerCtrl extends VBox{
-    private Task task;
     private AddCardCtrl addCardCtrl;
     private CardOverviewCtrl cardOverviewCtrl;
 
@@ -60,10 +59,8 @@ public class TaskContainerCtrl extends VBox{
         tilePane.setAlignment(Pos.TOP_RIGHT);
         this.cardOverviewCtrl=cardOverviewCtrl;
         if(task==null) {
-            this.task = new Task(cardOverviewCtrl.getCard(), "peaici");
             text= new TextField("empty");
         }else{
-            this.task=task;
             text = new TextField(task.getName());
         }
         //this.task=this.serverUtils.postNewTask(this.task,this.addCardCtrl.getCard());

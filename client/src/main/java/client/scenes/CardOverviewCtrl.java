@@ -18,7 +18,10 @@ import javafx.scene.layout.TilePane;
 import javafx.stage.Stage;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
 import java.util.Iterator;
+
+
 
 public class CardOverviewCtrl {
     private MainCtrl mainCtrl;
@@ -62,9 +65,10 @@ public class CardOverviewCtrl {
         HBox hBoxOfNewTaskButton=new HBox(newTaskButton);
         hBoxOfNewTaskButton.setMinWidth(405.0);
         tilePane.getChildren().add(hBoxOfNewTaskButton);
-
-        for(Task task:card.getTaskList()){/// doesnt work yet
-            addTask(task);
+        for(Task task:card.getTaskList()){
+            if(task!=null) {
+                addTask(task);
+            }
         }
 //        this.tasks.setText(this.card.getTasks().toString());
         toolBar.setOnMousePressed( mouseEvent -> {
@@ -88,20 +92,28 @@ public class CardOverviewCtrl {
             this.card.setDescription(this.description.getText());
         }
 
-        card.getTaskList().clear();/**should probably also delete them from db*/
+        for(int i=0;i<card.getTaskList().size();i++){
+            Task taskToDelete=card.getTaskList().get(i);
+            if(taskToDelete!=null) {
+                Platform.runLater(() -> this.serverUtils.deleteTask(taskToDelete));
+            }
+        }
+        card.getTaskList().clear();
         var children=tilePane.getChildren();//get each member of the tilePane
+        var tasksText=new ArrayList<String>();
         for(Node node:children){// when the window is closed (and the card is saved) the tasks are added to the db
             if(node.getClass()== TaskContainerCtrl.class) {
                 TaskContainerCtrl container = (TaskContainerCtrl) node;
-                Task taskToAdd = new Task(this.card, container.getText());
-                    Task newTask=serverUtils.postNewTask(taskToAdd,card);
-                    this.card.addTask(newTask);
+                tasksText.add(container.getText());
             }
         }
+        Platform.runLater(() ->{
+            for(String text:tasksText){
+                Task taskToAdd=new Task(this.card,text);
+                this.serverUtils.postNewTask(taskToAdd,this.card);
+            }
+        });
         this.listContainerCtrl.updateCard(this.card,this.cardIndex);
-        serverUtils.renameCard(this.card);
-        
-       // ListContainerCtrl.setHasChangedFlag(false);
         this.closeCard();
     }
     public void removeCard(){
@@ -133,8 +145,7 @@ public class CardOverviewCtrl {
         Iterator<Node> itr=tilePane.getChildren().iterator();
         while(itr.hasNext()){
             Node node= itr.next();
-            if(node.getClass()==TaskContainerCtrl.class)
-                itr.remove();
+            itr.remove();
         }
     }
     public void closeCard(){

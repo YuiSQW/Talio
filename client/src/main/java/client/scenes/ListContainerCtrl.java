@@ -292,16 +292,12 @@ public class ListContainerCtrl extends VBox {
      * Also responsible for displaying the new Card in the ListView of the VBox
      * @param card the new Card object
      */
-    public void saveNewCard(Card card, List<Task> tasks) {
+    public void saveNewCard(Card card) {
         //Adds the card with id and not the old one
         //Create a new card, so that the old one (without id) doesn't get used anymore
 
-        Platform.runLater(() -> {
+        Platform.runLater(() -> {;
             Card newCard = serverUtils.postNewCard(card, this.list);
-            for(Task task:tasks){
-                Task newTask=serverUtils.postNewTask(task,newCard);
-                newCard.addTask(newTask);
-            }
             this.cards.add(newCard);
             this.list.getCardList().add(newCard);
         });
