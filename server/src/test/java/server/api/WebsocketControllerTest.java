@@ -68,6 +68,23 @@ class WebsocketControllerTest {
         Thread.sleep(2000);
         assertNotNull(receivedBoard);
     }
+    
+    /**
+     * Test for case where the board is not found in the database
+     * @throws Exception
+     */
+    @Test
+    void sendBoardOnSubscriptionNotFoundTest() throws Exception{
+        WebSocketStompClient socket = new WebSocketStompClient(new StandardWebSocketClient());
+        socket.setMessageConverter(new MappingJackson2MessageConverter());
+        
+        Mockito.when(repo.existsById(Mockito.anyLong())).thenReturn(false);
+        StompSession session = socket.connect(url, new StompSessionHandlerAdapter(){}).get(10, SECONDS);
+        
+        session.subscribe("/boards/boardfeed/1", new GetBoardStompFrameHandler());
+        Thread.sleep(2000);
+        assertNull(receivedBoard);
+    }
 
     @Test
     void sendChangedBoardTest() throws Exception{
@@ -102,5 +119,7 @@ class WebsocketControllerTest {
         public void handleFrame(StompHeaders stompHeaders, Object board){
             receivedBoard = (Board) board;
         }
+        
+        
     }
 }
