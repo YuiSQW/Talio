@@ -201,7 +201,7 @@ class ServerUtilsTest {
     * Send a get request to the server based on id
      */
     @Test
-    void getTask() throws Exception{
+    void getTaskTest() throws Exception{
         Board board = new Board("", new ArrayList<>());
         BoardList list = new BoardList("", new ArrayList<>(), board);
         list.id = 1;
@@ -224,7 +224,7 @@ class ServerUtilsTest {
      * @throws Exception if test fails
      */
     @Test
-    void postNewTask() throws Exception{
+    void postNewTaskTest() throws Exception{
         Board board = new Board("", new ArrayList<>());
         BoardList list = new BoardList("", new ArrayList<>(), board);
         Card card = new Card("title", "desc", list);
@@ -239,6 +239,24 @@ class ServerUtilsTest {
         assertNotNull(task);
         assertEquals("title", task.getName());
         assertEquals(card, task.getParentCard());
+    }
+    
+    /**
+     * Test to verify if deleting a task works
+     * @throws Exception if test fails
+     */
+    @Test
+    void deleteTaskTest() throws Exception{
+        Board board = new Board("", new ArrayList<>());
+        BoardList list = new BoardList("", new ArrayList<>(), board);
+        Card card = new Card("title", "desc", list);
+        Task task = new Task(card, "title");
+        task.id = 1;
+        stubFor(delete("/api/tasks/1").willReturn(
+                aResponse().withHeader("Content-Type", "application/json").withBody(new ObjectMapper().writeValueAsString(task))
+        ));
+        ServerUtils server = new ServerUtils();
+        assertDoesNotThrow(() -> server.deleteTask(task));
     }
     
     
