@@ -115,7 +115,14 @@ public class ServerUtils {
             .target(SERVER).path("api/boardlists/" + listToDelete.id)
             .request(APPLICATION_JSON)
             .accept(APPLICATION_JSON)
-            .delete();
+                .delete();
+    }
+    public void deleteTask(Task taskToDelete){
+        ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/tasks/delete/" + taskToDelete.id)
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .delete();
     }
     
     public Board getBoard(long boardId){
@@ -172,6 +179,23 @@ public class ServerUtils {
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .get(new GenericType<List<BoardList>>(){});
+    }
+    public Task postNewTask(Task newTask, Card parentCard){
+        Task task = ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/tasks/new-task/" + parentCard.id)
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .post(Entity.entity(newTask, APPLICATION_JSON), Task.class);
+        task.setParentCard(parentCard);
+        return task;
+    }
+
+    public Task getTask(long listId){
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/tasks/" + listId)
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .get(new GenericType<Task>(){});
     }
 
     /**

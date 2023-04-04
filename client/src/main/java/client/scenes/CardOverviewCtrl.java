@@ -2,15 +2,26 @@ package client.scenes;
 
 import client.utils.ServerUtils;
 import commons.Card;
+
+import commons.Task;
+
 import javafx.application.Platform;
+
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.TilePane;
 import javafx.stage.Stage;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.Iterator;
+
+
 
 public class CardOverviewCtrl {
     private MainCtrl mainCtrl;
@@ -27,7 +38,11 @@ public class CardOverviewCtrl {
     @FXML
     private TextField title;
     @FXML
-    private TextArea description,tasks;
+    private TextArea description;
+    @FXML
+    private TilePane tilePane;
+    @FXML
+    private Button newTaskButton;
     private double x,y;
     @Inject
     public CardOverviewCtrl(MainCtrl mainCtrl, ServerUtils serverUtils){
@@ -46,6 +61,15 @@ public class CardOverviewCtrl {
         this.cardIndex=this.listContainerCtrl.getList().getCardList().indexOf(this.card);
         this.title.setText(this.card.getTitle());
         this.description.setText(this.card.getDescription());
+
+        HBox hBoxOfNewTaskButton=new HBox(newTaskButton);
+        hBoxOfNewTaskButton.setMinWidth(405.0);
+        tilePane.getChildren().add(hBoxOfNewTaskButton);
+        for(Task task:card.getTaskList()){
+            if(task!=null) {
+                addTask(task);
+            }
+        }
 //        this.tasks.setText(this.card.getTasks().toString());
         toolBar.setOnMousePressed( mouseEvent -> {
             this.x= mouseEvent.getSceneX();
@@ -67,10 +91,42 @@ public class CardOverviewCtrl {
             Platform.runLater(() -> serverUtils.updateCardDescription(this.card));
             this.card.setDescription(this.description.getText());
         }
+
+        var children=tilePane.getChildren();
+        var tasksText=new ArrayList<String>();
+        for(Node node:children){// we get the text from the taskscontainers that are visible in the GUI
+            if(node.getClass()== TaskContainerCtrl.class) {
+                TaskContainerCtrl container = (TaskContainerCtrl) node;
+                tasksText.add(container.getText());
+            }
+        }
+        //we compare the strings we got earlier with what the card originally had
+        //if they didnt change, there's no need to do any db updates
+        boolean tasksDidntChange=true;
+        if(tasksText.size()!=card.getTaskList().size())
+            tasksDidntChange=false;
+        else {
+            for (int i = 0; i < tasksText.size(); i++) {
+                if (!tasksText.get(i).equals(card.getTaskList().get(i).getName())) {
+                    tasksDidntChange = false;
+                    break;
+                }
+            }
+        }
+        if(!tasksDidntChange){//if the tasks have changed, we delete the old ones and add the new ones to the db
+            for(int i=0;i<card.getTaskList().size();i++){
+                Task taskToDelete=card.getTaskList().get(i);
+                if(taskToDelete!=null) {
+                    Platform.runLater(() -> this.serverUtils.deleteTask(taskToDelete));
+                }
+            }
+            card.getTaskList().clear();
+            for (String text : tasksText) {
+                Task taskToAdd = new Task(this.card, text);
+                Platform.runLater(() -> this.serverUtils.postNewTask(taskToAdd, this.card));
+            }
+        }
         this.listContainerCtrl.updateCard(this.card,this.cardIndex);
-        serverUtils.renameCard(this.card);
-        
-       // ListContainerCtrl.setHasChangedFlag(false);
         this.closeCard();
     }
     public void removeCard(){
@@ -86,7 +142,7 @@ public class CardOverviewCtrl {
     public void clearFields() {
         this.title.clear();
         this.description.clear();
-        this.tasks.clear();
+        clearTasks();
     }
     public void clearTitle() {
         this.title.clear();
@@ -98,7 +154,12 @@ public class CardOverviewCtrl {
         this.description.clear();
     }
     public void clearTasks(){
-        this.tasks.clear();
+        ///loop thru taskContainers and delete the
+        Iterator<Node> itr=tilePane.getChildren().iterator();
+        while(itr.hasNext()){
+            Node node= itr.next();
+            itr.remove();
+        }
     }
     public void closeCard(){
         cancel();
@@ -107,4 +168,19 @@ public class CardOverviewCtrl {
     }
     public void minimize(){
         this.stage.setIconified(true);}
+
+    public void addTask(){
+        TaskContainerCtrl taskContainerCtrl=new TaskContainerCtrl(this.mainCtrl,this.serverUtils);
+        taskContainerCtrl.init(tilePane,this,null);
+        tilePane.getChildren().add(tilePane.getChildren().size()-1,taskContainerCtrl);
+    }
+
+    public void addTask(Task task){
+        TaskContainerCtrl taskContainerCtrl=new TaskContainerCtrl(this.mainCtrl,this.serverUtils);
+        taskContainerCtrl.init(tilePane,this,task);
+        tilePane.getChildren().add(tilePane.getChildren().size()-1,taskContainerCtrl);
+    }
+    public Card getCard() {
+        return this.card;
+    }
 }
