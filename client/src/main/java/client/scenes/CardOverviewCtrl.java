@@ -92,13 +92,6 @@ public class CardOverviewCtrl {
             this.card.setDescription(this.description.getText());
         }
 
-        for(int i=0;i<card.getTaskList().size();i++){
-            Task taskToDelete=card.getTaskList().get(i);
-            if(taskToDelete!=null) {
-                Platform.runLater(() -> this.serverUtils.deleteTask(taskToDelete));
-            }
-        }
-        card.getTaskList().clear();
         var children=tilePane.getChildren();//get each member of the tilePane
         var tasksText=new ArrayList<String>();
         for(Node node:children){// when the window is closed (and the card is saved) the tasks are added to the db
@@ -107,12 +100,30 @@ public class CardOverviewCtrl {
                 tasksText.add(container.getText());
             }
         }
-        Platform.runLater(() ->{
-            for(String text:tasksText){
-                Task taskToAdd=new Task(this.card,text);
-                this.serverUtils.postNewTask(taskToAdd,this.card);
+        boolean tasksDidntChange=true;
+        if(tasksText.size()!=card.getTaskList().size())
+            tasksDidntChange=false;
+        else {
+            for (int i = 0; i < tasksText.size(); i++) {
+                if (!tasksText.get(i).equals(card.getTaskList().get(i).getName())) {
+                    tasksDidntChange = false;
+                    break;
+                }
             }
-        });
+        }
+        if(!tasksDidntChange) {
+            for(int i=0;i<card.getTaskList().size();i++){
+                Task taskToDelete=card.getTaskList().get(i);
+                if(taskToDelete!=null) {
+                    Platform.runLater(() -> this.serverUtils.deleteTask(taskToDelete));
+                }
+            }
+            card.getTaskList().clear();
+            for (String text : tasksText) {
+                Task taskToAdd = new Task(this.card, text);
+                Platform.runLater(() -> this.serverUtils.postNewTask(taskToAdd, this.card));
+            }
+        }
         this.listContainerCtrl.updateCard(this.card,this.cardIndex);
         this.closeCard();
     }
