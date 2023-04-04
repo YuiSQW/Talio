@@ -48,6 +48,10 @@ public class TaskControllerTest {
 
     @Autowired
     private CardRepository parentRepo;
+    @Autowired
+    private BoardListRepository listRepo;
+    @Autowired
+    private BoardRepository boardRepo;
 
     @Autowired
     private BoardUpdateListener boardUpdateListener;
@@ -62,7 +66,10 @@ public class TaskControllerTest {
         testList = new BoardList("",new ArrayList<>(), testBoard);
         testBoard.addList(testList);
         testCard=new Card("","",testList);
-
+        testCard.setParentList(testList);
+        testList.setParentBoard(testBoard);
+        testBoard.addList(testList);
+        testList.addCard(testCard);
 
     }
 
@@ -81,9 +88,13 @@ public class TaskControllerTest {
 
     @Test
     void getNewTaskTestCorrect() throws Exception{
+        Mockito.when(listRepo.getById(Mockito.anyLong())).thenReturn(testList);
+        Mockito.when(boardRepo.getById(Mockito.anyLong())).thenReturn(testBoard);
         Mockito.when(parentRepo.existsById(Mockito.anyLong())).thenReturn(true);
         Mockito.when(repo.save(Mockito.any(Task.class))).thenReturn(new Task(testCard, ""));
-        Mockito.when(parentRepo.findById(Mockito.anyLong())).thenReturn(Optional.of(new Card("","",new BoardList("", new ArrayList<>(), new Board("", new ArrayList<>())))));
+        Mockito.when(parentRepo.findById(Mockito.anyLong())).thenReturn(Optional.of(testCard));
+        Mockito.when(boardRepo.saveAndFlush(Mockito.any(Board.class))).thenReturn(testBoard);
+        Mockito.when(parentRepo.getById(Mockito.anyLong())).thenReturn(testCard);
         String content = new ObjectMapper().writeValueAsString(new Task(testCard, ""));
         this.mockMvc.perform(post("/api/tasks/new-task/1").contentType("application/json").content(content)).andExpect(status().is2xxSuccessful());
     }
