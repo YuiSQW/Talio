@@ -92,14 +92,16 @@ public class CardOverviewCtrl {
             this.card.setDescription(this.description.getText());
         }
 
-        var children=tilePane.getChildren();//get each member of the tilePane
+        var children=tilePane.getChildren();
         var tasksText=new ArrayList<String>();
-        for(Node node:children){// when the window is closed (and the card is saved) the tasks are added to the db
+        for(Node node:children){// we get the text from the taskscontainers that are visible in the GUI
             if(node.getClass()== TaskContainerCtrl.class) {
                 TaskContainerCtrl container = (TaskContainerCtrl) node;
                 tasksText.add(container.getText());
             }
         }
+        //we compare the strings we got earlier with what the card originally had
+        //if they didnt change, there's no need to do any db updates
         boolean tasksDidntChange=true;
         if(tasksText.size()!=card.getTaskList().size())
             tasksDidntChange=false;
@@ -111,7 +113,7 @@ public class CardOverviewCtrl {
                 }
             }
         }
-        if(!tasksDidntChange) {
+        if(!tasksDidntChange){//if the tasks have changed, we delete the old ones and add the new ones to the db
             for(int i=0;i<card.getTaskList().size();i++){
                 Task taskToDelete=card.getTaskList().get(i);
                 if(taskToDelete!=null) {
