@@ -49,7 +49,7 @@ public class TaskTest {
         Board t = new Board("", new ArrayList<>());
         BoardList r  = new BoardList("", new ArrayList<>(), t);
         Card c = new Card("cardTitle", "card description", r);
-        Task task=new Task(c,"Name");
+        Task task=new Task(c,"Name1");
         Task task2=new Task(c,"Name");
         task2.setId(1);
         assertNotEquals(task,task2);
