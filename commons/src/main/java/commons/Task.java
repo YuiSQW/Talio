@@ -54,14 +54,10 @@ public class Task implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (o == null || getClass() != o.getClass())
-            return false;
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         Task task = (Task) o;
-        if(this.name.equals(task.getName()))
-            return true;
-        return false;
+        return name.equals(task.name) && parentCard.equals(task.parentCard);
     }
 
     @Override
