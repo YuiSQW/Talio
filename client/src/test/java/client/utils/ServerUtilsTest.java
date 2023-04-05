@@ -207,11 +207,13 @@ class ServerUtilsTest {
         list.id = 1;
         Card card = new Card("", "desc", list);
         Task task = new Task(card, "title");
+        
         stubFor(get("/api/tasks/1").willReturn(
                 aResponse().withHeader("Content-Type", "application/json").withBody(new ObjectMapper().writeValueAsString(task))
         ));
         ServerUtils server = new ServerUtils();
         Task receivedTask =  server.getTask(1);
+        receivedTask.setParentCard(card);
         assertNotNull(receivedTask);
         assertEquals("title", receivedTask.getName());
         assertEquals(task, receivedTask);
