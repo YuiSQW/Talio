@@ -41,12 +41,16 @@ public class MainCtrl {
     private ClientConnectCtrl clientConnectCtrl;
     private Scene clientConnect;
 
+    private CustomizationCtrl customizationCtrl;
+    private Scene customizationview;
+
     public void initialize(Stage primaryStage,
                            Pair<BoardOverviewCtrl, Parent> board,
                            Pair<EditListNameCtrl, Parent> editList,
                            Pair<CardOverviewCtrl, Parent> card,
                            Pair<AddCardCtrl, Parent> addCard,
-                           Pair<ClientConnectCtrl, Parent> clientConnect) throws Exception {
+                           Pair<ClientConnectCtrl, Parent> clientConnect,
+                           Pair<CustomizationCtrl, Parent> customizationview) throws Exception {
         this.primaryStage = primaryStage;
 
         this.boardOverviewCtrl=board.getKey();
@@ -60,8 +64,13 @@ public class MainCtrl {
 
         this.cardOverviewCtrl=card.getKey();
         this.cardOverview=new Scene(card.getValue());
+
         this.addCardCtrl=addCard.getKey();
         this.addCardOverview=new Scene(addCard.getValue());
+
+        this.customizationCtrl= customizationview.getKey();
+        this.customizationview= new Scene(customizationview.getValue());
+        
         primaryStage.initStyle(StageStyle.TRANSPARENT);
         showWelcomeOverview();
         primaryStage.show();
@@ -77,8 +86,17 @@ public class MainCtrl {
         primaryStage.setTitle("Welcome");
         boardOverview.setFill(Color.TRANSPARENT);
         primaryStage.setScene(clientConnect);
-
     }
+    
+    public void showCustomization() {
+        Stage secondaryStage= new Stage(StageStyle.TRANSPARENT);
+        secondaryStage.setTitle("Customization");
+        secondaryStage.show();
+        customizationview.setFill(Color.TRANSPARENT);
+        secondaryStage.setScene(customizationview);
+        this.customizationCtrl.init(secondaryStage);
+    }
+
     public void editListName(ListContainerCtrl listContainerCtrl){
         Stage secondaryStage= new Stage(StageStyle.TRANSPARENT);
         secondaryStage.setTitle("Edit List Name:");

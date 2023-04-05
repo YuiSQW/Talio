@@ -28,6 +28,7 @@
                   <Glow />
                </effect></Button>
             <Button fx:id="disconnectButton" layoutX="610.0" layoutY="38.0" mnemonicParsing="false" onAction="#disconnect" text="Disconnect" AnchorPane.rightAnchor="5.199999999999974" AnchorPane.topAnchor="38.0" />
+            <Button fx:id="customizationbutton" layoutX="499.0" layoutY="38.0" mnemonicParsing="false" onAction="#customization" text="Customization" />
          </children>
       </AnchorPane>
       <TextField fx:id="boardTitle" layoutX="29.0" layoutY="35.0" prefHeight="42.0" prefWidth="174.0" text="Title" AnchorPane.leftAnchor="29.0" AnchorPane.topAnchor="35.0">

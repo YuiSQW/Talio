@@ -31,7 +31,7 @@ public class BoardOverviewCtrl {
     private double x,y;
     
     @FXML
-    private Button closeButton,minimizeButton,maximizeButton,addList, renameBoardBtn, disconnectButton;
+    private Button closeButton,minimizeButton,maximizeButton,addList, renameBoardBtn, disconnectButton, customizationbutton;
     @FXML
     private Pane toolBar;
     @FXML
@@ -149,7 +149,7 @@ public class BoardOverviewCtrl {
      */
     public void addNewList(){
         BoardList listToAdd = new BoardList("Empty list", new ArrayList<>(), this.board);
-        System.out.println("New list Button clicked");
+        //System.out.println("New list Button clicked");
         Platform.runLater(() -> serverUtils.postNewList(listToAdd, this.board));
         //this.addNewVbox(null);
     }
@@ -262,6 +262,14 @@ public class BoardOverviewCtrl {
     @FXML
     public void disconnect() {
         mainCtrl.showWelcomeOverview();
+    }
+
+    /**
+     * This method is called when the customization button is clicked so a user can customize the board.
+     */
+    @FXML
+    public void customization() {
+        mainCtrl.showCustomization();
     }
 
     //Next methods are getters used in testing
