@@ -54,9 +54,9 @@
       <Text layoutX="300.0" layoutY="309.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Font" />
       <ScrollPane layoutX="29.0" layoutY="318.0" prefHeight="200.0" prefWidth="464.0">
          <content>
-            <VBox>
+            <VBox fx:id="taskpresets">
                <children>
-                  <Button mnemonicParsing="false" text="Add Preset" />
+                  <Button fx:id="addbutton" alignment="BOTTOM_LEFT" mnemonicParsing="false" onAction="#addpreset" text="Add Preset" VBox.vgrow="ALWAYS" />
                </children>
             </VBox>
          </content>
