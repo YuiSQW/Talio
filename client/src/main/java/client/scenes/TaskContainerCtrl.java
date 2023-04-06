@@ -5,6 +5,9 @@ import commons.Task;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.TilePane;
 
@@ -13,6 +16,7 @@ import javax.inject.Inject;
 public class TaskContainerCtrl extends VBox{
     private AddCardCtrl addCardCtrl;
     private CardOverviewCtrl cardOverviewCtrl;
+    private CustomizationCtrl customizationCtrl;
 
     private MainCtrl mainCtrl;
 
@@ -36,6 +40,15 @@ public class TaskContainerCtrl extends VBox{
         text.setMinHeight(25.0);
         text.setPrefHeight(25.0);
         text.setPrefWidth(400.0);
+
+        BackgroundFill backgroundFill = new BackgroundFill(addCardCtrl.getlistcontainer().getboardoverview().getpresetbackground(), null, null);
+        Background background = new Background(backgroundFill);
+        text.setBackground(background);
+
+        Color value = addCardCtrl.getlistcontainer().getboardoverview().getpresetfont();
+        String style = String.format("-fx-text-fill: %s;", toHexString(value));
+        text.setStyle(style);
+
         Button removeButton = new Button("x");
         removeButton.setMinHeight(25.0);
         removeButton.setMaxHeight(25.0);
@@ -67,6 +80,15 @@ public class TaskContainerCtrl extends VBox{
         text.setMinHeight(25.0);
         text.setPrefHeight(25.0);
         text.setPrefWidth(365.0);
+
+        BackgroundFill backgroundFill = new BackgroundFill(cardOverviewCtrl.getlistcontainer().getboardoverview().getpresetbackground(), null, null);
+        Background background = new Background(backgroundFill);
+        text.setBackground(background);
+
+        Color value = cardOverviewCtrl.getlistcontainer().getboardoverview().getpresetfont();
+        String style = String.format("-fx-text-fill: %s;", toHexString(value));
+        text.setStyle(style);
+
         Button removeButton = new Button("x");
         removeButton.setMinHeight(25.0);
         removeButton.setMaxHeight(25.0);
@@ -89,5 +111,14 @@ public class TaskContainerCtrl extends VBox{
 
     public String getText(){
         return text.getText();
+    }
+
+    private static String toHexString(Color color) {
+        int r = ((int) Math.round(color.getRed()     * 255)) << 24;
+        int g = ((int) Math.round(color.getGreen()   * 255)) << 16;
+        int b = ((int) Math.round(color.getBlue()    * 255)) << 8;
+        int a = ((int) Math.round(color.getOpacity() * 255));
+    
+        return String.format("#%08X", (r + g + b + a));
     }
 }

@@ -183,4 +183,8 @@ public class CardOverviewCtrl {
     public Card getCard() {
         return this.card;
     }
+
+    public ListContainerCtrl getlistcontainer(){
+        return listContainerCtrl;
+    }
 }

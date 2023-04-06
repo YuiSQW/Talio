@@ -174,8 +174,6 @@ public class ListContainerCtrl extends VBox {
             
         });
         editButton.setOnAction(event -> this.mainCtrl.editListName(this));
-        
-        
 
     }
 
@@ -284,6 +282,10 @@ public class ListContainerCtrl extends VBox {
      */
     public BoardList getList(){
         return this.list;
+    }
+
+    public BoardOverviewCtrl getboardoverview(){
+        return boardOverviewCtrl;
     }
 
 

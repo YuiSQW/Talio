@@ -43,6 +43,9 @@ public class BoardOverviewCtrl {
     private Color listcolor = Color.WHITE;
     private Color listnamecolor = Color.BLACK;
 
+    private Color presetbackground = null;
+    private Color presetfont = Color.BLACK;
+
     @Inject
     public BoardOverviewCtrl(MainCtrl mainCtrl, ServerUtils serverUtils, WebsocketServerUtils websocketServerUtils) {
         this.mainCtrl=mainCtrl;
@@ -157,6 +160,22 @@ public class BoardOverviewCtrl {
 
     public Color getlistcolor(){
         return listcolor;
+    }
+
+    public Color getpresetbackground(){
+        return presetbackground;
+    }
+
+    public void setpresetbackground(Color color){
+        presetbackground = color;
+    }
+
+    public Color getpresetfont(){
+        return presetfont;
+    }
+
+    public void setpresetfont(Color color){
+        presetfont = color;
     }
 
     public void setlistnamecolor(Color color){

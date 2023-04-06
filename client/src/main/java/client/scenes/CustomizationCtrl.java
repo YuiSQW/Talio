@@ -34,6 +34,9 @@ public class CustomizationCtrl {
     private VBox taskpresets;
     @FXML
     private TextField text;
+
+    private Color defaultbackground;
+    private Color defaultfont;
     
     @Inject
     public CustomizationCtrl(MainCtrl mainCtrl, ServerUtils serverUtils){
@@ -88,6 +91,9 @@ public class CustomizationCtrl {
         presetHbox.setPrefWidth(462.0);
         removeButton.setOnAction(event ->{
             taskpresets.getChildren().remove(presetHbox);
+        });
+        defaultbutton.setOnAction(event ->{
+            setpreset();
         });
 
         taskpresets.getChildren().addAll(presetHbox);
@@ -154,5 +160,11 @@ public class CustomizationCtrl {
     public void addpreset(){
         init(taskpresets);
     }
+
+    public void setpreset(){
+        boardOverviewCtrl.setpresetbackground(presetbackgroundcp.getValue());
+        boardOverviewCtrl.setpresetfont(presetfontcp.getValue());
+    }
+
     
 }
