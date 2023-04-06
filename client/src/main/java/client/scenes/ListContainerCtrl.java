@@ -4,6 +4,7 @@ import client.utils.ServerUtils;
 import commons.BoardList;
 import commons.Card;
 import javafx.application.Platform;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
@@ -19,6 +20,7 @@ import javafx.scene.input.*;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
+
 
 
 /**
@@ -292,6 +294,7 @@ public class ListContainerCtrl extends VBox {
     public void saveNewCard(Card card) {
         //Adds the card with id and not the old one
         //Create a new card, so that the old one (without id) doesn't get used anymore
+
         Platform.runLater(() -> {
             Card newCard = serverUtils.postNewCard(card, this.list);
             this.cards.add(newCard);

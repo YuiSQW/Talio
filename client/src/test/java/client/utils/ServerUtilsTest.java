@@ -6,6 +6,7 @@ import commons.Board;
 import commons.BoardList;
 import commons.Card;
 
+import commons.Task;
 import org.junit.jupiter.api.Test;
 
 
@@ -567,4 +568,70 @@ class ServerUtilsTest {
         Board gottenBoard = serverUtils.getBoardOrCreateNew();
         assertNotNull(gottenBoard);
     }
+    
+    /*
+    * Test to verify if you get the correct Task from the server
+    * Send a get request to the server based on id
+     */
+    @Test
+    void getTaskTest() throws Exception{
+        Board board = new Board("", new ArrayList<>());
+        BoardList list = new BoardList("", new ArrayList<>(), board);
+        list.id = 1;
+        Card card = new Card("", "desc", list);
+        Task task = new Task(card, "title");
+        
+        stubFor(get("/api/tasks/1").willReturn(
+                aResponse().withHeader("Content-Type", "application/json").withBody(new ObjectMapper().writeValueAsString(task))
+        ));
+        ServerUtils server = new ServerUtils();
+        Task receivedTask =  server.getTask(1);
+        receivedTask.setParentCard(card);
+        assertNotNull(receivedTask);
+        assertEquals("title", receivedTask.getName());
+        assertEquals(task, receivedTask);
+    }
+    
+    /**
+     * Test to verify if the creation of a new task works
+     * Test to check if creating of new tasks work
+     * By sending a post request
+     * @throws Exception if test fails
+     */
+    @Test
+    void postNewTaskTest() throws Exception{
+        Board board = new Board("", new ArrayList<>());
+        BoardList list = new BoardList("", new ArrayList<>(), board);
+        Card card = new Card("title", "desc", list);
+        card.id = 1;
+        Task testTask = new Task(card, "title");
+        stubFor(post("/api/tasks/new-task/1").willReturn(
+                aResponse().withHeader("Content-Type", "application/json")
+                        .withBody(new ObjectMapper().writeValueAsString(testTask))
+        ));
+        ServerUtils server = new ServerUtils();
+        Task task = server.postNewTask(testTask, card);
+        assertNotNull(task);
+        assertEquals("title", task.getName());
+        assertEquals(card, task.getParentCard());
+    }
+    
+    /**
+     * Test to verify if deleting a task works
+     * @throws Exception if test fails
+     */
+    @Test
+    void deleteTaskTest() throws Exception{
+        Board board = new Board("", new ArrayList<>());
+        BoardList list = new BoardList("", new ArrayList<>(), board);
+        Card card = new Card("title", "desc", list);
+        Task task = new Task(card, "title");
+        task.id = 1;
+        stubFor(delete("/api/tasks/1").willReturn(
+                aResponse().withHeader("Content-Type", "application/json").withBody(new ObjectMapper().writeValueAsString(task))
+        ));
+        ServerUtils server = new ServerUtils();
+        assertDoesNotThrow(() -> server.deleteTask(task));
+    }
+
 }

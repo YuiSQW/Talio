@@ -68,8 +68,44 @@ class BoardControllerTest {
         this.mockMvc.perform(
             post("/api/boards/new-board").contentType("application/json").content(content)).andExpect(status().is2xxSuccessful());
     }
-
-
+    
+    /**
+     * Tests whether a new board is returned when there is no board in the database
+     * Mocks the repository's "count" method to return 0.
+     * Creates an expected board object with the name "Board Title" and an empty list of items.
+     *
+     * @throws Exception
+     */
+    @Test
+    void orCreateNewTest() throws Exception{
+        Mockito.when(this.repo.count()).thenReturn(0L);
+        Mockito.when(this.repo.saveAndFlush(Mockito.any(Board.class))).thenAnswer(i -> i.getArguments()[0]);
+        
+        String content = new ObjectMapper().writeValueAsString(new Board("Board Title", new ArrayList<>()));
+        
+        this.mockMvc.perform(get("/api/boards/get-stored-board-or-create-new")).andExpect(status().is2xxSuccessful())
+                .andExpect(content().json(content));
+    }
+    
+    /**
+     * Tests whether the correct board is returned when there is one in the database
+     * Mocks the repository's "count" method to return 1.
+     * Creates an expected board object with the name "Existing Board" and an empty list of items.
+     *
+     * @throws Exception
+     */
+    @Test
+    void getStoredBoardTest() throws Exception {
+        Mockito.when(this.repo.count()).thenReturn(1L);
+        Board existingBoard = new Board("Existing Board", new ArrayList<>());
+        Mockito.when(this.repo.findById(Mockito.anyLong())).thenReturn(Optional.of(existingBoard));
+        
+        this.mockMvc.perform(get("/api/boards/get-stored-board-or-create-new"))
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(content().json(new ObjectMapper().writeValueAsString(existingBoard)));
+    }
+    
+    
     @Test
     void getNewBoardTestError() throws Exception{
         String content = new ObjectMapper().writeValueAsString(new Board(null, new ArrayList<>()));
@@ -77,6 +113,15 @@ class BoardControllerTest {
 
     }
 
+    /**
+     * Tests whether a new list is added to the board
+     * Mocks the repository's "existsById" method to return true.
+     * Mocks the repository's "findById" method to return a board with the name "test1" and an empty list of lists.
+     * Mocks the repository's "save" method to return a board with the name "test1" and a list of lists with one list.
+     * Creates an expected board object with the name "test1" and a list of lists with one list.
+     *
+     * @throws Exception
+     */
     @Test
     void reorderListTestCorrect() throws Exception {
         Board board=new Board("test1",new ArrayList<>());
