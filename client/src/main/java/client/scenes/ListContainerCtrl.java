@@ -149,6 +149,7 @@ public class ListContainerCtrl extends VBox {
         setSpacing(10.0);
         getChildren().addAll(boardListTitle, cardList);
         setStyle("-fx-border-color:black;-fx-border-radius:15;");
+        //setting color based on customization menu
         BackgroundFill backgroundFill = new BackgroundFill(boardOverviewCtrl.getlistcolor(), new CornerRadii(16), null);
         Background background = new Background(backgroundFill);
         this.setBackground(background);

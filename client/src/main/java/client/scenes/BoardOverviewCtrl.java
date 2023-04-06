@@ -40,7 +40,7 @@ public class BoardOverviewCtrl {
     @FXML
     private TextField boardTitle;
 
-    private Color listcolor;
+    private Color listcolor = Color.WHITE;
 
     @Inject
     public BoardOverviewCtrl(MainCtrl mainCtrl, ServerUtils serverUtils, WebsocketServerUtils websocketServerUtils) {
