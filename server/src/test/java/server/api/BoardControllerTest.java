@@ -21,6 +21,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 import org.springframework.boot.test.mock.mockito.MockBeans;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import server.database.BoardRepository;
 
 
@@ -28,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 
@@ -204,5 +206,19 @@ class BoardControllerTest {
         this.mockMvc.perform(get("/api/boards/connection-available"))
             .andExpect(status().isOk())
             .andExpect(content().string("Connection available"));
+    }
+
+
+    @Test
+    void pollBoardTitleTest()throws Exception{
+        Mockito.when(repo.existsById(Mockito.anyLong())).thenReturn(true);
+        Mockito.when(repo.findById(Mockito.anyLong())).thenReturn(Optional.of(new Board("", new ArrayList<>())));
+        Mockito.when(repo.save(Mockito.any(Board.class))).thenReturn(new Board("", new ArrayList<>()));
+
+        MvcResult asyncListener = this.mockMvc.perform(get("/api/boards/poll-boardTitle/1")).andExpect(request().asyncStarted()).andReturn();
+        this.mockMvc.perform(put("/api/boards/1/New Title"));
+        String result = this.mockMvc.perform(asyncDispatch(asyncListener)).andReturn().getResponse().getContentAsString();
+        assertEquals("New Title", result);
+
     }
 }

@@ -194,4 +194,19 @@ class ServerUtilsTest {
         assertDoesNotThrow(() -> server.deleteList(list));
 
     }
+
+
+
+    @Test
+    void pollBoardTitleTest(){
+        Board board = new Board("", new ArrayList<>());
+        board.id = 1;
+        stubFor(get("/api/boards/poll-boardTitle/1").willReturn(
+            aResponse().withHeader("Content-Type", "application/json").withBody("New Title")
+        ));
+        ServerUtils server = new ServerUtils();
+        server.pollBoardTitle(1, p -> {
+            assertEquals("New Title", p);
+        });
+    }
 }

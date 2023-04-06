@@ -6,12 +6,19 @@ import commons.Board;
 
 import commons.BoardList;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import org.springframework.web.context.request.async.DeferredResult;
 import server.database.BoardRepository;
 
+
 import java.util.ArrayList;
+
+import java.util.Map;
+import java.util.concurrent.*;
+import java.util.function.Consumer;
 
 
 @RestController
@@ -26,8 +33,13 @@ public class BoardController {
     @Autowired
     private BoardUpdateListener boardUpdateListener;
 
+
+
+    private Map<Object, Consumer<String>> listeners;
     public BoardController(BoardRepository repo){
+
         this.repo = repo;
+        this.listeners = new ConcurrentHashMap<>();
     }
 
     /**
@@ -63,6 +75,7 @@ public class BoardController {
         board.setName(newName);
         Board updatedBoard = repo.save(board);
         boardUpdateListener.add(updatedBoard);
+        listeners.forEach((key, listener) -> listener.accept(newName));
         return ResponseEntity.ok(updatedBoard);
     }
 
@@ -113,4 +126,17 @@ public class BoardController {
         }
     }
 
+    @GetMapping("/poll-boardTitle/{id}")
+    public DeferredResult<ResponseEntity<String>>  pollBoardTitle(@PathVariable("id") long id)throws Exception{
+        ResponseEntity<String> noContent = ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        DeferredResult<ResponseEntity<String>> result = new DeferredResult<>(5000L, noContent);
+
+        Object key = new Object();
+        this.listeners.put(key, q -> {
+            result.setResult(ResponseEntity.ok(q));
+        });
+        result.onCompletion(() -> this.listeners.remove(key));
+        return result;
+
+    }
 }
