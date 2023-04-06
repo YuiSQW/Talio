@@ -41,6 +41,7 @@ public class BoardOverviewCtrl {
     private TextField boardTitle;
 
     private Color listcolor = Color.WHITE;
+    private Color listnamecolor = Color.BLACK;
 
     @Inject
     public BoardOverviewCtrl(MainCtrl mainCtrl, ServerUtils serverUtils, WebsocketServerUtils websocketServerUtils) {
@@ -156,6 +157,14 @@ public class BoardOverviewCtrl {
 
     public Color getlistcolor(){
         return listcolor;
+    }
+
+    public void setlistnamecolor(Color color){
+        listnamecolor = color;
+    }
+
+    public Color getlistnamecolor(){
+        return listnamecolor;
     }
 
     public TilePane gettilepane(){

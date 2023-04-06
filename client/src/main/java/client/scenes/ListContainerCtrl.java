@@ -77,6 +77,7 @@ public class ListContainerCtrl extends VBox {
         listName.setPrefHeight(47.0);
         listName.setPrefWidth(100.0);
         listName.setStyle("-fx-text-alignment:center;");
+        listName.setTextFill(boardOverviewCtrl.getlistnamecolor());
         // the edit button
         Button editButton = new Button("Edit");
         editButton.setPrefHeight(35.0);
