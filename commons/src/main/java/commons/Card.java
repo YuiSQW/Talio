@@ -91,4 +91,16 @@ public class Card implements Serializable {
             ", description='" + description + '\'' +
             '}';
     }
+
+    /**
+     * deletes task based on id
+     */
+    public void deleteTask(long id){
+        for(int i=0;i<taskList.size();i++){
+            if(taskList.get(i).id==id){
+                taskList.remove(i);
+                break;
+            }
+        }
+    }
 }
