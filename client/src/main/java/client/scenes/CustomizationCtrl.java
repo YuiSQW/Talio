@@ -4,9 +4,12 @@ import client.utils.ServerUtils;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
@@ -24,9 +27,13 @@ public class CustomizationCtrl {
     private Pane toolBar;
     private double x,y;
     @FXML
-    private Button closeButton, minimizeButton, boardreset, listreset;
+    private Button closeButton, minimizeButton, boardreset, listreset, addbutton;
     @FXML
-    private ColorPicker boardbackgroundcp, boardfontcp, listbackgroundcp, listfontcp;
+    private ColorPicker boardbackgroundcp, boardfontcp, listbackgroundcp, listfontcp, presetbackgroundcp, presetfontcp;
+    @FXML
+    private VBox taskpresets;
+    @FXML
+    private TextField text;
     
     @Inject
     public CustomizationCtrl(MainCtrl mainCtrl, ServerUtils serverUtils){
@@ -48,6 +55,44 @@ public class CustomizationCtrl {
             stage.setX(mouseEvent.getScreenX()-this.x);
             stage.setY(mouseEvent.getScreenY()-this.y);
         });
+    }
+    //task presets
+    public void init(VBox vBox){
+        text = new TextField("Color Preset");
+        text.setMinHeight(25.0);
+        text.setPrefHeight(25.0);
+        text.setPrefWidth(175.0);
+        
+        Button removeButton = new Button("x");
+        removeButton.setMinHeight(25.0);
+        removeButton.setMaxHeight(25.0);
+        removeButton.setPrefHeight(25.0);
+        removeButton.setPrefWidth(25.0);
+
+        Button defaultbutton = new Button("Set as default");
+        defaultbutton.setMinHeight(25.0);
+        defaultbutton.setMaxHeight(25.0);
+        defaultbutton.setPrefHeight(100.0);
+        defaultbutton.setPrefWidth(100.0);
+
+        presetbackgroundcp = new ColorPicker(Color.WHITE);
+        presetbackgroundcp.setPrefWidth(85);
+
+        presetfontcp = new ColorPicker(Color.BLACK);
+        presetfontcp.setPrefWidth(85);
+
+        HBox presetHbox = new HBox(text, presetbackgroundcp, presetfontcp, removeButton, defaultbutton);
+        presetHbox.setMinHeight(25.0);
+        presetHbox.setMaxHeight(25.0);
+        presetHbox.setPrefHeight(25.0);
+        presetHbox.setPrefWidth(462.0);
+        removeButton.setOnAction(event ->{
+            taskpresets.getChildren().remove(presetHbox);
+        });
+
+        taskpresets.getChildren().addAll(presetHbox);
+        HBox button = new HBox(addbutton);
+        taskpresets.getChildren().add(button);
     }
 
     public void close(){
@@ -106,5 +151,8 @@ public class CustomizationCtrl {
         boardOverviewCtrl.setlistnamecolor(listfontcp.getValue());
     }
 
+    public void addpreset(){
+        init(taskpresets);
+    }
     
 }
