@@ -32,6 +32,7 @@ public class MainCtrl {
 
     private EditListNameCtrl editListNameCtrl;
     private Scene editListNameOverview;
+    
     private CardOverviewCtrl cardOverviewCtrl;
     private Scene cardOverview;
 

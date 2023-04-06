@@ -15,6 +15,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import javax.inject.Inject;
@@ -38,6 +39,8 @@ public class BoardOverviewCtrl {
     private TilePane tilePane;
     @FXML
     private TextField boardTitle;
+
+    private Color listcolor;
 
     @Inject
     public BoardOverviewCtrl(MainCtrl mainCtrl, ServerUtils serverUtils, WebsocketServerUtils websocketServerUtils) {
@@ -126,7 +129,7 @@ public class BoardOverviewCtrl {
     
         
     }
-    
+
     /**
      * The function which is connected to the renameBtn
      * sets the board name to the new title
@@ -145,6 +148,14 @@ public class BoardOverviewCtrl {
 
     public Board getBoard() {
         return board;
+    }
+
+    public void setlistcolor(Color color){
+        listcolor = color;
+    }
+
+    public Color getlistcolor(){
+        return listcolor;
     }
 
     public TilePane gettilepane(){
@@ -174,7 +185,7 @@ public class BoardOverviewCtrl {
      * which contains a child BoardList instance of the Board
      */
     public void addNewVbox(BoardList boardList) {
-        ListContainerCtrl listContainerCtrl= new ListContainerCtrl(this.mainCtrl,this.serverUtils);
+        ListContainerCtrl listContainerCtrl = new ListContainerCtrl(this.mainCtrl,this.serverUtils);
         listContainerCtrl.init(tilePane,this,boardList);
         tilePane.getChildren().add((tilePane.getChildren().size() - 1), listContainerCtrl);
     }

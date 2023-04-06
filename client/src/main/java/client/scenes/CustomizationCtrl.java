@@ -36,7 +36,7 @@ public class CustomizationCtrl {
 
     public void init(Stage stage, BoardOverviewCtrl boardOverviewCtrl){
         this.stage=stage;
-        this.boardOverviewCtrl=boardOverviewCtrl;
+        this.boardOverviewCtrl = boardOverviewCtrl;
         
         toolBar.setOnMousePressed( mouseEvent -> {
             this.x= mouseEvent.getSceneX();
@@ -88,8 +88,12 @@ public class CustomizationCtrl {
         return String.format("#%08X", (r + g + b + a));
     }
 
-    public void listchangebackground(){
+    public void listreset(){
 
+    }
+
+    public void listchangebackground(){
+        boardOverviewCtrl.setlistcolor(listbackgroundcp.getValue());
     }
 
     public void listchangefont(){

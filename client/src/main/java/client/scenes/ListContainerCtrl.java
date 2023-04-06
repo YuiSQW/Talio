@@ -41,6 +41,7 @@ public class ListContainerCtrl extends VBox {
     private final ServerUtils serverUtils;
     
     private static boolean hasChangedFlag;
+    private Color listColor;
 
     //only allows one card dialog to be open at one time, since having multiple card
     //dialogs open will make the dialog unresponsive
@@ -148,7 +149,7 @@ public class ListContainerCtrl extends VBox {
         setSpacing(10.0);
         getChildren().addAll(boardListTitle, cardList);
         setStyle("-fx-border-color:black;-fx-border-radius:15;");
-        BackgroundFill backgroundFill = new BackgroundFill(Color.WHITE, new CornerRadii(16), null);
+        BackgroundFill backgroundFill = new BackgroundFill(boardOverviewCtrl.getlistcolor(), new CornerRadii(16), null);
         Background background = new Background(backgroundFill);
         this.setBackground(background);
 
@@ -280,6 +281,7 @@ public class ListContainerCtrl extends VBox {
     public BoardList getList(){
         return this.list;
     }
+
 
     /**
      * Method which updates the display of the Card object whose properties have been modified
