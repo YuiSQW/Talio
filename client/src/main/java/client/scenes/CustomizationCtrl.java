@@ -87,5 +87,14 @@ public class CustomizationCtrl {
     
         return String.format("#%08X", (r + g + b + a));
     }
+
+    public void listchangebackground(){
+
+    }
+
+    public void listchangefont(){
+        
+    }
+
     
 }

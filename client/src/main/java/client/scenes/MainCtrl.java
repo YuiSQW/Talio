@@ -94,7 +94,7 @@ public class MainCtrl {
         secondaryStage.show();
         customizationview.setFill(Color.TRANSPARENT);
         secondaryStage.setScene(customizationview);
-        this.customizationCtrl.init(secondaryStage);
+        this.customizationCtrl.init(secondaryStage, boardOverviewCtrl);
     }
 
     public void editListName(ListContainerCtrl listContainerCtrl){

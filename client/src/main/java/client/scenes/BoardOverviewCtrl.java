@@ -139,10 +139,17 @@ public class BoardOverviewCtrl {
         
     }
     
+    public TextField getboardTitle(){
+        return boardTitle;
+    }
+
     public Board getBoard() {
         return board;
     }
 
+    public TilePane gettilepane(){
+        return tilePane;
+    }
     /**
      * Method which triggers the addition of an EMPTY List Container
      * Connected to the addList button

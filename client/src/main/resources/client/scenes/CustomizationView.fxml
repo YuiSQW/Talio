@@ -38,18 +38,18 @@
             <Font size="18.0" />
          </font>
       </Text>
-      <Button layoutX="431.0" layoutY="71.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="52.0" text="reset" />
-      <Button layoutX="431.0" layoutY="176.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="52.0" text="reset" />
+      <Button fx:id="boardreset" layoutX="431.0" layoutY="71.0" mnemonicParsing="false" onAction="#boardreset" prefHeight="26.0" prefWidth="52.0" text="reset" />
+      <Button fx:id="listreset" layoutX="431.0" layoutY="176.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="52.0" text="reset" />
       <Line endX="362.8000183105469" endY="-7.62939453125E-6" layoutX="130.0" layoutY="62.0" startX="-100.0" />
       <Line endX="362.8000183105469" endY="-7.62939453125E-6" layoutX="130.0" layoutY="277.0" startX="-100.0" />
       <Text layoutX="87.0" layoutY="120.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Background" />
       <Text layoutX="87.0" layoutY="149.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Font" />
-      <ColorPicker layoutX="442.0" layoutY="102.0" prefHeight="26.0" prefWidth="29.0" />
-      <ColorPicker layoutX="442.0" layoutY="131.0" prefHeight="26.0" prefWidth="29.0" />
+      <ColorPicker fx:id="boardbackgroundcp" layoutX="442.0" layoutY="102.0" onAction="#boardchangebackground" prefHeight="26.0" prefWidth="29.0" />
+      <ColorPicker fx:id="boardfontcp" layoutX="442.0" layoutY="131.0" onAction="#boardchangefont" prefHeight="26.0" prefWidth="29.0" />
       <Text layoutX="87.0" layoutY="223.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Background" />
       <Text layoutX="87.0" layoutY="252.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Font" />
-      <ColorPicker layoutX="442.0" layoutY="205.0" prefHeight="26.0" prefWidth="29.0" />
-      <ColorPicker layoutX="442.0" layoutY="234.0" prefHeight="26.0" prefWidth="29.0" />
+      <ColorPicker fx:id="listbackgroundcp" layoutX="442.0" layoutY="205.0" prefHeight="26.0" prefWidth="29.0" />
+      <ColorPicker fx:id="listfontcp" layoutX="442.0" layoutY="234.0" prefHeight="26.0" prefWidth="29.0" />
       <Text layoutX="201.0" layoutY="309.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Background" />
       <Text layoutX="300.0" layoutY="309.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Font" />
       <ScrollPane layoutX="29.0" layoutY="318.0" prefHeight="200.0" prefWidth="464.0">

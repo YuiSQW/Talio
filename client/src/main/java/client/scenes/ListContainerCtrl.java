@@ -11,6 +11,9 @@ import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.TilePane;
 import javafx.geometry.Insets;
@@ -145,6 +148,9 @@ public class ListContainerCtrl extends VBox {
         setSpacing(10.0);
         getChildren().addAll(boardListTitle, cardList);
         setStyle("-fx-border-color:black;-fx-border-radius:15;");
+        BackgroundFill backgroundFill = new BackgroundFill(Color.WHITE, new CornerRadii(16), null);
+        Background background = new Background(backgroundFill);
+        this.setBackground(background);
 
         //Adds spacing between the rows of lists
         TilePane.setMargin(this, new Insets(10,0,0,0));

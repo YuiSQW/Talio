@@ -28,7 +28,7 @@
                   <Glow />
                </effect></Button>
             <Button fx:id="disconnectButton" layoutX="610.0" layoutY="38.0" mnemonicParsing="false" onAction="#disconnect" text="Disconnect" AnchorPane.rightAnchor="5.199999999999974" AnchorPane.topAnchor="38.0" />
-            <Button fx:id="customizationbutton" layoutX="499.0" layoutY="38.0" mnemonicParsing="false" onAction="#customization" text="Customization" />
+            <Button fx:id="customizationbutton" layoutX="507.0" layoutY="38.0" mnemonicParsing="false" onAction="#customization" text="Customization" AnchorPane.rightAnchor="91.39999999999998" AnchorPane.topAnchor="38.0" />
          </children>
       </AnchorPane>
       <TextField fx:id="boardTitle" layoutX="29.0" layoutY="35.0" prefHeight="42.0" prefWidth="174.0" text="Title" AnchorPane.leftAnchor="29.0" AnchorPane.topAnchor="35.0">
@@ -38,7 +38,7 @@
       </TextField>
       <ScrollPane layoutX="2.0" layoutY="106.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="427.0" prefWidth="686.0" AnchorPane.bottomAnchor="2.0" AnchorPane.leftAnchor="2.0" AnchorPane.rightAnchor="2.0" AnchorPane.topAnchor="100.0">
          <content>
-            <TilePane fx:id="tilePane" hgap="50.0">
+            <TilePane fx:id="tilePane" hgap="50.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefColumns="7">
                <children>
                   <VBox fx:id="v1" prefHeight="360.0" prefWidth="180.0">
                      <children>
