@@ -37,6 +37,8 @@ public class CustomizationCtrl {
     public void init(Stage stage, BoardOverviewCtrl boardOverviewCtrl){
         this.stage=stage;
         this.boardOverviewCtrl = boardOverviewCtrl;
+        boardfontcp.setValue(Color.BLACK);
+        listfontcp.setValue(Color.BLACK);
         
         toolBar.setOnMousePressed( mouseEvent -> {
             this.x= mouseEvent.getSceneX();
@@ -58,13 +60,14 @@ public class CustomizationCtrl {
 
     public void boardreset(){
         //reseting the background and colorpicker
-        BackgroundFill backgroundFill = new BackgroundFill(Color.WHITE, null, null);
+        BackgroundFill backgroundFill = new BackgroundFill(null, null, null);
         Background background = new Background(backgroundFill);
         boardOverviewCtrl.gettilepane().setBackground(background);
         boardbackgroundcp.setValue(Color.WHITE);
 
         //reseting the font and colorpicker
         boardOverviewCtrl.getboardTitle().setStyle(null);
+        boardfontcp.setValue(Color.BLACK);
     }
 
     public void boardchangebackground(){
@@ -89,7 +92,10 @@ public class CustomizationCtrl {
     }
 
     public void listreset(){
-
+        boardOverviewCtrl.setlistcolor(Color.WHITE);
+        listbackgroundcp.setValue(Color.WHITE);
+        boardOverviewCtrl.setlistnamecolor(Color.BLACK);
+        listfontcp.setValue(Color.BLACK);
     }
 
     public void listchangebackground(){
