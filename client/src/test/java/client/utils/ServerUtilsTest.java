@@ -196,6 +196,24 @@ class ServerUtilsTest {
 
     }
 
+
+
+
+
+    @Test
+    void pollBoardTitleTest(){
+        Board board = new Board("", new ArrayList<>());
+        board.id = 1;
+        stubFor(get("/api/boards/poll-boardTitle/1").willReturn(
+            aResponse().withHeader("Content-Type", "application/json").withBody("New Title")
+        ));
+        ServerUtils server = new ServerUtils();
+        server.pollBoardTitle(1, p -> {
+            assertEquals("New Title", p);
+        });
+    }
+
+
     @Test
     void getCardTestExtended() throws Exception{
         String title = "title";
@@ -568,6 +586,7 @@ class ServerUtilsTest {
         Board gottenBoard = serverUtils.getBoardOrCreateNew();
         assertNotNull(gottenBoard);
     }
+
     
     /*
     * Test to verify if you get the correct Task from the server
@@ -633,5 +652,6 @@ class ServerUtilsTest {
         ServerUtils server = new ServerUtils();
         assertDoesNotThrow(() -> server.deleteTask(task));
     }
+
 
 }

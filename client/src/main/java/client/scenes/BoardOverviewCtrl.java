@@ -116,14 +116,17 @@ public class BoardOverviewCtrl {
         
         boardTitle.setOnMousePressed(event -> {
             userChangesField.set(true);
-            //TODO send the changed flag to the server
+
         });
     
         boardTitle.setOnKeyTyped(event -> {
             userChangesField.set(true);
-            //TODO send the changed flag to the server
+
         });
-    
+
+        serverUtils.pollBoardTitle(board.id, p ->{
+            boardTitle.setText(p);
+        });
         
     }
     
@@ -221,11 +224,11 @@ public class BoardOverviewCtrl {
     
         //If the user is not editing the textField, then you can set the boardTitle textField to the new value
         //Otherwise the clients get constantly interrupted
-        if (!isUserEditing) {
+        /*if (!isUserEditing) {
             boardTitle.setText(this.board.getName());
 
             
-        }
+        }*/
         
         //Return false again after the label has been set
         return false;
@@ -236,6 +239,7 @@ public class BoardOverviewCtrl {
      * It delegates the function of closing the app to the Main Controller
      */
     public void close(){
+        serverUtils.stop();
         this.mainCtrl.closeApp();
         
     }

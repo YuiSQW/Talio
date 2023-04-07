@@ -17,6 +17,9 @@ package client.utils;
 
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.function.Consumer;
 
 
 import commons.Board;
@@ -25,6 +28,7 @@ import commons.Card;
 
 
 import commons.Task;
+import jakarta.ws.rs.core.Response;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 
@@ -42,6 +46,7 @@ public class ServerUtils {
 
     private static String SERVER = "http://localhost:8080/";
 
+    private final static ExecutorService EXEC = Executors.newSingleThreadExecutor();
     public Card getCard(long cardId){
         return ClientBuilder.newClient(new ClientConfig())
             .target(SERVER).path("api/cards/" + cardId)
@@ -248,5 +253,24 @@ public class ServerUtils {
             .request(APPLICATION_JSON)
             .accept(APPLICATION_JSON)
             .get(new GenericType<Board>(){});
+    }
+
+
+    public void pollBoardTitle(long id, Consumer<String> stringConsumer){
+        EXEC.submit(() ->{
+            while(!Thread.interrupted()){
+                Response response = ClientBuilder.newClient(new ClientConfig())
+                    .target(SERVER).path("/api/boards/poll-boardTitle/" + id)
+                    .request(APPLICATION_JSON)
+                    .accept(APPLICATION_JSON)
+                    .get(Response.class);
+                if(response.getStatus() == 204)continue;
+                String result = response.readEntity(String.class);
+                stringConsumer.accept(result);
+        }});
+    }
+
+    public void stop(){
+        EXEC.shutdownNow();
     }
 }
