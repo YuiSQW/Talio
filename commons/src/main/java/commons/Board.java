@@ -4,7 +4,6 @@ package commons;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
-import java.util.Set;
 
 
 /**
@@ -24,7 +23,7 @@ public class Board implements Serializable {
 
     @OneToMany(cascade = CascadeType.MERGE, mappedBy = "parentBoard",fetch = FetchType.EAGER, orphanRemoval = true)
     @OrderColumn
-    private Set<Tag> tags;
+    private List<Tag> tags;
     private String name;
     
     public Board(){
@@ -44,12 +43,12 @@ public class Board implements Serializable {
         this.lists = lists;
     }
 
-    public Set<Tag> getTags() {
+    public List<Tag> getTags() {
         return tags; }
-    public void setTags(Set<Tag> tags) {
+    public void setTags(List<Tag> tags) {
         this.tags = tags; }
 
-    public String getName(){
+    public String getName() {
         return this.name;
     }
 

@@ -4,39 +4,42 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 @Entity
 public class Tag implements Serializable {
-    private String tagType;
-    // Store the hex code of the color
+    private String tagName;
     private String color;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     public long id;
+
+    // Define the many-to-one relationship between tags and parent board
     @JsonIgnore
     @ManyToOne
     private Board parentBoard; //the Board instance that the tag corresponds to
+
+    // Define the many-to-many relationship between tags and cards
     @ManyToMany
     @JoinTable(
             name = "card_tag",
             joinColumns = @JoinColumn(name="tag_id"),
             inverseJoinColumns = @JoinColumn(name="card_id"))
-    private Set<Card> cards;
+    private List<Card> cards;
 
-    public Tag(String tagType, String color) {
-        this.tagType = tagType;
+    public Tag(String tagName, String color, List<Card> cards, Board parentBoard) {
+        this.tagName = tagName;
         this.color = color;
-        this.cards= new HashSet<Card>();
+        this.parentBoard=parentBoard;
+        this.cards=cards;
 
     }
     public Tag(){
         //default constructor necessary for Jackson operation
     }
-    public String getTagType() {
-        return tagType;
+    public String getTagName() {
+        return tagName;
     }
 
     public String getColor() {
@@ -50,7 +53,7 @@ public class Tag implements Serializable {
         return this.parentBoard;
     }
 
-    public Set<Card> getCards() {
+    public List<Card> getCards() {
         return cards;
     }
     public void addCard(Card card){
@@ -62,18 +65,18 @@ public class Tag implements Serializable {
         if (this == o) return true;
         if (!(o instanceof Tag)) return false;
         Tag tag = (Tag) o;
-        return Objects.equals(getTagType(), tag.getTagType()) && Objects.equals(getColor(), tag.getColor());
+        return Objects.equals(getTagName(), tag.getTagName()) && Objects.equals(getColor(), tag.getColor());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getTagType(), getColor());
+        return Objects.hash(getTagName(), getColor());
     }
 
     @Override
     public String toString() {
         return "Tag{" +
-                "tagType='" + tagType + '\'' +
+                "tagType='" + tagName + '\'' +
                 '}';
     }
 }

@@ -1,6 +1,8 @@
 package client.scenes;
 
 import client.utils.ServerUtils;
+import commons.Board;
+import commons.Card;
 import commons.Tag;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -14,12 +16,16 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
 
+/**
+ * Controller class for handling the creation of a new tag by the user
+ */
 public class AddTagCtrl {
     private MainCtrl mainCtrl;
     private ServerUtils serverUtils;
     private Stage stage;
-    private BoardOverviewCtrl boardOverviewCtrl;
+    private Board parentBoard;
     private AddCardCtrl addCardCtrl;
     @FXML
     private Pane toolBar;
@@ -39,7 +45,7 @@ public class AddTagCtrl {
 
     public void init(Stage stage, BoardOverviewCtrl boardOverviewCtrl,AddCardCtrl addCardCtrl){
         this.stage=stage;
-        this.boardOverviewCtrl=boardOverviewCtrl;
+        this.parentBoard=boardOverviewCtrl.getBoard();
         this.addCardCtrl=addCardCtrl;
         toolBar.setOnMousePressed( mouseEvent -> {
             this.x= mouseEvent.getSceneX();
@@ -49,6 +55,8 @@ public class AddTagCtrl {
             stage.setX(mouseEvent.getScreenX()-this.x);
             stage.setY(mouseEvent.getScreenY()-this.y);
         });
+
+        // List of colors the user can choose from
         ObservableList<String> colors= FXCollections.observableArrayList("red","blue","green");
         this.colorBox.setItems(colors);
         this.colorBox.setCellFactory(listView -> new ListCell<String>() {
@@ -63,7 +71,7 @@ public class AddTagCtrl {
                 }
             }
         });
-
+        // Select and display the desired color
         this.colorBox.setOnAction(event ->{
              String selectedColor = colorBox.getValue();
              this.colorField.setText(selectedColor);
@@ -74,10 +82,11 @@ public class AddTagCtrl {
 
     }
     public void saveTag(){
-        Tag newTag= new Tag(this.nameField.getText(),this.colorField.getText());
+        Tag newTag= new Tag(this.nameField.getText(),this.colorField.getText(),new ArrayList<Card>(),
+                this.parentBoard);
         this.addCardCtrl.addTag(newTag);
-        this.addCardCtrl.getAvailableTags().add(newTag);
-        Platform.runLater(() ->this.serverUtils.postNewTag(newTag,this.boardOverviewCtrl.getBoard()));
+        System.out.println("New Tag added");
+        Platform.runLater(() ->this.serverUtils.postNewTag(newTag,this.parentBoard));
         this.closeTag();
     }
 
@@ -96,7 +105,6 @@ public class AddTagCtrl {
     }
     public void closeTag(){
         cancel();
-        AddCardCtrl.setTagDialogOpen(false);
         this.stage.close();
     }
 

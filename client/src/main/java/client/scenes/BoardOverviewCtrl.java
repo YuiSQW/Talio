@@ -21,7 +21,6 @@ import javafx.util.Duration;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class BoardOverviewCtrl {
@@ -32,7 +31,7 @@ public class BoardOverviewCtrl {
     private Board board;
     private double x,y;
 
-    private Set<Tag> availableTags;
+    private List<Tag> availableTags;
     
     @FXML
     private Button closeButton,minimizeButton,maximizeButton,addList, renameBoardBtn, disconnectButton;
@@ -75,14 +74,7 @@ public class BoardOverviewCtrl {
          * 4. Use the serverUtils.getBoard method and enter the ID you got from the already existing board.
          */
     
-        
-        //This board is the one without id
-        //Board board = new Board(this.boardTitle.getText(), new ArrayList<>());
-        
-        //Assign the board to the one postNewBoard creates (the one with generated id)
-        //this.board = serverUtils.postNewBoard(board);
-        
-    
+
         toolBar.setOnMousePressed( mouseEvent -> {
             this.x= mouseEvent.getSceneX();
             this.y= mouseEvent.getSceneY();
@@ -128,8 +120,15 @@ public class BoardOverviewCtrl {
             userChangesField.set(true);
             //TODO send the changed flag to the server
         });
-    
-        
+
+        // Initialize the board with 3 basic tags
+        Tag basic1= new Tag("Urgent","red",new ArrayList<>(),this.board);
+        this.serverUtils.postNewTag(basic1,this.board);
+        Tag basic2= new Tag("Work","blue",new ArrayList<>(),this.board);
+        this.serverUtils.postNewTag(basic2,this.board);
+        Tag basic3= new Tag("Holiday","green",new ArrayList<>(),this.board);
+        this.serverUtils.postNewTag(basic3,this.board);
+
     }
     
     /**
@@ -145,7 +144,7 @@ public class BoardOverviewCtrl {
     }
     
     public Board getBoard() {
-        return board;
+        return this.board;
     }
 
     /**
@@ -156,7 +155,6 @@ public class BoardOverviewCtrl {
         BoardList listToAdd = new BoardList("Empty list", new ArrayList<>(), this.board);
         System.out.println("New list Button clicked");
         Platform.runLater(() -> serverUtils.postNewList(listToAdd, this.board));
-        //this.addNewVbox(null);
     }
 
     /**
@@ -187,6 +185,12 @@ public class BoardOverviewCtrl {
     public VBox getChild(int num) {
         return (VBox) tilePane.getChildren().get(num);
     }
+    /**
+     * Returns the list of available tags of the current board
+     */
+    public List<Tag> getAvailableTags() {
+        return this.availableTags;
+    }
 
     /**
      * Refreshes the overview of the board with all the updates of the database
@@ -215,8 +219,6 @@ public class BoardOverviewCtrl {
                 list.getCardList().add(null);
             }
             addList(list);
-            
-            //System.out.println(list.getParentBoard());
         }
         
         renameBoardBtn.disableProperty().bind((boardTitle.textProperty().isEqualTo(this.board.getName())
@@ -275,11 +277,6 @@ public class BoardOverviewCtrl {
     public MainCtrl getMainCtrl() {
         return mainCtrl;
     }
-
-    public Set<Tag> getAvailableTags() {
-        return this.availableTags;
-    }
-
     public WebsocketServerUtils getWebsocketServerUtils() {
         return websocketServerUtils;
     }

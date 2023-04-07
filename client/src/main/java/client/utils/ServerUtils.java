@@ -17,7 +17,6 @@ package client.utils;
 
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 import java.util.List;
-import java.util.Set;
 
 
 import commons.*;
@@ -248,20 +247,20 @@ public class ServerUtils {
                 .delete();
     }
 
-    public Set<Tag> getTagsOfBoard(Board parentBoard){
+    public List<Tag> getTagsOfBoard(Board parentBoard){
         return ClientBuilder.newClient(new ClientConfig())
                 .target(SERVER).path("api/tags/get-tags/"+parentBoard.id)
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
-                .get(new GenericType<Set<Tag>>(){});
+                .get(new GenericType<List<Tag>>(){});
     }
 
-    public Set<Tag> getTagsOfCard(Card card){
+    public List<Tag> getTagsOfCard(Card card){
         return ClientBuilder.newClient(new ClientConfig())
                 .target(SERVER).path("api/tags/get-tags/"+card.id)
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
-                .get(new GenericType<Set<Tag>>(){});
+                .get(new GenericType<List<Tag>>(){});
     }
 
     public void addTagToCard(Card card, Tag tag){

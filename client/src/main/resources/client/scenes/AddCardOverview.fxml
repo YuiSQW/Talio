@@ -19,7 +19,8 @@
         <TextArea fx:id="tasks" layoutX="52.0" layoutY="189.0" onMouseClicked="#clearTasks" prefHeight="103.0" prefWidth="442.0" text="Tasks" />
         <HBox fx:id="tagBar" layoutX="52.0" layoutY="309.0" prefHeight="50.0" prefWidth="442.0" spacing="5.0">
             <children>
-            <ComboBox fx:id="tagBox" prefHeight="25.0" prefWidth="90.0" promptText="Add Tag" />
+            <ComboBox fx:id="tagBox" prefHeight="25.0" prefWidth="97.0" promptText="Select Tag" style="-fx-background-radius: 1em;" />
+            <Button fx:id="createTag" mnemonicParsing="false" onAction="#createNewTag" style="-fx-background-radius: 1em;" text="Create Tag" />
                 <Button fx:id="saveButton" mnemonicParsing="false" onAction="#saveCard" style="-fx-background-radius: 1em;" text="Save" textAlignment="CENTER" />
             </children>
         </HBox>

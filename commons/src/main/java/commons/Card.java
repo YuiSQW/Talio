@@ -4,9 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 public class Card implements Serializable {
@@ -22,8 +20,9 @@ public class Card implements Serializable {
     @OrderColumn
     private List<Task> taskList;
 
+    @JsonIgnore
     @ManyToMany(mappedBy = "cards")
-    private Set<Tag> tagSet;
+    private List<Tag> tags;
 
     @JsonIgnore //this field needs to be ignored if converted to json, since it would otherwise be stuck in infinite loop
     @ManyToOne
@@ -35,12 +34,12 @@ public class Card implements Serializable {
         // default constructor that is necessary for Jackson, don't use!!
         // Jackson starts complaining if it is private access
     }
-    public Card(String title, String description, BoardList parentList){
+    public Card(String title, String description, List<Tag> tags, BoardList parentList){
         this.title = title;
         this.description = description;
         this.parentList = parentList;
+        this.tags=tags;
         this.taskList=new ArrayList<>();
-        this.tagSet= new HashSet<Tag>();
     }
     public String getDescription() {
         return this.description;
@@ -72,12 +71,12 @@ public class Card implements Serializable {
         this.taskList.add(task);
     }
 
-    public Set<Tag> getTagSet(){
-        return this.tagSet;}
+    public List<Tag> getTagList(){
+        return this.tags;}
     public void addTag(Tag tag){
-        this.tagSet.add(tag);}
+        this.tags.add(tag);}
     public void removeTag(Tag tag){
-        this.tagSet.remove(tag);}
+        this.tags.remove(tag);}
     public BoardList getParentList(){
 
         return this.parentList;
@@ -97,7 +96,7 @@ public class Card implements Serializable {
             ", taskList=" + taskList +
             ", title='" + title + '\'' +
             ", description='" + description + '\'' +
-                this.tagSet.toString()+
+                this.tags.toString()+
             '}';
     }
 

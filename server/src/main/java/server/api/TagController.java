@@ -11,7 +11,8 @@ import org.springframework.web.bind.annotation.*;
 import server.database.BoardRepository;
 import server.database.CardRepository;
 import server.database.TagRepository;
-import java.util.Set;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/tags")
@@ -39,31 +40,31 @@ public class TagController {
         return ResponseEntity.ok(this.repo.findById(id).get());
     }
     @GetMapping("/get-tags/{cardId}")
-    public ResponseEntity<Set<Tag>> getTagsOfCard(@PathVariable("card_id") long cardId){
+    public ResponseEntity<List<Tag>> getTagsOfCard(@PathVariable("card_id") long cardId){
         if( cardId<0 || !this.cardsRepo.existsById(cardId)){
             return ResponseEntity.badRequest().build();
         }
         Card card = this.cardsRepo.getById(cardId);
-        Set<Tag> tags = card.getTagSet();
+        List<Tag> tags = card.getTagList();
         return ResponseEntity.ok(tags);
     }
 
     @GetMapping("/get-tags/{parentId}")
-    public ResponseEntity<Set<Tag>> getTagsOfBoard(@PathVariable("parentId") long parentId){
+    public ResponseEntity<List<Tag>> getTagsOfBoard(@PathVariable("parentId") long parentId){
         if( parentId<0 || !this.parentRepo.existsById(parentId)){
             return ResponseEntity.badRequest().build();
         }
         Board parentBoard = this.parentRepo.getById(parentId);
-        Set<Tag> tags = parentBoard.getTags();
+        List<Tag> tags = parentBoard.getTags();
         return ResponseEntity.ok(tags);
     }
-    @PostMapping("/new-tag/{parentId}")
+    @PostMapping("/new-tag/{boardId}")
     public ResponseEntity<Tag> postNewTag(@RequestBody Tag newTag,
-                                          @PathVariable("parentId") long parentId){
-        if( parentId < 0 || !this.parentRepo.existsById(parentId)){
+                                          @PathVariable("boardId") long boardId){
+        if( boardId < 0 || parentRepo.existsById(boardId)){
             return ResponseEntity.badRequest().build();
         }
-        Board parentBoard= parentRepo.getById(parentId);
+        Board parentBoard= parentRepo.getById(boardId);
         newTag.setParentBoard(parentBoard);
         parentBoard.addTag(newTag);
         Board updatedBoard= this.parentRepo.saveAndFlush(parentBoard);
