@@ -1,13 +1,7 @@
 package commons;
 
-
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.apache.commons.lang3.tuple.Pair;
-
-
 import javax.persistence.*;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -77,10 +71,15 @@ public class Card implements Serializable {
     public void addTask(Task task){
         this.taskList.add(task);
     }
-    public void addTag(Tag tag){this.tagSet.add(tag);}
-    public void removeTag(Tag tag){this.tagSet.remove(tag);}
 
+    public Set<Tag> getTagSet(){
+        return this.tagSet;}
+    public void addTag(Tag tag){
+        this.tagSet.add(tag);}
+    public void removeTag(Tag tag){
+        this.tagSet.remove(tag);}
     public BoardList getParentList(){
+
         return this.parentList;
     }
     @Override

@@ -327,13 +327,14 @@ public class ListContainerCtrl extends VBox {
         this.cards.remove(card);
         //Delete the card from the server
         serverUtils.deleteCard(card);
-    
-    
-    
     }
 
     public static void setCardDialogOpen(boolean valToSet){
         cardDialogOpen = valToSet;
+    }
+
+    public BoardOverviewCtrl getBoardOverviewCtrl() {
+        return boardOverviewCtrl;
     }
 }
 

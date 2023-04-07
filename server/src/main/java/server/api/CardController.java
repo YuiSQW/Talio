@@ -76,7 +76,6 @@ public class CardController {
             }
         }
         Board updatedBoard = boardRepo.saveAndFlush(parentBoard);
-        //Card saved = repo.save(newCard);
         boardUpdateListener.add(updatedBoard);
         Card addedCard = updatedBoard.getLists().get(index).getCardList().get(updatedBoard.getLists().get(index).getCardList().size() - 1);
         return ResponseEntity.ok(addedCard);

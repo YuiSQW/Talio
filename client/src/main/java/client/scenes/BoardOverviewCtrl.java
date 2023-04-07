@@ -18,11 +18,10 @@ import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import javafx.util.Pair;
-
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class BoardOverviewCtrl {
@@ -33,7 +32,7 @@ public class BoardOverviewCtrl {
     private Board board;
     private double x,y;
 
-    private List<Tag> availableTags;
+    private Set<Tag> availableTags;
     
     @FXML
     private Button closeButton,minimizeButton,maximizeButton,addList, renameBoardBtn, disconnectButton;
@@ -197,9 +196,8 @@ public class BoardOverviewCtrl {
     public boolean refresh(boolean isUserEditing){
         //TODO implements the logic related to retrieving the lists and displaying them
         this.board = websocketServerUtils.getCurrentBoard();
-        //this.board = serverUtils.getBoard(this.board.id);
         List<BoardList> lists = this.board.getLists();
-
+        this.availableTags=this.board.getTags();
        
         //Use an ObservableList to directly display changes onto the TilePane
         ObservableList<Node> tilePaneChildren = tilePane.getChildren();
@@ -229,14 +227,13 @@ public class BoardOverviewCtrl {
         //Otherwise the clients get constantly interrupted
         if (!isUserEditing) {
             boardTitle.setText(this.board.getName());
-
-            
         }
         
         //Return false again after the label has been set
         return false;
     }
-    
+
+
     /**
      * Function that is connected to the closeButton of the controller
      * It delegates the function of closing the app to the Main Controller
@@ -277,6 +274,10 @@ public class BoardOverviewCtrl {
 
     public MainCtrl getMainCtrl() {
         return mainCtrl;
+    }
+
+    public Set<Tag> getAvailableTags() {
+        return this.availableTags;
     }
 
     public WebsocketServerUtils getWebsocketServerUtils() {

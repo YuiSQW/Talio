@@ -88,10 +88,7 @@ public class BoardListController {
         }
         Board parentBoard = parentRepo.getById(boardId);
         newList.setParentBoard(parentBoard);
-        //BoardList addedList = repo.saveAndFlush(newList);
         parentBoard.addList(newList);
-        //parentBoard.addList(addedList);
-        //Board updatedBoard = parentRepo.saveAndFlush(parentBoard);
         Board updatedBoard = parentRepo.saveAndFlush(parentBoard);
         boardUpdateListener.add(updatedBoard);
         return ResponseEntity.ok(newList);

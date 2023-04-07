@@ -41,12 +41,16 @@ public class MainCtrl {
     private ClientConnectCtrl clientConnectCtrl;
     private Scene clientConnect;
 
+    private AddTagCtrl addTagCtrl;
+    private Scene addTagOverview;
+
     public void initialize(Stage primaryStage,
                            Pair<BoardOverviewCtrl, Parent> board,
                            Pair<EditListNameCtrl, Parent> editList,
                            Pair<CardOverviewCtrl, Parent> card,
                            Pair<AddCardCtrl, Parent> addCard,
-                           Pair<ClientConnectCtrl, Parent> clientConnect) throws Exception {
+                           Pair<ClientConnectCtrl, Parent> clientConnect,
+                           Pair<AddTagCtrl, Parent> addTag) throws Exception {
         this.primaryStage = primaryStage;
 
         this.boardOverviewCtrl=board.getKey();
@@ -62,6 +66,10 @@ public class MainCtrl {
         this.cardOverview=new Scene(card.getValue());
         this.addCardCtrl=addCard.getKey();
         this.addCardOverview=new Scene(addCard.getValue());
+
+        this.addTagCtrl=addTag.getKey();
+        this.addTagOverview=new Scene(addTag.getValue());
+
         primaryStage.initStyle(StageStyle.TRANSPARENT);
         showWelcomeOverview();
         primaryStage.show();
@@ -103,6 +111,16 @@ public class MainCtrl {
         addCardOverview.setFill(Color.TRANSPARENT);
         secondaryStage.setScene(this.addCardOverview);
         this.addCardCtrl.init(secondaryStage,listContainerCtrl);
+    }
+
+    public void addNewTag(BoardOverviewCtrl boardOverviewCtrl,AddCardCtrl addCardCtrl){
+        Stage secondaryStage = new Stage(StageStyle.TRANSPARENT);
+        secondaryStage.setTitle("Create new Tag:");
+        secondaryStage.show();
+        addTagOverview.setFill(Color.TRANSPARENT);
+        secondaryStage.setScene(this.addTagOverview);
+        this.addTagCtrl.init(secondaryStage,boardOverviewCtrl,addCardCtrl);
+
     }
 
     /**

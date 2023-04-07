@@ -3,19 +3,22 @@ package commons;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
 @Entity
-public class Tag{
-    private final String tagType;
-    private final String color;
+public class Tag implements Serializable {
+    private String tagType;
+    // Store the hex code of the color
+    private String color;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
-
+    public long id;
     @JsonIgnore
+    @ManyToOne
+    private Board parentBoard; //the Board instance that the tag corresponds to
     @ManyToMany
     @JoinTable(
             name = "card_tag",
@@ -29,12 +32,29 @@ public class Tag{
         this.cards= new HashSet<Card>();
 
     }
+    public Tag(){
+        //default constructor necessary for Jackson operation
+    }
     public String getTagType() {
         return tagType;
     }
 
     public String getColor() {
         return color;
+    }
+
+    public void setParentBoard(Board board){
+        this.parentBoard=parentBoard;
+    }
+    public Board getParentBoard(){
+        return this.parentBoard;
+    }
+
+    public Set<Card> getCards() {
+        return cards;
+    }
+    public void addCard(Card card){
+        this.cards.add(card);
     }
 
     @Override

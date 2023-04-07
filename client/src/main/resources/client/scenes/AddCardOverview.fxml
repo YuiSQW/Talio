@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -16,11 +17,9 @@
             </font></TextField>
         <TextArea fx:id="description" layoutX="52.0" layoutY="100.0" onMouseClicked="#clearDescription" prefHeight="70.0" prefWidth="442.0" text="Description&#10;&#10;" />
         <TextArea fx:id="tasks" layoutX="52.0" layoutY="189.0" onMouseClicked="#clearTasks" prefHeight="103.0" prefWidth="442.0" text="Tasks" />
-        <HBox layoutX="52.0" layoutY="309.0" prefHeight="50.0" prefWidth="442.0" spacing="5.0">
+        <HBox fx:id="tagBar" layoutX="52.0" layoutY="309.0" prefHeight="50.0" prefWidth="442.0" spacing="5.0">
             <children>
-                <TextField alignment="CENTER" prefHeight="26.0" prefWidth="64.0" style="-fx-background-radius: 1em;" text="Tag" />
-                <TextField alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="26.0" prefWidth="64.0" style="-fx-background-radius: 1em;" text="Tag" />
-                <TextField alignment="CENTER" layoutX="74.0" layoutY="10.0" prefHeight="23.0" prefWidth="30.0" style="-fx-background-radius: 1em;" text="+" />
+            <ComboBox fx:id="tagBox" prefHeight="25.0" prefWidth="90.0" promptText="Add Tag" />
                 <Button fx:id="saveButton" mnemonicParsing="false" onAction="#saveCard" style="-fx-background-radius: 1em;" text="Save" textAlignment="CENTER" />
             </children>
         </HBox>

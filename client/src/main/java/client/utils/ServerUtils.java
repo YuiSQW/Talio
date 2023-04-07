@@ -17,14 +17,12 @@ package client.utils;
 
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 import java.util.List;
+import java.util.Set;
 
 
-import commons.Board;
-import commons.BoardList;
-import commons.Card;
+import commons.*;
 
 
-import commons.Task;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 
@@ -223,4 +221,55 @@ public class ServerUtils {
             .accept(APPLICATION_JSON)
             .get(new GenericType<Board>(){});
     }
+
+    public Tag postNewTag(Tag newTag, Board parent){
+        Tag createdTag = ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/tags/new-tag/" + parent.id)
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .post(Entity.entity(newTag, APPLICATION_JSON), Tag.class);
+        createdTag.setParentBoard(parent);
+        return createdTag;
+    }
+
+    public Tag getTag(long tagId){
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/tags/"+tagId)
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .get(new GenericType<Tag>(){});
+    }
+
+    public void deleteTag(Tag tagToDelete){
+        ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/tags/" + tagToDelete.id)
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .delete();
+    }
+
+    public Set<Tag> getTagsOfBoard(Board parentBoard){
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/tags/get-tags/"+parentBoard.id)
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .get(new GenericType<Set<Tag>>(){});
+    }
+
+    public Set<Tag> getTagsOfCard(Card card){
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/tags/get-tags/"+card.id)
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .get(new GenericType<Set<Tag>>(){});
+    }
+
+    public void addTagToCard(Card card, Tag tag){
+        ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("/api/tags/add-tag/"+card.id+"/"+tag.id)
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .put(Entity.entity("",APPLICATION_JSON));
+    }
+
 }
