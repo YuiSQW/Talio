@@ -38,7 +38,7 @@
       </TextField>
       <ScrollPane layoutX="2.0" layoutY="106.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="427.0" prefWidth="686.0" AnchorPane.bottomAnchor="2.0" AnchorPane.leftAnchor="2.0" AnchorPane.rightAnchor="2.0" AnchorPane.topAnchor="100.0">
          <content>
-            <TilePane fx:id="tilePane" hgap="50.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefColumns="7">
+            <TilePane fx:id="tilePane" hgap="50.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefColumns="6" prefRows="10" prefHeight="800">
                <children>
                   <VBox fx:id="v1" prefHeight="360.0" prefWidth="180.0">
                      <children>
