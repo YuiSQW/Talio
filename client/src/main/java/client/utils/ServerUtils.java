@@ -67,13 +67,15 @@ public class ServerUtils {
 
 
 
-    public void updateCardDescription(Card newCard){
-        ClientBuilder.newClient(new ClientConfig())
+    public Card updateCardDescription(Card newCard){
+        Card card = ClientBuilder.newClient(new ClientConfig())
             .target(SERVER).path("api/cards/change-description/" + newCard.id +"/" + newCard.getDescription())
             .request(APPLICATION_JSON)
             .accept(APPLICATION_JSON)
             .put(Entity.entity(newCard, APPLICATION_JSON), Card.class);
+        return card;
     }
+
     /**
      * Deletes a card from the server
      * @param cardToDelete the card to be deleted
