@@ -33,6 +33,9 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 import static org.hamcrest.Matchers.is;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -86,6 +89,7 @@ public class TaskControllerTest {
         this.mockMvc.perform(get("/api/tasks/1")).andExpect(status().is2xxSuccessful());
     }
 
+    
     @Test
     void getNewTaskTestCorrect() throws Exception{
         Mockito.when(listRepo.getById(Mockito.anyLong())).thenReturn(testList);
@@ -125,7 +129,23 @@ public class TaskControllerTest {
         Mockito.when(this.repo.save(Mockito.any(Task.class))).thenReturn(task);
         this.mockMvc.perform(put("/api/tasks/change-name/1/newname"))
                 .andExpect(status().isBadRequest());
+        
+        
     }
-
+    
+    /**
+     * Tests the deleteTask method in the TaskController class
+     * @throws Exception if the test fails
+     */
+    @Test
+    void deleteTaskTestCorrect() throws Exception {
+        when(repo.getById(anyLong())).thenReturn(new Task(testCard, ""));
+        when(parentRepo.getById(anyLong())).thenReturn(testCard);
+        when(parentRepo.saveAndFlush(any(Card.class))).thenReturn(testCard);
+        this.mockMvc.perform(delete("/api/tasks/delete/1"))
+                .andExpect(status().is2xxSuccessful());
+    }
+    
+ 
 
 }
