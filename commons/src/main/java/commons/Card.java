@@ -98,10 +98,10 @@ public class Card implements Serializable {
             "id=" + id +
             ", taskList=" + taskList +
             ", title='" + title + '\'' +
-            ", description='" + description + '\'' +
-                this.tags.toString()+
+            ", description='" + description+'\''+
             '}';
     }
+
     /**
      * deletes task based on id
      */
