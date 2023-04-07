@@ -2,7 +2,6 @@ package client.scenes;
 
 import client.utils.ServerUtils;
 import commons.Board;
-import commons.Card;
 import commons.Tag;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -16,7 +15,6 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
 
 /**
  * Controller class for handling the creation of a new tag by the user
@@ -82,8 +80,7 @@ public class AddTagCtrl {
 
     }
     public void saveTag(){
-        Tag newTag= new Tag(this.nameField.getText(),this.colorField.getText(),new ArrayList<Card>(),
-                this.parentBoard);
+        Tag newTag= new Tag(this.nameField.getText(),this.colorField.getText(), this.parentBoard);
         this.addCardCtrl.addTag(newTag);
         System.out.println("New Tag added");
         Platform.runLater(() ->this.serverUtils.postNewTag(newTag,this.parentBoard));

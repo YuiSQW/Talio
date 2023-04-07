@@ -61,26 +61,15 @@ public class ClientConnectCtrl {
     public void connectToServer() throws Exception {
         String serverAddress = serverAddressField.getText();
 
-        /*if(serverAddress.equals("localhost:8080")) {
-            try{
-                serverUtils.connect(serverAddress);
-                websocketServerUtils.setServer(serverAddress);
-                mainCtrl.showBoardOverview();
-            } catch (Exception exception){
-                throw new Exception("Exception: " + exception);
-            }
-        } else{
-            invalidServerAddressAlert();
-        }*/
         try{
             serverUtils.connect(serverAddress);
             websocketServerUtils.setServer(serverAddress);
             mainCtrl.showBoardOverview();
-        }catch (Exception e){
-            if(e instanceof UnknownHostException){
+        }catch(Exception exception){
+            if(exception instanceof UnknownHostException){
                 invalidServerAddressAlert();
             }else{
-                e.printStackTrace();
+                exception.printStackTrace();
             }
         }
     }

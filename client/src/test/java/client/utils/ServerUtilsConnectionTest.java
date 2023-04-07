@@ -32,10 +32,9 @@ public class ServerUtilsConnectionTest {
         stubFor(get("/api/boards/connection-available").willReturn(
             aResponse().withHeader("Content-Type", "application/json").withBody(new ObjectMapper().writeValueAsString(serverAddress))
         ));
-        Throwable throwable =assertThrows(ExceptionInInitializerError.class, () -> {
+        assertThrows(ExceptionInInitializerError.class, () -> {
             server.connect(serverAddress);
         });
-        assertEquals(ExceptionInInitializerError.class, throwable.getClass());
     }
 
 }

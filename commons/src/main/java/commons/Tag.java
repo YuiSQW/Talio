@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -28,11 +29,11 @@ public class Tag implements Serializable {
             inverseJoinColumns = @JoinColumn(name="card_id"))
     private List<Card> cards;
 
-    public Tag(String tagName, String color, List<Card> cards, Board parentBoard) {
+    public Tag(String tagName, String color, Board parentBoard) {
         this.tagName = tagName;
         this.color = color;
         this.parentBoard=parentBoard;
-        this.cards=cards;
+        this.cards=new ArrayList<>();
 
     }
     public Tag(){

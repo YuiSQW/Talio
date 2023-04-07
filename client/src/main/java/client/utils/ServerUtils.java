@@ -59,13 +59,15 @@ public class ServerUtils {
 
 
 
-    public void updateCardDescription(Card newCard){
-        ClientBuilder.newClient(new ClientConfig())
+    public Card updateCardDescription(Card newCard){
+        Card card = ClientBuilder.newClient(new ClientConfig())
             .target(SERVER).path("api/cards/change-description/" + newCard.id +"/" + newCard.getDescription())
             .request(APPLICATION_JSON)
             .accept(APPLICATION_JSON)
             .put(Entity.entity(newCard, APPLICATION_JSON), Card.class);
+        return card;
     }
+
     /**
      * Deletes a card from the server
      * @param cardToDelete the card to be deleted
@@ -112,7 +114,14 @@ public class ServerUtils {
             .target(SERVER).path("api/boardlists/" + listToDelete.id)
             .request(APPLICATION_JSON)
             .accept(APPLICATION_JSON)
-            .delete();
+                .delete();
+    }
+    public void deleteTask(Task taskToDelete){
+        ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/tasks/delete/" + taskToDelete.id)
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .delete();
     }
     
     public Board getBoard(long boardId){
@@ -169,6 +178,23 @@ public class ServerUtils {
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .get(new GenericType<List<BoardList>>(){});
+    }
+    public Task postNewTask(Task newTask, Card parentCard){
+        Task task = ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/tasks/new-task/" + parentCard.id)
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .post(Entity.entity(newTask, APPLICATION_JSON), Task.class);
+        task.setParentCard(parentCard);
+        return task;
+    }
+
+    public Task getTask(long listId){
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/tasks/" + listId)
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .get(new GenericType<Task>(){});
     }
 
     /**

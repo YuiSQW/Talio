@@ -122,11 +122,11 @@ public class BoardOverviewCtrl {
         });
 
         // Initialize the board with 3 basic tags
-        Tag basic1= new Tag("Urgent","red",new ArrayList<>(),this.board);
+        Tag basic1= new Tag("Urgent","red",this.board);
         this.serverUtils.postNewTag(basic1,this.board);
-        Tag basic2= new Tag("Work","blue",new ArrayList<>(),this.board);
+        Tag basic2= new Tag("Work","blue",this.board);
         this.serverUtils.postNewTag(basic2,this.board);
-        Tag basic3= new Tag("Holiday","green",new ArrayList<>(),this.board);
+        Tag basic3= new Tag("Holiday","green",this.board);
         this.serverUtils.postNewTag(basic3,this.board);
 
     }

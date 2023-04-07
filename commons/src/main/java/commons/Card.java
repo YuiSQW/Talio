@@ -34,11 +34,11 @@ public class Card implements Serializable {
         // default constructor that is necessary for Jackson, don't use!!
         // Jackson starts complaining if it is private access
     }
-    public Card(String title, String description, List<Tag> tags, BoardList parentList){
+    public Card(String title, String description, BoardList parentList){
         this.title = title;
         this.description = description;
         this.parentList = parentList;
-        this.tags=tags;
+        this.tags= new ArrayList<>();
         this.taskList=new ArrayList<>();
     }
     public String getDescription() {
@@ -73,6 +73,9 @@ public class Card implements Serializable {
 
     public List<Tag> getTagList(){
         return this.tags;}
+    public void setTagList(List<Tag> tags){
+        this.tags=tags;
+    }
     public void addTag(Tag tag){
         this.tags.add(tag);}
     public void removeTag(Tag tag){
@@ -98,6 +101,17 @@ public class Card implements Serializable {
             ", description='" + description + '\'' +
                 this.tags.toString()+
             '}';
+    }
+    /**
+     * deletes task based on id
+     */
+    public void deleteTask(long id){
+        for(int i=0;i<taskList.size();i++){
+            if(taskList.get(i).id==id){
+                taskList.remove(i);
+                break;
+            }
+        }
     }
 
 }
