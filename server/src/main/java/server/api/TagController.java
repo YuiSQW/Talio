@@ -61,7 +61,7 @@ public class TagController {
     @PostMapping("/new-tag/{boardId}")
     public ResponseEntity<Tag> postNewTag(@RequestBody Tag newTag,
                                           @PathVariable("boardId") long boardId){
-        if( boardId < 0 || parentRepo.existsById(boardId)){
+        if( boardId < 0 || !parentRepo.existsById(boardId)){
             return ResponseEntity.badRequest().build();
         }
         Board parentBoard= parentRepo.getById(boardId);
