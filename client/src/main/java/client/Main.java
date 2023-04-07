@@ -39,8 +39,9 @@ public class Main extends Application {
         var addCard=FXML.load(AddCardCtrl.class,"client","scenes","AddCardOverview.fxml");
         var cardOverview= FXML.load(CardOverviewCtrl.class,"client","scenes","CardOverview.fxml");
         var welcomeOverview =FXML.load(ClientConnectCtrl.class,"client","scenes","ClientConnect.fxml");
+        var customizationview = FXML.load(CustomizationCtrl.class,"client","scenes","CustomizationView.fxml");
 
         var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
-        mainCtrl.initialize(primaryStage, boardOverview,editListName, cardOverview, addCard, welcomeOverview );
+        mainCtrl.initialize(primaryStage, boardOverview,editListName, cardOverview, addCard, welcomeOverview, customizationview);
     }
 }

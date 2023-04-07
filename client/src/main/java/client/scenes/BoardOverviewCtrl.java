@@ -15,6 +15,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import javax.inject.Inject;
@@ -31,13 +32,19 @@ public class BoardOverviewCtrl {
     private double x,y;
     
     @FXML
-    private Button closeButton,minimizeButton,maximizeButton,addList, renameBoardBtn, disconnectButton;
+    private Button closeButton,minimizeButton,maximizeButton,addList, renameBoardBtn, disconnectButton, customizationbutton;
     @FXML
     private Pane toolBar;
     @FXML
     private TilePane tilePane;
     @FXML
     private TextField boardTitle;
+
+    private Color listcolor = Color.WHITE;
+    private Color listnamecolor = Color.BLACK;
+
+    private Color presetbackground = null;
+    private Color presetfont = Color.BLACK;
 
     @Inject
     public BoardOverviewCtrl(MainCtrl mainCtrl, ServerUtils serverUtils, WebsocketServerUtils websocketServerUtils) {
@@ -129,7 +136,7 @@ public class BoardOverviewCtrl {
         });
         
     }
-    
+
     /**
      * The function which is connected to the renameBtn
      * sets the board name to the new title
@@ -142,17 +149,56 @@ public class BoardOverviewCtrl {
         
     }
     
+    public TextField getboardTitle(){
+        return boardTitle;
+    }
+
     public Board getBoard() {
         return board;
     }
 
+    public void setlistcolor(Color color){
+        listcolor = color;
+    }
+
+    public Color getlistcolor(){
+        return listcolor;
+    }
+
+    public Color getpresetbackground(){
+        return presetbackground;
+    }
+
+    public void setpresetbackground(Color color){
+        presetbackground = color;
+    }
+
+    public Color getpresetfont(){
+        return presetfont;
+    }
+
+    public void setpresetfont(Color color){
+        presetfont = color;
+    }
+
+    public void setlistnamecolor(Color color){
+        listnamecolor = color;
+    }
+
+    public Color getlistnamecolor(){
+        return listnamecolor;
+    }
+
+    public TilePane gettilepane(){
+        return tilePane;
+    }
     /**
      * Method which triggers the addition of an EMPTY List Container
      * Connected to the addList button
      */
     public void addNewList(){
         BoardList listToAdd = new BoardList("Empty list", new ArrayList<>(), this.board);
-        System.out.println("New list Button clicked");
+        //System.out.println("New list Button clicked");
         Platform.runLater(() -> serverUtils.postNewList(listToAdd, this.board));
         //this.addNewVbox(null);
     }
@@ -170,7 +216,7 @@ public class BoardOverviewCtrl {
      * which contains a child BoardList instance of the Board
      */
     public void addNewVbox(BoardList boardList) {
-        ListContainerCtrl listContainerCtrl= new ListContainerCtrl(this.mainCtrl,this.serverUtils);
+        ListContainerCtrl listContainerCtrl = new ListContainerCtrl(this.mainCtrl,this.serverUtils);
         listContainerCtrl.init(tilePane,this,boardList);
         tilePane.getChildren().add((tilePane.getChildren().size() - 1), listContainerCtrl);
     }
@@ -266,6 +312,14 @@ public class BoardOverviewCtrl {
     @FXML
     public void disconnect() {
         mainCtrl.showWelcomeOverview();
+    }
+
+    /**
+     * This method is called when the customization button is clicked so a user can customize the board.
+     */
+    @FXML
+    public void customization() {
+        mainCtrl.showCustomization();
     }
 
     //Next methods are getters used in testing

@@ -150,4 +150,8 @@ public class AddCardCtrl {
         tilePane.getChildren().add(tilePane.getChildren().size()-1,taskContainerCtrl);
     }
 
+    public ListContainerCtrl getlistcontainer(){
+        return listContainerCtrl;
+    }
+
 }

@@ -12,6 +12,9 @@ import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.TilePane;
 import javafx.geometry.Insets;
@@ -40,6 +43,7 @@ public class ListContainerCtrl extends VBox {
     private final ServerUtils serverUtils;
     
     private static boolean hasChangedFlag;
+    private Color listColor;
 
     //only allows one card dialog to be open at one time, since having multiple card
     //dialogs open will make the dialog unresponsive
@@ -75,6 +79,7 @@ public class ListContainerCtrl extends VBox {
         listName.setPrefHeight(47.0);
         listName.setPrefWidth(100.0);
         listName.setStyle("-fx-text-alignment:center;");
+        listName.setTextFill(boardOverviewCtrl.getlistnamecolor());
         // the edit button
         Button editButton = new Button("Edit");
         editButton.setPrefHeight(35.0);
@@ -147,6 +152,10 @@ public class ListContainerCtrl extends VBox {
         setSpacing(10.0);
         getChildren().addAll(boardListTitle, cardList);
         setStyle("-fx-border-color:black;-fx-border-radius:15;");
+        //setting color based on customization menu
+        BackgroundFill backgroundFill = new BackgroundFill(boardOverviewCtrl.getlistcolor(), new CornerRadii(16), null);
+        Background background = new Background(backgroundFill);
+        this.setBackground(background);
 
         //Adds spacing between the rows of lists
         TilePane.setMargin(this, new Insets(10,0,0,0));
@@ -165,8 +174,6 @@ public class ListContainerCtrl extends VBox {
             
         });
         editButton.setOnAction(event -> this.mainCtrl.editListName(this));
-        
-        
 
     }
 
@@ -276,6 +283,11 @@ public class ListContainerCtrl extends VBox {
     public BoardList getList(){
         return this.list;
     }
+
+    public BoardOverviewCtrl getboardoverview(){
+        return boardOverviewCtrl;
+    }
+
 
     /**
      * Method which updates the display of the Card object whose properties have been modified
