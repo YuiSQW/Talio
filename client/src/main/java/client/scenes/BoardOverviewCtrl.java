@@ -10,8 +10,7 @@ import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
@@ -21,6 +20,7 @@ import javafx.util.Duration;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class BoardOverviewCtrl {
@@ -311,7 +311,28 @@ public class BoardOverviewCtrl {
      */
     @FXML
     public void disconnect() {
-        mainCtrl.showWelcomeOverview();
+        disconnectValidation();
+    }
+    
+    /*
+    * This method is called when the disconnect button is clicked so a user can switch servers.
+    * ensures that the user wants to disconnect
+     */
+    public void disconnectValidation(){
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirm Disconnection");
+        alert.setHeaderText("Do you really want to disconnect?");
+        alert.setContentText("Choose Yes to disconnect or No to cancel.");
+        
+        ButtonType buttonTypeYes = new ButtonType("Yes");
+        ButtonType buttonTypeNo = new ButtonType("No", ButtonBar.ButtonData.CANCEL_CLOSE);
+        
+        alert.getButtonTypes().setAll(buttonTypeYes, buttonTypeNo);
+        
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == buttonTypeYes){
+            mainCtrl.showWelcomeOverview();
+        }
     }
 
     /**
