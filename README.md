@@ -5,6 +5,11 @@ This information can be added throughout the course, except for the names of the
 Add your own name (do not add the names for others!) to the section below.
 
 ## Description of project
+TaLiO,
+is an application which allows users to make so-called boards on
+which lists of tasks can be added to. This serves the users as a useful
+tool for many purposes, for example to keep track of any tasks that
+should be done, are being done, or have been completed in the past.
 
 ## Group members
 - Marius Frija
@@ -19,9 +24,10 @@ Add your own name (do not add the names for others!) to the section below.
 
 - Matei Hristodorescu
 
-| Profile Picture | Name | Email |
-|---|---|---|
-| ![](https://eu.ui-avatars.com/api/?name=OOPP&length=4&size=50&color=DDD&background=777&font-size=0.325) | Your Name | Y.Name@student.tudelft.nl |
+| Profile Picture | Name              | Email |
+|---|-------------------|---|
+| ![](https://eu.ui-avatars.com/api/?name=OOPP&length=4&size=50&color=DDD&background=777&font-size=0.325) | Your Name         | Y.Name@student.tudelft.nl |
+| ![](C:\Users\yulia\Downloads\d.png) | Yulia Waarsenburg | Y.S.Q.Waarsenburg@student.tudelft.nl |
 
 
 <!-- Instructions (remove once assignment has been completed -->
@@ -33,6 +39,16 @@ Add your own name (do not add the names for others!) to the section below.
 ## How to run it
 
 ## How to contribute to it
+1. Clone the gitLab repository.
+2. Add an issue of the feature or fix the bug you want to work on.
+3. Include additional tests, to make sure everything works as expected.
+4. Make sure the test suite is passing and that your code is well documented. 
+5. Open an MR to merge your code and its documentation. You can mark your MR as a draft to let others know you're still working on it.
+6. Wait for at least 2 reviews. If you get verifications from 2 reviewers, you can merge the MR.
+7. If you get comments or requests to change something, please do so. If you fixed the issues/comments, you can mark the comment as resolved.
 
 ## Copyright / License (opt.)
+This project is not subject to any copyright or license.
+
+
 
