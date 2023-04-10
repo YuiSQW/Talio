@@ -33,6 +33,17 @@ Add your own name (do not add the names for others!) to the section below.
 ## How to run it
 
 ## How to contribute to it
+## How to contribute to it
+1. Clone the gitLab repository.
+2. Add an issue of the feature or fix the bug you want to work on.
+3. Include additional tests, to make sure everything works as expected.
+4. Make sure the test suite is passing and that your code is well documented.
+5. Open an MR to merge your code and its documentation. You can mark your MR as a draft to let others know you're still working on it.
+6. Wait for at least 2 reviews. If you get verifications from 2 reviewers, you can merge the MR.
+7. If you get comments or requests to change something, please do so. If you fixed the issues/comments, you can mark the comment as resolved.
 
 ## Copyright / License (opt.)
+This project is not subject to any copyright or license.
+
+
 
