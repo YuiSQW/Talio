@@ -34,7 +34,6 @@ Add your own name (do not add the names for others!) to the section below.
 ## How to run it
 
 ## How to contribute to it
-## How to contribute to it
 1. Clone the gitLab repository.
 2. Add an issue of the feature or fix the bug you want to work on.
 3. Include additional tests, to make sure everything works as expected.
