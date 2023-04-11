@@ -19,12 +19,12 @@ Add your own name (do not add the names for others!) to the section below.
 
 - Matei Hristodorescu
 
-| Profile Picture                                                                                         | Name                | Email                                |
-|---------------------------------------------------------------------------------------------------------|---------------------|--------------------------------------|
-| ![](https://eu.ui-avatars.com/api/?name=YSQ&length=4&size=50&color=DDD&background=777&font-size=0.325)  | Yulia Waarsenburg   | Y.S.Q.Waarsenburg@student.tudelft.nl |
-| ![](https://eu.ui-avatars.com/api/?name=MH&length=4&size=50&color=DDD&background=777&font-size=0.325)   | Matei Hristodorescu | M.Hristodorescu@student.tudelft.nl   |
-| ![](https://eu.ui-avatars.com/api/?name=MVV&length=4&size=50&color=DDD&background=777&font-size=0.325)  | Matthias van Vliet  | M.B.vanVliet@student.tudelft.nl      |
-
+| Profile Picture                                                                                          | Name                | Email                                |
+|----------------------------------------------------------------------------------------------------------|---------------------|--------------------------------------|
+| ![](https://eu.ui-avatars.com/api/?name=YSQ&length=4&size=50&color=DDD&background=777&font-size=0.325)   | Yulia Waarsenburg   | Y.S.Q.Waarsenburg@student.tudelft.nl |
+| ![](https://eu.ui-avatars.com/api/?name=MH&length=4&size=50&color=DDD&background=777&font-size=0.325)    | Matei Hristodorescu | M.Hristodorescu@student.tudelft.nl   |
+| ![](https://eu.ui-avatars.com/api/?name=MVV&length=4&size=50&color=DDD&background=777&font-size=0.325)   | Matthias van Vliet  | M.B.vanVliet@student.tudelft.nl      |
+| ![](https://eu.ui-avatars.com/api/?name=RN&length=4&size=50&color=DDD&background=777&font-size=0.325)    | Rebecca Nys         | R.Nys@student.tudelft.nl             |
 
 <!-- Instructions (remove once assignment has been completed -->
 <!-- - Add (only!) your own name to the table above (use Markdown formatting) -->
