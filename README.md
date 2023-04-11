@@ -5,6 +5,11 @@ This information can be added throughout the course, except for the names of the
 Add your own name (do not add the names for others!) to the section below.
 
 ## Description of project
+TaLiO, is an application which allows users to make boards
+on which lists of tasks can be added to.
+This serves the users as a useful tool for many purposes,
+for example to keep track of any tasks that should be done,
+are being done, or have been completed in the past.
 
 ## Group members
 - Marius Frija
