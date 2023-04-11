@@ -10,7 +10,9 @@ import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.TilePane;
@@ -32,7 +34,7 @@ public class BoardOverviewCtrl {
     private double x,y;
     
     @FXML
-    private Button closeButton,minimizeButton,maximizeButton,addList, renameBoardBtn, disconnectButton, customizationbutton;
+    private Button closeButton,minimizeButton,maximizeButton,addList, renameBoardBtn, disconnectButton, customizationbutton, howToDrag;
     @FXML
     private Pane toolBar;
     @FXML
@@ -333,5 +335,13 @@ public class BoardOverviewCtrl {
 
     public WebsocketServerUtils getWebsocketServerUtils() {
         return websocketServerUtils;
+    }
+
+    @FXML
+    public void howToDragInfo() {
+        String contentText = "Drag a task by clicking on its title. Drop it on the first open spot of a list or on top of a card to place it above that card.";
+        Alert alert = new Alert(Alert.AlertType.INFORMATION, contentText, ButtonType.OK);
+        alert.setHeaderText("How to drag and drop tasks:");
+        alert.showAndWait();
     }
 }
