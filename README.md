@@ -1,10 +1,5 @@
-# Starting template
-
-This README will need to contain a description of your project, how to run it, how to set up the development environment, and who worked on it.
-This information can be added throughout the course, except for the names of the group members.
-Add your own name (do not add the names for others!) to the section below.
-
 ## Description of project
+Talio, a planning application currently in progress, is designed for the Java platform. This application empowers users to effortlessly generate, categorize, and monitor their goals through an intuitive graphical user interface (GUI). On the client side, Talio utilizes the JavaFX framework and has been meticulously crafted and tested on JavaFX release 17. While it is compatible with later versions of JavaFX, we strongly advise users to employ the recommended version to mitigate potential warnings and, in extreme cases, prevent crashes. The server side of Talio is constructed on the robust Spring framework, ensuring a solid foundation for seamless functionality.
 
 ## Group members
 - Marius Frija
@@ -33,6 +28,11 @@ Add your own name (do not add the names for others!) to the section below.
 <!-- - (please make sure the photos have the same size) --> 
 
 ## How to run it
+The application consists of 2 parts: the server and the client. 
+
+To start the server, run ./gradlew bootRun.
+
+To start the client, run ./gradlew run
 
 ## How to contribute to it
 1. Clone the gitLab repository.
